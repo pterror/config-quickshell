@@ -55,6 +55,10 @@ Singleton {
 	}
 
 	readonly property QtObject colors: QtObject {
+		readonly property QtObject accent: QtObject {
+			readonly property string fg: "#ffffaaaa"
+		}
+
 		readonly property QtObject bar: QtObject {
 			readonly property string bg: "#00e0ffff"
 			readonly property string outline: "#00ffffff"
@@ -71,6 +75,12 @@ Singleton {
 			readonly property string bg: "#66001017"
 			readonly property string outline: "#ee33ccff"
 			readonly property string outlineInvalid: "#aa595959"
+		}
+
+		readonly property QtObject workspaceIndicator: QtObject {
+			readonly property string focused: Config.colors.accent.fg
+			readonly property string visible: "#80ffffff"
+			readonly property string empty: "#20ffffff"
 		}
 	}
 

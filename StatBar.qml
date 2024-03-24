@@ -9,7 +9,6 @@ PanelWindow {
 		left: true
 		right: true
 		top: true
-		// bottom: true
 	}
 
 	height: Config.layout.topBar.height
@@ -50,7 +49,7 @@ PanelWindow {
 				width: 400
 
 				HSpace {}
-				Text2 { text: HyprlandIpc.submap || "(no submap)" }
+				WorkspacesWidget {}
 			}
 		}
 	}
