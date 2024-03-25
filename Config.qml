@@ -15,7 +15,7 @@ Singleton {
 		function getSeed() {
 			// NOTE: The following line makes wallpaper selection essentially random:
 			// return new Date()
-			return Number(new Date()) / 86400000 - (7.5 * 3600000) - new Date().getTimezoneOffset() * 3600000
+			return Math.floor(Number(new Date()) / 86400000 - (7.5 * 3600000) - new Date().getTimezoneOffset() * 3600000)
 		}
 	}
 

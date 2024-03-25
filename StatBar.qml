@@ -33,16 +33,18 @@ PanelWindow {
 				Layout.fillHeight: true
 				width: 400
 
-				Text2 { text: Time.time.getHours().toString().padStart(2, "0") + ":" + Time.time.getMinutes().toString().padStart(2, "0") }
+				Text2 {
+					function n(n) { return String(n).padStart(2, "0") }
+					text: n(Time.time.getDate()) + "/" + n(Time.time.getMonth() + 1) + " " +
+						n(Time.time.getHours()) + ":" + n(Time.time.getMinutes()) + ":" + n(Time.time.getSeconds())
+				}
 				HSpace {}
 			}
 			RowLayout2 {
 				Layout.fillHeight: true
 				Layout.fillWidth: true
 
-				HSpace {}
 				Text2 { text: HyprlandIpc.activeWindow.title }
-				HSpace {}
 			}
 			RowLayout2 {
 				Layout.fillHeight: true

@@ -1,0 +1,17 @@
+{
+	"include": ["."],
+	"compilerOptions": {
+		"rootDir": ".",
+		"target": "ESNext",
+		"module": "ESNext",
+		"moduleDetection": "force",
+		"noEmit": true,
+		"allowJs": true,
+		"checkJs": true,
+		"strict": true,
+		"skipLibCheck": true,
+		"noFallthroughCasesInSwitch": true,
+		"exactOptionalPropertyTypes": true,
+		"noUncheckedIndexedAccess": true
+	}
+}
