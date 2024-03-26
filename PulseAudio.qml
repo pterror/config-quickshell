@@ -16,7 +16,6 @@ Singleton {
 			splitMarker: ""
 			onRead: data => {
 				const match = data.match(/Sink #(\d+)/)
-				console.log(match)
 				if (match) {
 					updatedSink = match[1]
 					volumeProcess.running = true

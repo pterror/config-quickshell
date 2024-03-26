@@ -13,10 +13,10 @@ Singleton {
 		property string title: ""
 		property string klass: ""
 	}
-	// The first element is always `undefined`, because workspaces are 1-indexed.
-	property list<var> workspaceInfos: Array.from({ length: 9 }, (_, i) => {
+	property list<var> workspaceInfosArray: Array.from({ length: 9 }, (_, i) => {
 		return { id: i + 1, name: String(i + 1), focused: false, exists: false }
 	})
+	property var workspaceInfos: workspaceInfosArray.reduce((p, c) => { p[c.name] = c; return p }, {})
 	property QtObject activeWorkspace: QtObject {
 		property int id: 1
 		property string name: "1"
@@ -82,34 +82,40 @@ Singleton {
 							activeMonitor = args[0]
 							activeScreen = Quickshell.screens.find(screen => screen.name === args[0])
 							monitorFocused(args[0], args[1])
-							for (let i = 0; i < 9; i += 1) {
-								const info = workspaceInfos[i]
+							for (const key in workspaceInfos) {
+								const info = workspaceInfos[key]
 								info.focused = info.name === args[1]
-								workspaceInfos[i] = info
+								setWorkspaceInfo(info)
 							}
 							break
 						}
 						// TODO: handle `movewindow`
 						case "createworkspacev2": {
 							const id = Number(args[0])
-							for (let i = 0; i < 9; i += 1) {
-								const info = workspaceInfos[i]
-								info.focused = false
-								workspaceInfos[i] = info
+							const name = args[1]
+							if (id >= 0) {
+								for (const key in workspaceInfos) {
+									const info = workspaceInfos[key]
+									if (!info) continue
+									info.focused = false
+									setWorkspaceInfo(info)
+								}
 							}
-							const info = workspaceInfos[id - 1]
+							const info = workspaceInfos[name] ?? {}
 							info.id = id
-							info.name = args[1]
+							info.name = name
 							info.focused = true
 							info.exists = true
-							workspaceInfos[id - 1] = info
+							setWorkspaceInfo(info)
 							break
 						}
 						case "destroyworkspace": {
-							const info = workspaceInfos[Number(args[0]) - 1]
+							const name = Number(args[0])
+							const info = workspaceInfos[name]
+							if (!info) break
 							info.focused = false
 							info.exists = false
-							workspaceInfos[Number(args[0]) - 1] = info
+							setWorkspaceInfo(info)
 							break
 						}
 					}
@@ -144,10 +150,10 @@ Singleton {
 			onRead: json => {
 				const data = JSON.parse(json)
 				for (const datum of data) {
-					const info = workspaceInfos[datum.id - 1]
-					info.name = datum.name
+					const info = workspaceInfos[datum.name]
+					if (!info) continue
 					info.exists = true
-					workspaceInfos[datum.id - 1] = info
+					setWorkspaceInfo(info)
 				}
 			}
 		}
@@ -160,10 +166,16 @@ Singleton {
 			splitMarker: ""
 			onRead: json => {
 				const data = JSON.parse(json)
-				const info = workspaceInfos[data.id - 1]
+				const info = workspaceInfos[data.name]
+				if (!info) return
 				info.focused = true
-				workspaceInfos[data.id - 1] = info
+				setWorkspaceInfo(info)
 			}
 		}
+	}
+
+	function setWorkspaceInfo(info) {
+		workspaceInfos[info.name] = info
+		if (info.id >= 1 && info.id <= 9) workspaceInfosArray[info.id - 1] = info
 	}
 }

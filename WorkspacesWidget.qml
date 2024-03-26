@@ -7,7 +7,7 @@ RowLayout2 {
 	Layout.fillHeight: true
   Layout.horizontalStretchFactor: 1
 	Repeater {
-		model: HyprlandIpc.workspaceInfos
+		model: HyprlandIpc.workspaceInfosArray
 		Text2 {
 			Layout.minimumWidth: 10
 			required property var modelData
