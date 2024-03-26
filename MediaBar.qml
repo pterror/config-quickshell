@@ -4,7 +4,6 @@ import Quickshell
 import Quickshell.Wayland
 
 PanelWindow {
-	id: root
 	anchors {
 		left: true
 		right: true

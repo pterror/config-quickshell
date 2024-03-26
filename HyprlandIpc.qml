@@ -6,6 +6,8 @@ import QtQuick
 
 Singleton {
 	property string submap: ""
+	property string activeMonitor: ""
+	property var activeScreen: Quickshell.screens[0]
 	property QtObject activeWindow: QtObject {
 		property string address: "0"
 		property string title: ""
@@ -77,6 +79,8 @@ Singleton {
 							break
 						}
 						case "focusedmon": {
+							activeMonitor = args[0]
+							activeScreen = Quickshell.screens.find(screen => screen.name === args[0])
 							monitorFocused(args[0], args[1])
 							for (let i = 0; i < 9; i += 1) {
 								const info = workspaceInfos[i]

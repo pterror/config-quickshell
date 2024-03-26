@@ -31,6 +31,12 @@ Singleton {
 			readonly property int fontSize: 11
 		}
 
+		readonly property QtObject panel: QtObject {
+			readonly property int radius: Config.layout.widget.radius
+			readonly property int margins: Config.layout.widget.margins
+			readonly property int innerRadius: Config.layout.panel.radius - Config.layout.panel.margins
+		}
+
 		readonly property QtObject bar: QtObject {
 			readonly property int radius: Config.layout.widget.radius
 			readonly property int margins: Config.layout.widget.margins
@@ -67,8 +73,18 @@ Singleton {
 		readonly property QtObject widget: QtObject {
 			readonly property string fg: "#a0ffffff"
 			readonly property string bg: "#00e0ffff"
+			readonly property string accent: Config.colors.accent.fg
 			readonly property string hoverBg: "#40e0ffff"
 			readonly property string outline: "#00ffffff"
+		}
+
+		readonly property QtObject panel: QtObject {
+			readonly property string fg: Config.colors.widget.fg
+			// readonly property string bg: Config.colors.widget.bg
+			readonly property string bg: "#40e0ffff"
+			readonly property string accent: Config.colors.widget.accent
+			readonly property string hoverBg: Config.colors.widget.hoverBg
+			readonly property string outline: Config.colors.widget.outline
 		}
 
 		readonly property QtObject selection: QtObject {

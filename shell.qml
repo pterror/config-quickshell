@@ -10,6 +10,19 @@ ShellRoot {
 	StatBar { screen: Quickshell.screens[0] }
 	MediaBar { screen: Quickshell.screens[0] }
 
+	VProgressBar {
+		id: volumeOsd
+		fraction: PulseAudio.volume * 0.01
+	}
+
+	Connections {
+		target: PulseAudio
+		function onVolumeChanged() {
+			volumeOsd.screen = HyprlandIpc.activeScreen
+			volumeOsd.show()
+		}
+	}
+
 	Variants {
 		model: Quickshell.screens
 
