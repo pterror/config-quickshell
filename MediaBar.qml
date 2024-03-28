@@ -34,7 +34,7 @@ PanelWindow {
 				RowLayout2 {
 					Layout.fillHeight: true
 					width: 72
-					Text2 { text: "cpu " + Math.floor(100 * CPUInfo.active / CPUInfo.total) + "%" }
+					Text2 { text: "cpu " + Math.floor(100 * CPUInfo.activeSec / CPUInfo.totalSec) + "%" }
 				}
 				RowLayout2 {
 					Layout.fillHeight: true

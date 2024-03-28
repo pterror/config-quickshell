@@ -1,10 +1,12 @@
-import Quickshell
 import QtQuick
+import Quickshell
+import Quickshell.Wayland
 
 PanelWindow {
-	property int persistDuration: 2000
+	property int persistDuration: 1000
 	property int hideHandle: 0
 	default property alias content: container.children
+	WlrLayershell.namespace: "shell:popup"
 
 	Rectangle {
 		id: container
@@ -12,29 +14,26 @@ PanelWindow {
 		color: "transparent"
 		opacity: 0
 
-		Behavior on opacity {
-			SmoothedAnimation { velocity: 1 }
+		SmoothedAnimation {
+			id: hide
+			target: container
+			property: "opacity"
+			from: 1; to: 0
+			velocity: 2.5
+			onFinished: visible = false
 		}
 	}
 
 	Timer {
 		id: hideTimer
 		interval: persistDuration
-		onTriggered: {
-			container.opacity = 0
-			finishHideTimer.running = true
-		}
-	}
-
-	Timer {
-		id: finishHideTimer
-		interval: 1000
-		onTriggered: visible = false
+		onTriggered: hide.restart()
 	}
 
 	function show() {
+		visible = true
 		container.opacity = 1
-		finishHideTimer.running = false
-		hideTimer.running = true
+		hideTimer.restart()
+		hide.stop()
 	}
 }

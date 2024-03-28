@@ -10,16 +10,20 @@ ShellRoot {
 	StatBar { screen: Quickshell.screens[0] }
 	MediaBar { screen: Quickshell.screens[0] }
 
-	VProgressBar {
-		id: volumeOsd
-		fraction: PulseAudio.volume * 0.01
+	LazyLoader {
+		id: volumeOsdLoader
+		loading: PulseAudio.initialized
+		VProgressBar { fraction: PulseAudio.volume * 0.01 }
 	}
 
 	Connections {
 		target: PulseAudio
 		function onVolumeChanged() {
-			volumeOsd.screen = HyprlandIpc.activeScreen
-			volumeOsd.show()
+			if (!volumeOsdLoader.active) return
+			if (volumeOsdLoader.item.screen.id !== HyprlandIpc.activeScreen.id) {
+				volumeOsdLoader.item.screen = HyprlandIpc.activeScreen
+			}
+			volumeOsdLoader.item.show()
 		}
 	}
 

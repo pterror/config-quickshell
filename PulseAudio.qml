@@ -5,7 +5,8 @@ import Quickshell
 import Quickshell.Io
 
 Singleton {
-	property int volume: 0
+	property bool initialized: volume != -1
+	property int volume: -1
 	property bool muted: false
 	property string updatedSink: "0"
 
