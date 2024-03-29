@@ -14,11 +14,6 @@ ShellRoot {
 	StatBar { screen: Quickshell.screens[0] }
 	MediaBar { screen: Quickshell.screens[0] }
 
-	Shortcut {
-		sequence: "Meta+Tab"
-		onActivated: ShellIpc.workspacesOverview = !ShellIpc.workspacesOverview
-	}
-
 	LazyLoader {
 		id: volumeOsdLoader
 		loading: PulseAudio.initialized

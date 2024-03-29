@@ -57,6 +57,9 @@ Singleton {
 						}
 						case "submap": {
 							submap = args[0]
+							if (args[0] === "quickshell:workspacesoverview:toggle") {
+								ShellIpc.workspacesOverview = !ShellIpc.workspacesOverview
+							}
 							break
 						}
 						case "openwindow": {
