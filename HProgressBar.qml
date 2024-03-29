@@ -14,13 +14,14 @@ FadingWindow {
 		radius: Config.layout.panel.radius
 
 		Rectangle {
+			property int maxWidth: parent.width - Config.layout.panel.margins * 2
 			anchors {
 				left: parent.left
 				top: parent.top
 				bottom: parent.bottom
 				margins: Config.layout.panel.margins
 			}
-			width: parent.width * fraction
+			width: maxWidth * Math.max(0, Math.min(1, fraction))
 			color: Config.colors.panel.accent
 			radius: Config.layout.panel.innerRadius
 
