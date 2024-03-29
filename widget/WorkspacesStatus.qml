@@ -6,13 +6,11 @@ import "../component"
 import ".."
 
 RowLayout2 {
-	Layout.fillWidth: true
-	Layout.fillHeight: true
-  Layout.horizontalStretchFactor: 1
+	autoSize: true
 	Repeater {
 		model: HyprlandIpc.workspaceInfosArray
 		Text2 {
-			Layout.minimumWidth: 10
+			Layout.minimumWidth: 13
 			required property var modelData
 			text: modelData.name
 			color: modelData.focused

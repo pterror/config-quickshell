@@ -50,7 +50,37 @@ PanelWindow {
 				Layout.fillHeight: true
 				Layout.fillWidth: true
 
-				Text2 { text: MPRIS.title + " - " + MPRIS.artist }
+				RowLayout2 {
+					autoSize: true
+					Layout.alignment: Qt.AlignVCenter | Qt.AlignHCenter
+					MouseArea {
+						id: mediaMouseArea
+						Layout.fillHeight: true
+						Layout.fillWidth: true
+						implicitWidth: text.implicitWidth
+						implicitHeight: text.implicitHeight
+						cursorShape: Qt.PointingHandCursor
+						hoverEnabled: true
+						onClicked: mediaControls.visible = !mediaControls.visible
+						Rectangle {
+							anchors.fill: parent
+							radius: Config.layout.barItem.radius
+							color: mediaMouseArea.containsMouse ? Config.colors.barItem.hoverBg : Config.colors.barItem.bg
+							Behavior on color { PropertyAnimation { duration: 100 } }
+
+							Text2 {
+								id: text
+								text: MPRIS.title + " - " + MPRIS.artist
+
+								MediaControls {
+									id: mediaControls
+									anchors.bottom: true
+									visible: false
+								}
+							}
+						}
+					}
+				}
 			}
 			RowLayout2 {
 				Layout.fillHeight: true

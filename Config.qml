@@ -35,6 +35,13 @@ Singleton {
 			readonly property int fontSize: 11
 		}
 
+		readonly property QtObject button: QtObject {
+			readonly property int radius: 8
+			readonly property int margins: 4
+			readonly property int border: 0
+			readonly property int fontSize: 11
+		}
+
 		readonly property QtObject panel: QtObject {
 			readonly property int radius: Config.layout.widget.radius
 			readonly property int margins: Config.layout.widget.margins
@@ -47,6 +54,10 @@ Singleton {
 			readonly property int border: Config.layout.widget.border
 			// NOTE: Currently unused
 			readonly property int fontSize: Config.layout.widget.fontSize
+		}
+
+		readonly property QtObject barItem: QtObject {
+			readonly property int radius: 2
 		}
 
 		readonly property QtObject topBar: QtObject {
@@ -62,6 +73,13 @@ Singleton {
 			readonly property int radius: Config.layout.widget.radius
 			readonly property int border: Config.layout.widget.border
 		}
+
+		readonly property QtObject mediaPlayer: QtObject {
+			readonly property int imageSize: 256
+			readonly property int controlsGap: 16
+			readonly property int controlSize: 32
+			readonly property int controlGap: 8
+		}
 	}
 
 	readonly property QtObject colors: QtObject {
@@ -74,6 +92,12 @@ Singleton {
 			readonly property string outline: "#00ffffff"
 		}
 
+		readonly property QtObject barItem: QtObject {
+			readonly property string bg: "#00e0ffff"
+			readonly property string hoverBg: "#20e0ffff"
+			readonly property string outline: "#00ffffff"
+		}
+
 		readonly property QtObject widget: QtObject {
 			readonly property string fg: "#a0ffffff"
 			readonly property string bg: "#40e0ffff"
@@ -82,10 +106,18 @@ Singleton {
 			readonly property string outline: "#00ffffff"
 		}
 
+		readonly property QtObject button: QtObject {
+			readonly property string fg: "#a0ffffff"
+			readonly property string bg: "#00e0ffff"
+			readonly property string accent: Config.colors.accent.fg
+			readonly property string hoverBg: "#60e0ffff"
+			readonly property string outline: "#00ffffff"
+		}
+
 		readonly property QtObject panel: QtObject {
 			readonly property string fg: Config.colors.widget.fg
 			// readonly property string bg: Config.colors.widget.bg
-			readonly property string bg: "#40e0ffff"
+			readonly property string bg: "#20e0ffff"
 			readonly property string accent: Config.colors.widget.accent
 			readonly property string hoverBg: Config.colors.widget.hoverBg
 			readonly property string outline: Config.colors.widget.outline

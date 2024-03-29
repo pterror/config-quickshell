@@ -54,8 +54,28 @@ PanelWindow {
 				Layout.fillHeight: true
 				width: 400
 
-				HSpace {}
-				WorkspacesWidget {}
+				RowLayout2 {
+					autoSize: true
+					Layout.alignment: Qt.AlignVCenter | Qt.AlignRight
+					MouseArea {
+						id: mediaMouseArea
+						Layout.fillHeight: true
+						Layout.fillWidth: true
+						implicitWidth: workspacesStatus.implicitWidth
+						implicitHeight: workspacesStatus.implicitHeight
+						cursorShape: Qt.PointingHandCursor
+						hoverEnabled: true
+						onClicked: ShellIpc.workspacesOverview = !ShellIpc.workspacesOverview
+						Rectangle {
+							anchors.fill: parent
+							radius: Config.layout.barItem.radius
+							color: mediaMouseArea.containsMouse ? Config.colors.barItem.hoverBg : Config.colors.barItem.bg
+							Behavior on color { PropertyAnimation { duration: 100 } }
+
+							WorkspacesStatus { id: workspacesStatus }
+						}
+					}
+				}
 			}
 		}
 	}

@@ -80,7 +80,7 @@ Singleton {
 						}
 						case "activelayout": {
 							activeKeyboardLayout.id = args[0]
-							activeKeyboardLayout.name = args[1]
+							activeKeyboardLayout.layout = args[1]
 							keyboardLayoutChanged(args[0], args[1])
 							break
 						}
