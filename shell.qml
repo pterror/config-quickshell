@@ -3,6 +3,10 @@ import Quickshell.Io
 import Quickshell.Wayland
 import QtQuick
 import QtQuick.Layouts
+import "./input"
+import "./component"
+import "./window"
+import "./library"
 
 ShellRoot {
 	WallpaperRandomizer { id: wallpaperRandomizer }

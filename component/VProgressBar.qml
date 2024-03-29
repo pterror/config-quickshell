@@ -1,5 +1,6 @@
 import Quickshell
 import QtQuick
+import ".."
 
 FadingWindow {
 	required property real fraction

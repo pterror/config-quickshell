@@ -4,8 +4,9 @@ import Quickshell.Wayland
 import QtQuick
 import QtQuick.Layouts
 import Qt.labs.folderlistmodel
-import "Arrays.mjs" as Arrays
-import "Random.mjs" as Random
+import ".."
+import "../library/Arrays.mjs" as Arrays
+import "../library/Random.mjs" as Random
 
 QtObject {
 	property var wallpapers: getWallpapers()

@@ -1,5 +1,6 @@
 import QtQuick
 import QtQuick.Layouts
+import ".."
 
 Text {
 	Layout.alignment: Qt.AlignVCenter | Qt.AlignHCenter

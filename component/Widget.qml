@@ -1,4 +1,5 @@
 import QtQuick
+import ".."
 
 Rectangle {
 	anchors.margins: Config.layout.widget.margins

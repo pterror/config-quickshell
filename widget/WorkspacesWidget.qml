@@ -1,6 +1,9 @@
 import QtQuick
 import QtQuick.Layouts
 import Quickshell
+import "../input"
+import "../component"
+import ".."
 
 RowLayout2 {
 	Layout.fillWidth: true

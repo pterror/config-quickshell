@@ -1,6 +1,7 @@
 import QtQuick
 import Quickshell
 import Quickshell.Wayland
+import ".."
 
 WlrLayershell {
 	signal selectionComplete(x: real, y: real, width: real, height: real)

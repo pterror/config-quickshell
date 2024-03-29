@@ -2,7 +2,7 @@ pragma Singleton
 
 import QtQuick
 import Quickshell
-import "Fetch.mjs" as Fetch
+import "../library/Fetch.mjs" as Fetch
 
 Singleton {
 	property real total: 1

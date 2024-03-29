@@ -2,8 +2,8 @@ pragma Singleton
 
 import QtQuick
 import Quickshell
-import "Units.mjs" as Units
-import "Fetch.mjs" as Fetch
+import "../library/Units.mjs" as Units
+import "../library/Fetch.mjs" as Fetch
 
 Singleton {
 	property real upload: 0

@@ -2,6 +2,11 @@ import QtQuick
 import QtQuick.Layouts
 import Quickshell
 import Quickshell.Wayland
+import "../input"
+import "../component"
+import "../widget"
+import "../library"
+import ".."
 
 PanelWindow {
 	anchors {

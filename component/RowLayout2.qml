@@ -1,5 +1,6 @@
 import QtQuick
 import QtQuick.Layouts
+import ".."
 
 Rectangle {
 	color: Config.debugFlags.debugRectangles ? "#20ff0000" : "transparent"
@@ -7,7 +8,7 @@ Rectangle {
 	border.width: Config.debugFlags.debugRectangles ? 1 : 0
 	default property alias content: container.children
 
-	ColumnLayout {
+	RowLayout {
 		id: container
 		anchors.fill: parent
 	}
