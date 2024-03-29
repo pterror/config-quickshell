@@ -17,7 +17,7 @@ PanelWindow {
 		autoSize: true
 		id: content
 		radius: Config.layout.panel.radius
-		margins: Config.layout.widget.margins
+		margins: Config.layout.panel.margins
 		color: Config.colors.panel.bg
 		spacing: Config.layout.mediaPlayer.controlsGap
 

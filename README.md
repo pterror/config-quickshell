@@ -23,6 +23,6 @@ bind = $mainMod, Tab, exec, hyprctl dispatch submap "quickshell:workspacesovervi
 
 # required for the above hack to work
 submap = quickshell:workspacesoverview:toggle
-bind = $mainMod, space, submap, reset
+bind = $mainMod, Tab, submap, reset
 submap = reset
 ```
