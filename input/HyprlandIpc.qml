@@ -26,6 +26,11 @@ Singleton {
 		property string id: "(unknown)"
 		property string layout: "(unknown)"
 	}
+
+	property string windowToFocus: ""
+	property string workspaceToFocus: ""
+	property string workspaceToFocusOnCurrentMonitor: ""
+
 	signal configReloaded()
 	signal windowOpened(address: string, workspace: string, klass: string, title: string)
 	signal windowClosed(address: string)
@@ -40,7 +45,7 @@ Singleton {
 		parser: SplitParser {
 			onRead: message => {
 				if (Config.debug) {
-					console.log("hyprland: " + message)
+					console.log("HyprlandIpc: " + message)
 				}
 				const [type, body] = message.split(">>")
 				if (body !== undefined) {
@@ -178,5 +183,35 @@ Singleton {
 	function setWorkspaceInfo(info) {
 		workspaceInfos[info.name] = info
 		if (info.id >= 1 && info.id <= 9) workspaceInfosArray[info.id - 1] = info
+	}
+
+	Process {
+		id: focusWindowProcess
+		command: ["hyprctl", "dispatch", "focuswindow", windowToFocus]
+	}
+
+	function focusWindow(id) {
+		windowToFocus = String(id)
+		focusWindowProcess.running = true
+	}
+
+	Process {
+		id: focusWorkspaceProcess
+		command: ["hyprctl", "dispatch", "workspace", workspaceToFocus]
+	}
+
+	function focusWorkspace(address) {
+		workspaceToFocus = String(address)
+		focusWorkspaceProcess.running = true
+	}
+
+	Process {
+		id: focusWorkspaceOnCurrentMonitorProcess
+		command: ["hyprctl", "dispatch", "workspace", workspaceToFocusOnCurrentMonitor]
+	}
+
+	function focusWorkspaceOnCurrentMonitor(id) {
+		workspaceToFocusOnCurrentMonitor = String(id)
+		focusWorkspaceOnCurrentMonitorProcess.running = true
 	}
 }

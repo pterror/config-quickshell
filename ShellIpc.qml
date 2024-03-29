@@ -4,7 +4,8 @@ import Quickshell
 import Quickshell.Io
 
 Singleton {
-	property bool termSelect: false;
+	property bool termSelect: false
+	property bool workspacesOverview: false
 
 	SocketServer {
 		active: true
@@ -13,16 +14,19 @@ Singleton {
 		handler: Socket {
 			parser: SplitParser {
 				onRead: message => {
-					console.log(message)
+					if (Config.debug) {
+						console.log("ShellIpc: " + message)
+					}
 					switch (message) {
-					case "termselect:start":
-						termSelect = true;
-						break;
-					case "termselect:stop":
-						termSelect = false;
-						break;
-					default:
-						console.log(`socket received unknown message: ${message}`)
+						case "termselect:start": { termSelect = true; break }
+						case "termselect:stop": { termSelect = false; break }
+						case "workspacesoverview:open": { workspacesOverview = true; break }
+						case "workspacesoverview:close": { workspacesOverview = false; break }
+						case "workspacesoverview:toggle": { workspacesOverview = !workspacesOverview; break }
+						default: {
+							console.error(`ShellIpc received unknown message: ${message}`)
+							break
+						}
 					}
 				}
 			}

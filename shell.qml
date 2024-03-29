@@ -31,24 +31,34 @@ ShellRoot {
 		}
 	}
 
+	WorkspacesOverview { id: workspacesOverview }
+
+	Connections {
+		target: ShellIpc
+		function onWorkspacesOverviewChanged() {
+			workspacesOverview.visible = ShellIpc.workspacesOverview
+			if (!workspacesOverview.visible) return
+			if (workspacesOverview.screen.id !== HyprlandIpc.activeScreen.id) {
+				workspacesOverview.screen = HyprlandIpc.activeScreen
+			}
+		}
+	}
+
+	PersistentProperties {
+		onLoaded: workspacesOverview.visible = ShellIpc.workspacesOverview
+	}
+
 	Variants {
 		model: Quickshell.screens
 
 		Scope {
-			property var modelData
+			required property var modelData
 
 			PanelWindow {
 				id: window
-
 				screen: modelData
 				WlrLayershell.layer: WlrLayer.Background
-
-				anchors {
-					top: true
-					bottom: true
-					left: true
-					right: true
-				}
+				anchors { top: true; bottom: true; left: true; right: true }
 
 				Image {
 					anchors.fill: parent

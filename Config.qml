@@ -24,6 +24,10 @@ Singleton {
 	})
 
 	readonly property QtObject layout: QtObject {
+		readonly property QtObject icon: QtObject {
+			readonly property int size: 32
+		}
+
 		readonly property QtObject widget: QtObject {
 			readonly property int radius: 8
 			readonly property int margins: 4
@@ -72,9 +76,9 @@ Singleton {
 
 		readonly property QtObject widget: QtObject {
 			readonly property string fg: "#a0ffffff"
-			readonly property string bg: "#00e0ffff"
+			readonly property string bg: "#40e0ffff"
 			readonly property string accent: Config.colors.accent.fg
-			readonly property string hoverBg: "#40e0ffff"
+			readonly property string hoverBg: "#60e0ffff"
 			readonly property string outline: "#00ffffff"
 		}
 
