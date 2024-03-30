@@ -15,7 +15,7 @@ Singleton {
 		function getSeed() {
 			// NOTE: The following line makes wallpaper selection essentially random:
 			// return new Date()
-			return Math.floor(Number(new Date()) / 86400000 - (7.5 * 3600000) - new Date().getTimezoneOffset() * 3600000)
+			return Math.floor((Number(new Date()) - 7.5 * _HOUR_MS - new Date().getTimezoneOffset() * _MIN_MS) / _DAY_MS)
 		}
 	}
 
@@ -143,4 +143,8 @@ Singleton {
 	readonly property EasingCurve popoutYCurve: EasingCurve {
 		curve.type: Easing.InQuart
 	}
+
+	readonly property real _MIN_MS: 60000
+	readonly property real _HOUR_MS: 3600000
+	readonly property real _DAY_MS: 86400000
 }
