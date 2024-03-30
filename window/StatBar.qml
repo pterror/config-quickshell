@@ -9,12 +9,7 @@ import "../library"
 import ".."
 
 PanelWindow {
-	anchors {
-		left: true
-		right: true
-		top: true
-	}
-
+	anchors { left: true; right: true; top: true }
 	height: Config.layout.topBar.height
 	color: "transparent"
 	WlrLayershell.namespace: "shell:bar"
@@ -57,7 +52,7 @@ PanelWindow {
 				RowLayout2 {
 					autoSize: true
 					Layout.alignment: Qt.AlignVCenter | Qt.AlignRight
-					HoverButton {
+					HoverItem {
 						inner: workspacesStatus
 						onClicked: ShellIpc.workspacesOverview = !ShellIpc.workspacesOverview
 						WorkspacesStatus { id: workspacesStatus }

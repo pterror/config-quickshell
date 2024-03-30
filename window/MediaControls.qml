@@ -2,20 +2,18 @@ import QtQuick
 import QtQuick.Layouts
 import QtQuick.Controls
 import Quickshell
-import Quickshell.Wayland
 import "../component"
 import "../input"
 import ".."
 
-PanelWindow {
+PopupWindow {
 	color: "transparent"
-	WlrLayershell.namespace: "shell:mediacontrols"
 	width: content.implicitWidth
 	height: content.implicitHeight
 
 	ColumnLayout2 {
-		autoSize: true
 		id: content
+		autoSize: true
 		radius: Config.layout.panel.radius
 		margins: Config.layout.panel.margins
 		color: Config.colors.panel.bg
@@ -33,59 +31,17 @@ PanelWindow {
 			Layout.alignment: Qt.AlignVCenter | Qt.AlignHCenter
 			autoSize: true
 			spacing: Config.layout.mediaPlayer.controlGap
-			Button {
-				id: previousButton
-				flat: true
-				display: AbstractButton.IconOnly
-				icon.width: Config.layout.mediaPlayer.controlSize
-				icon.height: Config.layout.mediaPlayer.controlSize
-				icon.source: "../image/media_previous.svg"
-				background: Rectangle {
-					anchors.margins: Config.layout.button.margins
-					radius: Config.layout.button.radius
-					color: previousButton.hovered ? Config.colors.button.hoverBg : Config.colors.button.bg
-				}
-				MouseArea {
-					anchors.fill: parent
-					cursorShape: Qt.PointingHandCursor
-					onClicked: MPRIS.previous()
-				}
+			HoverIcon {
+				source: "../image/media_previous.svg"
+				onClicked: MPRIS.previous()
 			}
-			Button {
-				id: playButton
-				flat: true
-				display: AbstractButton.IconOnly
-				icon.width: Config.layout.mediaPlayer.controlSize
-				icon.height: Config.layout.mediaPlayer.controlSize
-				icon.source: MPRIS.playing ? "../image/media_pause.svg" : "../image/media_play.svg"
-				background: Rectangle {
-					anchors.margins: Config.layout.button.margins
-					radius: Config.layout.button.radius
-					color: playButton.hovered ? Config.colors.button.hoverBg : Config.colors.button.bg
-				}
-				MouseArea {
-					anchors.fill: parent
-					cursorShape: Qt.PointingHandCursor
-					onClicked: MPRIS.playing ? MPRIS.pause() : MPRIS.play()
-				}
+			HoverIcon {
+				source: MPRIS.playing ? "../image/media_pause.svg" : "../image/media_play.svg"
+				onClicked: MPRIS.playing ? MPRIS.pause() : MPRIS.play()
 			}
-			Button {
-				id: nextButton
-				flat: true
-				display: AbstractButton.IconOnly
-				icon.width: Config.layout.mediaPlayer.controlSize
-				icon.height: Config.layout.mediaPlayer.controlSize
-				icon.source: "../image/media_next.svg"
-				background: Rectangle {
-					anchors.margins: Config.layout.button.margins
-					radius: Config.layout.button.radius
-					color: nextButton.hovered ? Config.colors.button.hoverBg : Config.colors.button.bg
-				}
-				MouseArea {
-					anchors.fill: parent
-					cursorShape: Qt.PointingHandCursor
-					onClicked: MPRIS.previous()
-				}
+			HoverIcon {
+				source: "../image/media_next.svg"
+				onClicked: MPRIS.next()
 			}
 		}
 	}

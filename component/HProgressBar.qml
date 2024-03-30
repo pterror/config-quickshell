@@ -3,6 +3,7 @@ import ".."
 
 Widget {
 	required property real fraction
+	signal input(real fraction)
   color: Config.colors.panel.bg
   radius: Config.layout.panel.radius
 
@@ -18,6 +19,17 @@ Widget {
     color: Config.colors.panel.accent
     radius: Config.layout.panel.innerRadius
 
-    Behavior on width { SmoothedAnimation { velocity: 50 } }
+    Behavior on width { SmoothedAnimation { velocity: mouseArea.pressed ? 5000 : 50 } }
   }
+
+	MouseArea {
+    id: mouseArea
+		anchors.fill: parent
+		anchors.margins: Config.layout.panel.margins
+    onPressed: event => root.input(1 - (event.x / width))
+		onPositionChanged: event => {
+			if (!pressed) return
+			root.input(1 - (event.x / width))
+		}
+	}
 }

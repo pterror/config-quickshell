@@ -24,6 +24,10 @@ Singleton {
 	})
 
 	readonly property QtObject layout: QtObject {
+		readonly property QtObject popup: QtObject {
+			readonly property int gap: 8
+		}
+
 		readonly property QtObject icon: QtObject {
 			readonly property int size: 32
 		}
@@ -42,9 +46,13 @@ Singleton {
 			readonly property int fontSize: 11
 		}
 
+		readonly property QtObject iconButton: QtObject {
+			readonly property int size: 32
+		}
+
 		readonly property QtObject panel: QtObject {
-			readonly property int radius: Config.layout.widget.radius
-			readonly property int margins: Config.layout.widget.margins
+			readonly property int radius: Config.layout.widget.radius * 2
+			readonly property int margins: Config.layout.widget.margins * 2
 			readonly property int innerRadius: Config.layout.panel.radius - Config.layout.panel.margins
 		}
 
@@ -77,7 +85,6 @@ Singleton {
 		readonly property QtObject mediaPlayer: QtObject {
 			readonly property int imageSize: 256
 			readonly property int controlsGap: 16
-			readonly property int controlSize: 32
 			readonly property int controlGap: 8
 		}
 	}

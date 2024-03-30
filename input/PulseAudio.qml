@@ -3,27 +3,39 @@ pragma Singleton
 import QtQuick
 import Quickshell
 import Quickshell.Io
+import ".."
 
 Singleton {
-	property bool initialized: volume != -1
+	property bool initialized: volume != -1 && micVolume != -1
 	property int volume: -1
+	property int micVolume: -1
 	property bool muted: false
-	property string updatedSink: "0"
+	property bool micMuted: false
 	property string volumeChange: ""
+	property string micVolumeChange: ""
 	property string muteChange: ""
 	property string micMuteChange: ""
 
 	Process {
 		running: true
-		command: ["pactl", "list", "sinks"]
+		onRunningChanged: running = true
+		command: ["pactl", "subscribe"]
 		stdout: SplitParser {
-			splitMarker: ""
 			onRead: data => {
-				const match = data.match(/Sink #(\d+)/)
-				if (match) {
-					updatedSink = match[1]
+				if (Config.debug) {
+					console.log("PulseAudio [stdin]: " + data)
+				}
+				const [, updatedSink] = data.match(/sink #(\d+)/) ?? []
+				if (updatedSink) {
 					volumeProcess.running = true
 					muteProcess.running = true
+					return
+				}
+				const [, updatedSource] = data.match(/source #(\d+)/) ?? []
+				if (updatedSource) {
+					micVolumeProcess.running = true
+					micMuteProcess.running = true
+					return
 				}
 			}
 		}
@@ -31,22 +43,8 @@ Singleton {
 
 	Process {
 		running: true
-		command: ["pactl", "subscribe"]
-		stdout: SplitParser {
-			onRead: data => {
-				const sinkMatch = data.match(/sink #(\d+)/)
-				if (sinkMatch) {
-					const sinkId = sinkMatch[1]
-					volumeProcess.running = true
-					muteProcess.running = true
-				}
-			}
-		}
-	}
-
-	Process {
 		id: volumeProcess
-		command: ["pactl", "get-sink-volume", updatedSink]
+		command: ["pactl", "get-sink-volume", "@DEFAULT_SINK@"]
 		stdout: SplitParser {
 			splitMarker: ""
 			onRead: data => volume = Number(data.match(/(\d+)%/)?.[1] || 0)
@@ -54,9 +52,27 @@ Singleton {
 	}
 
 	Process {
+		running: true
 		id: muteProcess
-		command: ["pactl", "get-sink-mute", updatedSink]
-		stdout: SplitParser { splitMarker: ""; onRead: data => data == "Mute: yes\n" }
+		command: ["pactl", "get-sink-mute", "@DEFAULT_SINK@"]
+		stdout: SplitParser { splitMarker: ""; onRead: data => muted = data == "Mute: yes\n" }
+	}
+
+	Process {
+		running: true
+		id: micVolumeProcess
+		command: ["pactl", "get-source-volume", "@DEFAULT_SOURCE@"]
+		stdout: SplitParser {
+			splitMarker: ""
+			onRead: data => micVolume = Number(data.match(/(\d+)%/)?.[1] || 0)
+		}
+	}
+
+	Process {
+		running: true
+		id: micMuteProcess
+		command: ["pactl", "get-source-mute", "@DEFAULT_SOURCE@"]
+		stdout: SplitParser { splitMarker: ""; onRead: data => micMuted = data == "Mute: yes\n" }
 	}
 
 	Process {
@@ -69,6 +85,15 @@ Singleton {
 	function setVolume(n) { volumeChange = String(n); setVolumeProcess.running = true }
 
 	Process {
+		id: setMicVolumeProcess
+		command: ["pactl", "set-source-volume", "@DEFAULT_SOURCE@", micVolumeChange + "%"]
+	}
+
+	function increaseMicVolume(n) { micVolumeChange = "+" + n; setMicVolumeProcess.running = true }
+	function decreaseMicVolume(n) { micVolumeChange = "-" + n; setMicVolumeProcess.running = true }
+	function setMicVolume(n) { micVolumeChange = String(n); setMicVolumeProcess.running = true }
+
+	Process {
 		id: setMuteProcess
 		command: ["pactl", "set-sink-mute", "@DEFAULT_SINK@", muteChange]
 	}
@@ -79,7 +104,7 @@ Singleton {
 
 	Process {
 		id: setMicMuteProcess
-		command: ["pactl", "set-source-mute", "@DEFAULT_SINK@", micMuteChange]
+		command: ["pactl", "set-source-mute", "@DEFAULT_SOURCE@", micMuteChange]
 	}
 
 	function toggleMicMute() { micMuteChange = "toggle"; setMicMuteProcess.running = true }

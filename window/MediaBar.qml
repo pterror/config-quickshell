@@ -7,18 +7,14 @@ import "../component"
 import ".."
 
 PanelWindow {
-	anchors {
-		left: true
-		right: true
-		bottom: true
-	}
-
+	id: root
+	anchors { left: true; right: true; bottom: true }
 	height: Config.layout.topBar.height
 	color: "transparent"
 	WlrLayershell.namespace: "shell:bar"
 
 	Rectangle {
-		id: barRect
+		id: rootRect
 		anchors {
 			fill: parent
 			margins: Config.layout.topBar.margins
@@ -53,7 +49,7 @@ PanelWindow {
 				RowLayout2 {
 					autoSize: true
 					Layout.alignment: Qt.AlignVCenter | Qt.AlignHCenter
-					HoverButton {
+					HoverItem {
 						inner: mediaText
 						onClicked: mediaControls.visible = !mediaControls.visible
 						Text2 {
@@ -62,7 +58,9 @@ PanelWindow {
 
 							MediaControls {
 								id: mediaControls
-								anchors.bottom: true
+								relativeX: root.width / 2 - width / 2
+								relativeY: -height - Config.layout.popup.gap
+								parentWindow: root
 								visible: false
 							}
 						}
@@ -70,13 +68,48 @@ PanelWindow {
 				}
 			}
 			RowLayout2 {
+				id: rightRow
 				Layout.fillHeight: true
 				width: 400
 				HSpace {}
-				Text2 {
-					text: {
-						const sym = PulseAudio.muted ? "🔇" : PulseAudio.volume < 33 ? "🔈" : PulseAudio.volume < 67 ? "🔉" : "🔊"
-						return sym + " " + PulseAudio.volume + "%"
+				HoverItem {
+					inner: volumeItem
+					onClicked: volumeControls.visible = !volumeControls.visible
+					RowLayout2 {
+						id: volumeItem
+						autoSize: true
+						Rectangle {
+							implicitWidth: speakerImage.implicitWidth
+							implicitHeight: rightRow.height
+							color: "transparent"
+							Image {
+								id: speakerImage
+								anchors.verticalCenter: parent.verticalCenter
+								source: PulseAudio.muted ? "../image/speaker_muted.svg" :
+									PulseAudio.volume < 25 ? "../image/speaker_volume_very_low.svg" :
+									PulseAudio.volume < 50 ? "../image/speaker_volume_low.svg" :
+									PulseAudio.volume < 75 ? "../image/speaker_volume_medium.svg" :
+									"../image/speaker_volume_high.svg"
+							}
+						}
+
+						Text2 {
+							id: volumeText
+							text: {
+								return PulseAudio.volume + "%"
+							}
+
+							VolumeControls {
+								id: volumeControls
+								relativeY: -height - Config.layout.popup.gap
+								parentWindow: root
+								visible: false
+								onVisibleChanged: {
+									if (!visible) return
+									relativeX = volumeText.mapToItem(rootRect, volumeText.width / 2, 0).x - width / 2
+								}
+							}
+						}
 					}
 				}
 				Text2 { text: Connman.network }

@@ -3,6 +3,7 @@ pragma Singleton
 import QtQuick
 import Quickshell
 import Quickshell.Io
+import ".."
 
 Singleton {
 	property bool playing: false
@@ -12,6 +13,7 @@ Singleton {
 
 	Process {
 		running: true
+		onRunningChanged: running = true
 		command: ["playerctl", "-F", "status"]
 		stdout: SplitParser {
 			onRead: data => playing = data === "Playing"
@@ -20,15 +22,28 @@ Singleton {
 
 	Process {
 		running: true
+		onRunningChanged: running = true
 		command: ["playerctl", "-F", "metadata"]
 		stdout: SplitParser {
+			splitMarker: ""
 			onRead: data => {
-				const [, player, key, value] = data.match(/(.+?) +(.+?) +(.+)/) ?? []
-				switch (key) {
-					case "xesam:title": { title = value; break }
-					case "xesam:artist": { artist = value; break }
-					case "mpris:artUrl": { image = value; break }
+				if (Config.debug) {
+					console.log("MPRIS [stdin]: " + data)
 				}
+				let newTitle = ""
+				let newArtist = ""
+				let newImage = "blank.png"
+				for (const line of data.split("\n")) {
+					const [, player, key, value] = line.match(/(.+?) +(.+?) +(.+)/) ?? []
+					switch (key) {
+						case "xesam:title": { newTitle = value; break }
+						case "xesam:artist": { newArtist = value; break }
+						case "mpris:artUrl": { newImage = value; break }
+					}
+				}
+				title = newTitle 
+				artist = newArtist 
+				image = newImage
 			}
 		}
 	}

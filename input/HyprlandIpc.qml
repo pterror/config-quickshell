@@ -40,12 +40,13 @@ Singleton {
 
 	Socket {
 		connected: true
+		onConnectedChanged: connected = true
 		path: `/tmp/hypr/${Quickshell.env("HYPRLAND_INSTANCE_SIGNATURE")}/.socket2.sock`
 
 		parser: SplitParser {
 			onRead: message => {
 				if (Config.debug) {
-					console.log("HyprlandIpc: " + message)
+					console.log("HyprlandIpc [stdin]: " + message)
 				}
 				const [type, body] = message.split(">>")
 				if (body !== undefined) {

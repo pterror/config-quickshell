@@ -24,10 +24,10 @@ PanelWindow {
 
 	RowLayout2 {
 		id: content
-		radius: Config.layout.panel.radius
-		margins: Config.layout.widget.margins
-		color: Config.colors.panel.bg
 		autoSize: true
+		radius: Config.layout.panel.radius
+		margins: Config.layout.panel.margins
+		color: Config.colors.panel.bg
 
 		Repeater {
 			model: workspaces

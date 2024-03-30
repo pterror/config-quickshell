@@ -9,6 +9,7 @@ Singleton {
 
 	SocketServer {
 		active: true
+		onActiveChanged: active = true
 		path: "/run/user/1000/quickshell.sock"
 
 		handler: Socket {

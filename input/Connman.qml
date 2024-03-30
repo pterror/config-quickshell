@@ -3,6 +3,7 @@ pragma Singleton
 import QtQuick
 import Quickshell
 import Quickshell.Io
+import ".."
 
 Singleton {
 	property string network: ""
@@ -11,12 +12,14 @@ Singleton {
 
 	Process {
 		running: true
+		onRunningChanged: running = true
 		command: ["connmanctl", "monitor", "--services"]
 		stdout: SplitParser {
 			onRead: data => {
-				console.log(data)
+				if (Config.debug) {
+					console.log("Connman [stdin]: " + data)
+				}
 				const [, _type, network, key, value] = data.match(/(.+?) +(.+?) +(.+?) += +(.+)/) ?? []
-				console.log(_type, network, key, value)
 				if (!network) return
 				switch (key) {
 					// Service events:
