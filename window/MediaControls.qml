@@ -10,8 +10,8 @@ import ".."
 PanelWindow {
 	color: "transparent"
 	WlrLayershell.namespace: "shell:mediacontrols"
-	width: Math.max(content.implicitWidth, 1)
-	height: Math.max(content.implicitHeight, 1)
+	width: content.implicitWidth
+	height: content.implicitHeight
 
 	ColumnLayout2 {
 		autoSize: true
