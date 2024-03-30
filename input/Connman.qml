@@ -6,25 +6,62 @@ import Quickshell.Io
 
 Singleton {
 	property string network: ""
-	property string nextNetwork: ""
+	property string networkId: ""
+	property var strengths: ({})
 
-	property Process process: Process {
+	Process {
 		running: true
-		command: ["connmanctl", "services"]
-		onStarted: nextNetwork = ""
-		onExited: network = nextNetwork
+		command: ["connmanctl", "monitor", "--services"]
 		stdout: SplitParser {
 			onRead: data => {
-				const match = data.match(/^\*A[OR] (\S+)/)
-				if (match?.[1]) {
-					nextNetwork = match[1]
+				console.log(data)
+				const [, _type, network, key, value] = data.match(/(.+?) +(.+?) +(.+?) += +(.+)/) ?? []
+				console.log(_type, network, key, value)
+				if (!network) return
+				switch (key) {
+					// Service events:
+					// State: association | configuration | ready | online | disconnect | idle
+					// Strength: 0-100
+					// Domains: [  ]
+					// Timeservers: [  ]
+					// Nameservers: [ <string>* ]
+					// Domains: [  ]
+					// Proxy: [  ]
+					// Ethernet = [ Method=<dhcp|auto>, Interface=<wlan0>, Address=<FF:FF:FF:FF:FF:FF>, MTU=<1500> ]
+					// IPv4: [ Method=<dhcp|auto>, Address=<192.168.0.1>, Netmask=<255.255.255.0> ]
+					// IPv6: [ Method=<dhcp|auto>, Address=<ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff>, PrefixLength=<64>, Privacy=<disabled> ]
+					case "State": {
+						switch (value) {
+							case "online": {
+								networkId = network
+								updateNameProcess.running = true
+								break
+							}
+							case "disconnect": { networkId = ""; break }
+						}
+						break
+					}
+					case "Strength": {
+						strengths[network] = Number(value)
+						break
+					}
 				}
 			}
 		}
 	}
 
-	Timer {
-		interval: 1000; running: true; repeat: true
-		onTriggered: process.running = true
+	Process {
+		id: updateNameProcess
+		running: true
+		command: ["connmanctl", "services"]
+		stdout: SplitParser {
+			splitMarker: ""
+			onRead: data => {
+				const match = data.match(/^\*A[OR] (\S+)/m)
+				if (match?.[1]) {
+					network = match[1]
+				}
+			}
+		}
 	}
 }
