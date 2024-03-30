@@ -10,21 +10,18 @@ import ".."
 
 PanelWindow {
 	anchors { left: true; right: true; top: true }
-	height: Config.layout.topBar.height
+	height: Config.layout.hBar.height
 	color: "transparent"
 	WlrLayershell.namespace: "shell:bar"
 
 	Rectangle {
 		id: barRect
-		anchors {
-			fill: parent
-			margins: Config.layout.topBar.margins
-		}
+		anchors.fill: parent
 
 		color: Config.colors.bar.bg
-		radius: Config.layout.topBar.radius
+		radius: Config.layout.hBar.radius
 		border.color: Config.colors.bar.outline
-		border.width: Config.layout.topBar.border
+		border.width: Config.layout.hBar.border
 
 		RowLayout {
 			anchors.fill: parent
@@ -33,11 +30,11 @@ PanelWindow {
 				width: 400
 
 				Text2 {
+					Layout.alignment: Qt.AlignLeft
 					function n(n) { return String(n).padStart(2, "0") }
 					text: n(Time.time.getDate()) + "/" + n(Time.time.getMonth() + 1) + " " +
 						n(Time.time.getHours()) + ":" + n(Time.time.getMinutes()) + ":" + n(Time.time.getSeconds())
 				}
-				HSpace {}
 			}
 			RowLayout2 {
 				Layout.fillHeight: true
@@ -51,7 +48,7 @@ PanelWindow {
 
 				RowLayout2 {
 					autoSize: true
-					Layout.alignment: Qt.AlignVCenter | Qt.AlignRight
+					Layout.alignment: Qt.AlignRight
 					HoverItem {
 						inner: workspacesStatus
 						onClicked: ShellIpc.workspacesOverview = !ShellIpc.workspacesOverview

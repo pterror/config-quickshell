@@ -56,25 +56,18 @@ Singleton {
 			readonly property int innerRadius: Config.layout.panel.radius - Config.layout.panel.margins
 		}
 
-		readonly property QtObject bar: QtObject {
+		readonly property QtObject hBar: QtObject {
 			readonly property int radius: Config.layout.widget.radius
 			readonly property int margins: Config.layout.widget.margins
 			readonly property int border: Config.layout.widget.border
 			// NOTE: Currently unused
 			readonly property int fontSize: Config.layout.widget.fontSize
+			readonly property int height: 32
 		}
 
 		readonly property QtObject barItem: QtObject {
-			readonly property int radius: 2
-		}
-
-		readonly property QtObject topBar: QtObject {
-			readonly property int radius: Config.layout.bar.radius
-			readonly property int border: Config.layout.bar.border
-			readonly property int margins: Config.layout.bar.margins
-			// NOTE: Currently unused
-			readonly property int fontSize: Config.layout.bar.fontSize
-			readonly property int height: 32
+			readonly property int radius: 4
+			readonly property int margins: Config.layout.button.margins
 		}
 
 		readonly property QtObject selection: QtObject {

@@ -9,7 +9,7 @@ import ".."
 PanelWindow {
 	id: root
 	anchors { left: true; right: true; bottom: true }
-	height: Config.layout.topBar.height
+	height: Config.layout.hBar.height
 	color: "transparent"
 	WlrLayershell.namespace: "shell:bar"
 
@@ -17,13 +17,13 @@ PanelWindow {
 		id: rootRect
 		anchors {
 			fill: parent
-			margins: Config.layout.topBar.margins
+			margins: Config.layout.hBar.margins
 		}
 
 		color: Config.colors.bar.bg
-		radius: Config.layout.topBar.radius
+		radius: Config.layout.hBar.radius
 		border.color: Config.colors.bar.outline
-		border.width: Config.layout.topBar.border
+		border.width: Config.layout.hBar.border
 
 		RowLayout {
 			anchors.fill: parent

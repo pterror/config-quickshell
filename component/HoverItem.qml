@@ -1,24 +1,26 @@
 import QtQuick
-import QtQuick.Layouts
+import QtQuick.Controls
 import ".."
 
-MouseArea {
+Button {
+	default property alias content: mouseArea.children
 	required property var inner
-	default property alias content: rectangle.children
-
 	id: root
-	Layout.fillHeight: true
-	Layout.fillWidth: true
-	implicitWidth: inner.implicitWidth
-	implicitHeight: inner.implicitHeight
-	cursorShape: Qt.PointingHandCursor
-	hoverEnabled: true
-
-	Rectangle {
-		id: rectangle
+	signal clicked()
+	flat: true
+	implicitWidth: inner.implicitWidth + Config.layout.barItem.margins * 2
+	implicitHeight: inner.implicitHeight + Config.layout.barItem.margins * 2
+	display: AbstractButton.TextOnly
+	background: Rectangle {
+		anchors.margins: Config.layout.button.margins
+		radius: Config.layout.button.radius
+		color: root.hovered ? Config.colors.barItem.hoverBg : Config.colors.barItem.bg
+	}
+	MouseArea {
+		id: mouseArea
 		anchors.fill: parent
-		radius: Config.layout.barItem.radius
-		color: root.containsMouse ? Config.colors.barItem.hoverBg : Config.colors.barItem.bg
-		Behavior on color { PropertyAnimation { duration: 100 } }
+		anchors.margins: Config.layout.barItem.margins
+		cursorShape: Qt.PointingHandCursor
+		onClicked: root.clicked()
 	}
 }
