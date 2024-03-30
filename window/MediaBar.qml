@@ -95,9 +95,7 @@ PanelWindow {
 
 						Text2 {
 							id: volumeText
-							text: {
-								return PulseAudio.volume + "%"
-							}
+							text: PulseAudio.volume + "%"
 
 							VolumeControls {
 								id: volumeControls

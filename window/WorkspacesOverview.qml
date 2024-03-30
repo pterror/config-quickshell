@@ -10,7 +10,6 @@ PanelWindow {
 	id: root
 	color: "transparent"
 	WlrLayershell.namespace: "shell:workspaces"
-	property var monitorsData: []
 	property var workspacesData: []
 	property var clientsData: []
 	property var workspaces: recomputeWorkspaces()
@@ -43,15 +42,6 @@ PanelWindow {
 	}
 
 	Process {
-		id: monitorsProcess
-		command: ["hyprctl", "monitors", "-j"]
-		stdout: SplitParser {
-			splitMarker: ""
-			onRead: json => monitorsData = JSON.parse(json)
-		}
-	}
-
-	Process {
 		id: workspacesProcess
 		command: ["hyprctl", "workspaces", "-j"]
 		stdout: SplitParser {
@@ -70,7 +60,6 @@ PanelWindow {
 	}
 
 	function reload() {
-		monitorsProcess.running = true
 		clientsProcess.running = true
 		workspacesProcess.running = true
 	}
@@ -78,14 +67,14 @@ PanelWindow {
 	function recomputeWorkspaces() {
 		const result = Array.from({ length: 9 }, (_, i) => ({ id: i + 1, x: 0, y: 0, width: 1920, height: 1080, clients: [] }))
 		for (const workspace of workspacesData) {
-			const monitor = monitorsData.find(m => m.name === workspace.monitor)
-			if (!monitor) continue
+			const screen = Quickshell.screens.find(m => m.name === workspace.monitor)
+			if (!screen) continue
 			const boundingBox = result[workspace.id - 1]
 			if (!boundingBox) continue
-			boundingBox.x = monitor.x
-			boundingBox.y = monitor.y
-			boundingBox.width = monitor.width
-			boundingBox.height = monitor.height
+			boundingBox.x = screen.x
+			boundingBox.y = screen.y
+			boundingBox.width = screen.width
+			boundingBox.height = screen.height
 			result[workspace.id - 1] = boundingBox
 		}
 		for (const client of clientsData) {

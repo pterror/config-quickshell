@@ -14,6 +14,8 @@ ShellRoot {
 	StatBar { screen: Quickshell.screens[0] }
 	MediaBar { screen: Quickshell.screens[0] }
 
+	AudioVisualizer { screen: Quickshell.screens[0] }
+
 	LazyLoader {
 		id: volumeOsdLoader
 		loading: PulseAudio.initialized
@@ -23,7 +25,7 @@ ShellRoot {
 	Connections {
 		target: PulseAudio
 		function onVolumeChanged() {
-			if (!volumeOsdLoader.active) return
+			if (!volumeOsdLoader.active || !volumeOsdLoader.item) return
 			if (volumeOsdLoader.item.screen.id !== HyprlandIpc.activeScreen.id) {
 				volumeOsdLoader.item.screen = HyprlandIpc.activeScreen
 			}

@@ -44,12 +44,19 @@ Singleton {
 		path: `/tmp/hypr/${Quickshell.env("HYPRLAND_INSTANCE_SIGNATURE")}/.socket2.sock`
 
 		parser: SplitParser {
+			splitMarker: ""
 			onRead: message => {
 				if (Config.debug) {
 					console.log("HyprlandIpc [stdin]: " + message)
 				}
-				const [type, body] = message.split(">>")
-				if (body !== undefined) {
+				const lines = message.split(/\n(?=.+>>|$)/)
+				for (const line of lines) {
+					if (!line) continue
+					const [, type, body] = line.match(/(.+)>>([\s\S]+)/)
+					if (body === undefined) {
+						console.log("HyprlandIpc: error: malformed message: " + message)
+						continue
+					}
 					const args = body.split(",")
 					switch (type) {
 						case "configreloaded": {
@@ -58,7 +65,7 @@ Singleton {
 						}
 						case "submap": {
 							submap = args[0]
-							if (args[0] === "quickshell:workspacesoverview:toggle") {
+							if (args[0] === "quickshell:workspaces_overview:toggle") {
 								ShellIpc.workspacesOverview = !ShellIpc.workspacesOverview
 							}
 							break
@@ -129,8 +136,6 @@ Singleton {
 							break
 						}
 					}
-				} else {
-					console.log("error: malformed message: " + message)
 				}
 			}
 		}

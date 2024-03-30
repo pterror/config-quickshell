@@ -21,9 +21,9 @@ Singleton {
 					switch (message) {
 						case "termselect:start": { termSelect = true; break }
 						case "termselect:stop": { termSelect = false; break }
-						case "workspacesoverview:open": { workspacesOverview = true; break }
-						case "workspacesoverview:close": { workspacesOverview = false; break }
-						case "workspacesoverview:toggle": { workspacesOverview = !workspacesOverview; break }
+						case "workspaces_overview:open": { workspacesOverview = true; break }
+						case "workspaces_overview:close": { workspacesOverview = false; break }
+						case "workspaces_overview:toggle": { workspacesOverview = !workspacesOverview; break }
 						default: {
 							console.error(`ShellIpc received unknown message: ${message}`)
 							break
