@@ -17,7 +17,7 @@ ShellRoot {
 	LazyLoader {
 		id: volumeOsdLoader
 		loading: PulseAudio.initialized
-		VProgressBar { fraction: PulseAudio.volume * 0.01 }
+		VProgressBarWindow { fraction: PulseAudio.volume * 0.01 }
 	}
 
 	Connections {
