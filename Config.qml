@@ -80,6 +80,10 @@ Singleton {
 			readonly property int controlsGap: 16
 			readonly property int controlGap: 8
 		}
+
+		readonly property QtObject audioVisualizer: QtObject {
+			readonly property int gap: 4
+		}
 	}
 
 	readonly property QtObject colors: QtObject {

@@ -1,46 +1,60 @@
 import QtQuick
+import QtQuick.Layouts
 import Quickshell
 import Quickshell.Wayland
 import "../component"
 import "../input"
+import ".."
 
 PanelWindow {
 	id: root
 	color: "transparent"
 	WlrLayershell.namespace: "shell:audio_visualizer"
+	property var columnAlignment: anchors.bottom ? Qt.AlignBottom : Qt.AlignTop
 	property int bars: 32
-	property list<int> range: Array.from({ length: bars }, (_, i) => i)
-	width: Math.max(content.implicitWidth, 1000)
-	height: Math.max(content.implicitHeight, 1000)
+	property int noiseReduction: 60
+	property string channels: "mono" // or stereo
+	property string monoOption: "average" // or left or right
+	property string innerColor: "white"
+	width: 1920
+	height: 320
 	
-	onVisibleChanged: {
-		if (visible) {
-			Cava.subscribe(bars)
-		} else {
-			// FIXME: this does not work if `bars` is changed.
-			Cava.unsubscribe(bars)
-		}
+	Cava {
+		id: cava
+		config: ({
+			general: { bars: bars },
+			smoothing: { noise_reduction: noiseReduction },
+			output: {
+				method: "raw",
+				bit_format: 8,
+				channels: channels,
+				mono_option: monoOption,
+			}
+		})
 	}
 
 	RowLayout2 {
 		id: content
-		autoSize: true
+		width: root.width
+		height: root.height
+		property real scale: height / 128.0
+		property real columnWidth: (width + Config.layout.audioVisualizer.gap) / bars - Config.layout.audioVisualizer.gap
 
 		Repeater {
-			model: range
+			model: cava.count
 
 			Rectangle {
 				required property int modelData
-				property int value: 0
-				color: "white"
-
-				height: value
-				width: 32
+				property int value: 1
+				Layout.alignment: root.columnAlignment
+				color: root.innerColor
+				implicitHeight: value * content.scale
+				implicitWidth: content.columnWidth
 
 				Connections {
-					target: Cava
-					function onValue(count, index, newValue) {
-						if (bars !== count || index !== modelData) return
+					target: cava
+					function onValue(index, newValue) {
+						if (index !== modelData) return
 						value = newValue
 					}
 				}
