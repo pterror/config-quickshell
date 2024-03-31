@@ -94,7 +94,6 @@ PanelWindow {
 						}
 
 						Text2 {
-							id: volumeText
 							text: PulseAudio.volume + "%"
 
 							VolumeControls {
@@ -104,10 +103,25 @@ PanelWindow {
 								visible: false
 								onVisibleChanged: {
 									if (!visible) return
-									relativeX = volumeText.mapToItem(rootRect, volumeText.width / 2, 0).x - width / 2
+									relativeX = volumeItem.mapToItem(rootRect, volumeItem.width / 2, 0).x - width / 2
 								}
 							}
 						}
+
+						Rectangle { width: 0 }
+
+						Rectangle {
+							implicitWidth: micImage.implicitWidth
+							implicitHeight: rightRow.height
+							color: "transparent"
+							Image {
+								id: micImage
+								anchors.verticalCenter: parent.verticalCenter
+								source: PulseAudio.micMuted ? "../image/microphone_muted.svg" : "../image/microphone.svg"
+							}
+						}
+
+						Text2 { id: micVolumeText; text: PulseAudio.micVolume + "%" }
 					}
 				}
 				Text2 { text: Connman.network }
