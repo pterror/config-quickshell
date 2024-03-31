@@ -10,6 +10,9 @@ PanelWindow {
 	id: root
 	color: "transparent"
 	WlrLayershell.namespace: "shell:audio_visualizer"
+	Component.onCompleted: {
+		if (this.WlrLayershell) this.WlrLayershell.layer = WlrLayer.Bottom
+	}
 	property var columnAlignment: anchors.bottom ? Qt.AlignBottom : Qt.AlignTop
 	property int bars: 32
 	property int noiseReduction: 60
