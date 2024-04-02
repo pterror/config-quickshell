@@ -44,16 +44,14 @@ PanelWindow {
 			}
 			RowLayout2 {
 				Layout.fillHeight: true
-				width: 400
+				autoSize: true
+				implicitWidth: 400
 
-				RowLayout2 {
-					autoSize: true
-					Layout.alignment: Qt.AlignRight
-					HoverItem {
-						inner: workspacesStatus
-						onClicked: ShellIpc.workspacesOverview = !ShellIpc.workspacesOverview
-						WorkspacesStatus { id: workspacesStatus }
-					}
+				HSpace {}
+				HoverItem {
+					inner: workspacesStatus
+					onClicked: ShellIpc.workspacesOverview = !ShellIpc.workspacesOverview
+					WorkspacesStatus { id: workspacesStatus }
 				}
 			}
 		}

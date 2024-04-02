@@ -74,13 +74,14 @@ PanelWindow {
 				HSpace {}
 				HoverItem {
 					inner: volumeItem
+					Layout.fillHeight: true
 					onClicked: volumeControls.visible = !volumeControls.visible
 					RowLayout2 {
 						id: volumeItem
 						autoSize: true
 						Rectangle {
 							implicitWidth: speakerImage.width
-							implicitHeight: rightRow.height
+							implicitHeight: speakerImage.height
 							color: "transparent"
 							Image {
 								id: speakerImage
@@ -114,7 +115,7 @@ PanelWindow {
 
 						Rectangle {
 							implicitWidth: micImage.width
-							implicitHeight: rightRow.height
+							implicitHeight: micImage.height
 							color: "transparent"
 							Image {
 								id: micImage
