@@ -14,6 +14,7 @@ Singleton {
 		property string title: ""
 		property string klass: ""
 	}
+	property list<var> windows: ({}) // { address: { workspace, klass, title, initialClass, initialTitle } }
 	property list<var> workspaceInfosArray: Array.from({ length: 9 }, (_, i) => {
 		return { id: i + 1, name: String(i + 1), focused: false, exists: false }
 	})
@@ -23,20 +24,21 @@ Singleton {
 		property string name: "1"
 	}
 	property QtObject activeKeyboardLayout: QtObject {
-		property string id: "(unknown)"
+		property string keyboard: "(unknown)"
 		property string layout: "(unknown)"
 	}
 
 	property string windowToFocus: ""
 	property string workspaceToFocus: ""
 	property string workspaceToFocusOnCurrentMonitor: ""
+	property string windowWithUpdatedTitle: ""
 
 	signal configReloaded()
 	signal windowOpened(address: string, workspace: string, klass: string, title: string)
 	signal windowClosed(address: string)
 	signal windowFocused(klass: string, title: string)
 	signal monitorFocused(name: string, workspaceName: string)
-	signal keyboardLayoutChanged(id: string, layout: string)
+	signal keyboardLayoutChanged(keyboard: string, layout: string)
 
 	Socket {
 		connected: true
@@ -64,52 +66,80 @@ Singleton {
 							break
 						}
 						case "submap": {
-							submap = args[0]
-							if (args[0] === "quickshell:workspaces_overview:toggle") {
+							[submap] = args
+							if (submap === "quickshell:workspaces_overview:toggle") {
 								ShellIpc.workspacesOverview = !ShellIpc.workspacesOverview
 							}
 							break
 						}
 						case "openwindow": {
-							windowOpened(args[0], args[1], args[2], args[3])
+							const [address, workspace, klass, title] = args
+							windowOpened(address, workspace, klass, title)
+							const info = windows[address] ?? {}
+							info.address = address
+							info.workspace = workspace
+							info.klass = klass
+							info.title = title
+							info.initialClass = klass
+							info.initialTitle = title
+							windows[address] = info
 							break
 						}
 						case "closewindow": {
-							windowClosed(args[0])
+							const [address] = args
+							delete windows[address]
+							windowClosed(address)
 							break
 						}
-						// TODO: What does `windowtitle` do?
+						case "windowtitle": {
+							const [address] = args
+							windowWithUpdatedTitle = address
+							break
+						}
 						case "activewindow": {
-							activeWindow.klass = args[0]
-							activeWindow.title = args[1]
-							windowFocused(args[0], args[1])
+							const [klass, title] = args
+							activeWindow.klass = klass
+							activeWindow.title = title
+							windowFocused(klass, title)
+							if (windowWithUpdatedTitle) {
+								const info = windows[windowWithUpdatedTitle]
+								if (info) {
+									info.klass = klass
+									info.title = title
+									windows[windowWithUpdatedTitle] = info
+								}
+							}
 							break
 						}
 						case "activewindowv2": {
-							activeWindow.address = args[0]
+							const [address] = args
+							activeWindow.address = address
+							windowWithUpdatedTitle = ""
 							break
 						}
 						case "activelayout": {
-							activeKeyboardLayout.id = args[0]
-							activeKeyboardLayout.layout = args[1]
-							keyboardLayoutChanged(args[0], args[1])
+							const [keyboard, layout] = args
+							activeKeyboardLayout.keyboard = keyboard
+							activeKeyboardLayout.layout = layout
+							keyboardLayoutChanged(id, layout)
 							break
 						}
 						case "focusedmon": {
-							activeMonitor = args[0]
-							activeScreen = Quickshell.screens.find(screen => screen.name === args[0])
-							monitorFocused(args[0], args[1])
+							const [monitor, workspace] = args
+							activeMonitor = monitor
+							activeScreen = Quickshell.screens.find(screen => screen.name === monitor)
+							monitorFocused(monitor, workspace)
 							for (const key in workspaceInfos) {
 								const info = workspaceInfos[key]
-								info.focused = info.name === args[1]
+								info.focused = info.name === workspace
 								setWorkspaceInfo(info)
 							}
 							break
 						}
 						// TODO: handle `movewindow`
 						case "createworkspacev2": {
-							const id = Number(args[0])
-							const name = args[1]
+							const [idString, name] = args
+							const id = Number(idString)
 							if (id >= 0) {
 								for (const key in workspaceInfos) {
 									const info = workspaceInfos[key]
@@ -127,7 +157,7 @@ Singleton {
 							break
 						}
 						case "destroyworkspace": {
-							const name = Number(args[0])
+							const [name] = args
 							const info = workspaceInfos[name]
 							if (!info) break
 							info.focused = false
@@ -169,6 +199,27 @@ Singleton {
 					if (!info) continue
 					info.exists = true
 					setWorkspaceInfo(info)
+				}
+			}
+		}
+	}
+
+	Process {
+		running: true
+		command: ["hyprctl", "clients", "-j"]
+		stdout: SplitParser {
+			splitMarker: ""
+			onRead: json => {
+				const data = JSON.parse(json)
+				for (const datum of data) {
+					const address = datum.address.slice(2)
+					const info = windows[address] ?? {}
+					info.address = address
+					info.klass = datum.class
+					info.title = datum.title
+					info.initialClass = datum.initialClass
+					info.initialTitle = datum.initialTitle
+					windows[datum.address] = info
 				}
 			}
 		}
