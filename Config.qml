@@ -9,6 +9,10 @@ Singleton {
 		readonly property bool debugRectangles: Config.debug && true
 	}
 
+	readonly property QtObject network: QtObject {
+		readonly property string interface_: "wlp10s0" // enp11s0, wlan0, eth0
+	}
+
 	readonly property QtObject wallpapers: QtObject {
 		readonly property string folder: Quickshell.env("HOME") + "/.config/wallpapers/"
 		readonly property list<string> formats: ["*.png"]
