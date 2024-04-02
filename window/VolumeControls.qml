@@ -28,11 +28,11 @@ PopupWindow {
 			}
 			HoverIcon {
 				Layout.alignment: Qt.AlignHCenter
-				source: PulseAudio.muted ? "../image/speaker_muted.svg" :
-					PulseAudio.volume < 25 ? "../image/speaker_volume_very_low.svg" :
-					PulseAudio.volume < 50 ? "../image/speaker_volume_low.svg" :
-					PulseAudio.volume < 75 ? "../image/speaker_volume_medium.svg" :
-					"../image/speaker_volume_high.svg"
+				source: PulseAudio.muted ? "../image/speaker_muted.png" :
+					PulseAudio.volume < 25 ? "../image/speaker_volume_very_low.png" :
+					PulseAudio.volume < 50 ? "../image/speaker_volume_low.png" :
+					PulseAudio.volume < 75 ? "../image/speaker_volume_medium.png" :
+					"../image/speaker_volume_high.png"
 				onClicked: PulseAudio.toggleMute()
 			}
 		}
@@ -47,7 +47,7 @@ PopupWindow {
 			}
 			HoverIcon {
 				Layout.alignment: Qt.AlignHCenter
-				source: PulseAudio.micMuted ? "../image/microphone_muted.svg" : "../image/microphone.svg"
+				source: PulseAudio.micMuted ? "../image/microphone_muted.png" : "../image/microphone.png"
 				onClicked: PulseAudio.toggleMicMute()
 			}
 		}

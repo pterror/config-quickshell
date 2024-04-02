@@ -3,7 +3,7 @@ import Quickshell
 import Quickshell.Io
 import ".."
 
-QtObject {
+Scope {
 	id: root
 	property var config: ({
 		general: { bars: 32 },
@@ -18,16 +18,14 @@ QtObject {
 	property int count: root.config.general.bars || 0
 	signal value(int index, int value)
 
-	property var process: Process {
+	Process {
+		property int index: 0
 		id: process
 		running: true
 		stdinEnabled: true
 		// onRunningChanged: running = true
 		command: ["cava", "-p", "/dev/stdin"]
-		onExited: {
-			stdinEnabled = true; index = 0
-			console.log("......")
-		}
+		onExited: { stdinEnabled = true; index = 0 }
 		onStarted: {
 			const iniParts = []
 			for (const k in config) {
@@ -46,9 +44,13 @@ QtObject {
 		stdout: SplitParser {
 			splitMarker: ""
 			onRead: data => {
-				for (let i = 0; i < data.length; i += 1) {
-					root.value(i, Math.min(data.charCodeAt(i), 128))
+				if (process.index + data.length > config.general.bars) {
+					process.index = 0
 				}
+				for (let i = 0; i < data.length; i += 1) {
+					root.value(i + process.index, Math.min(data.charCodeAt(i), 128))
+				}
+				process.index += data.length
 			}
 		}
 	}

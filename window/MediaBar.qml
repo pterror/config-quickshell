@@ -79,17 +79,19 @@ PanelWindow {
 						id: volumeItem
 						autoSize: true
 						Rectangle {
-							implicitWidth: speakerImage.implicitWidth
+							implicitWidth: speakerImage.width
 							implicitHeight: rightRow.height
 							color: "transparent"
 							Image {
 								id: speakerImage
+								width: 16
+								height: 16
 								anchors.verticalCenter: parent.verticalCenter
-								source: PulseAudio.muted ? "../image/speaker_muted.svg" :
-									PulseAudio.volume < 25 ? "../image/speaker_volume_very_low.svg" :
-									PulseAudio.volume < 50 ? "../image/speaker_volume_low.svg" :
-									PulseAudio.volume < 75 ? "../image/speaker_volume_medium.svg" :
-									"../image/speaker_volume_high.svg"
+								source: PulseAudio.muted ? "../image/speaker_muted.png" :
+									PulseAudio.volume < 25 ? "../image/speaker_volume_very_low.png" :
+									PulseAudio.volume < 50 ? "../image/speaker_volume_low.png" :
+									PulseAudio.volume < 75 ? "../image/speaker_volume_medium.png" :
+									"../image/speaker_volume_high.png"
 							}
 						}
 
@@ -111,20 +113,22 @@ PanelWindow {
 						Rectangle { width: 0 }
 
 						Rectangle {
-							implicitWidth: micImage.implicitWidth
+							implicitWidth: micImage.width
 							implicitHeight: rightRow.height
 							color: "transparent"
 							Image {
 								id: micImage
+								width: 16
+								height: 16
 								anchors.verticalCenter: parent.verticalCenter
-								source: PulseAudio.micMuted ? "../image/microphone_muted.svg" : "../image/microphone.svg"
+								source: PulseAudio.micMuted ? "../image/microphone_muted.png" : "../image/microphone.png"
 							}
 						}
 
 						Text2 { id: micVolumeText; text: PulseAudio.micVolume + "%" }
 					}
 				}
-				Text2 { text: Connman.network }
+				// Text2 { text: Connman.network }
 				RowLayout2 {
 					Layout.fillHeight: true
 					width: 48
