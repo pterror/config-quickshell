@@ -2,12 +2,15 @@ pragma Singleton
 
 import QtQuick
 import Quickshell
+import "./input"
 
 Singleton {
 	readonly property bool debug: false
 	readonly property QtObject debugFlags: QtObject {
 		readonly property bool debugRectangles: Config.debug && true
 	}
+
+	readonly property var audioProvider: WirePlumber
 
 	readonly property QtObject network: QtObject {
 		readonly property string interface_: "wlp10s0" // enp11s0, wlan0, eth0

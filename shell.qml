@@ -30,12 +30,12 @@ ShellRoot {
 
 	LazyLoader {
 		id: volumeOsdLoader
-		loading: PulseAudio.initialized
-		VProgressBarWindow { fraction: PulseAudio.volume * 0.01 }
+		loading: Config.audioProvider.initialized
+		VProgressBarWindow { fraction: Config.audioProvider.volume * 0.01 }
 	}
 
 	Connections {
-		target: PulseAudio
+		target: Config.audioProvider
 		function onVolumeChanged() {
 			if (!volumeOsdLoader.active || !volumeOsdLoader.item) return
 			if (volumeOsdLoader.item.screen.id !== HyprlandIpc.activeScreen.id) {

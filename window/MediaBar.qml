@@ -88,16 +88,16 @@ PanelWindow {
 								width: 16
 								height: 16
 								anchors.verticalCenter: parent.verticalCenter
-								source: PulseAudio.muted ? "../image/speaker_muted.png" :
-									PulseAudio.volume < 25 ? "../image/speaker_volume_very_low.png" :
-									PulseAudio.volume < 50 ? "../image/speaker_volume_low.png" :
-									PulseAudio.volume < 75 ? "../image/speaker_volume_medium.png" :
+								source: Config.audioProvider.muted ? "../image/speaker_muted.png" :
+									Config.audioProvider.volume < 25 ? "../image/speaker_volume_very_low.png" :
+									Config.audioProvider.volume < 50 ? "../image/speaker_volume_low.png" :
+									Config.audioProvider.volume < 75 ? "../image/speaker_volume_medium.png" :
 									"../image/speaker_volume_high.png"
 							}
 						}
 
 						Text2 {
-							text: PulseAudio.volume + "%"
+							text: Config.audioProvider.volume + "%"
 
 							VolumeControls {
 								id: volumeControls
@@ -122,11 +122,11 @@ PanelWindow {
 								width: 16
 								height: 16
 								anchors.verticalCenter: parent.verticalCenter
-								source: PulseAudio.micMuted ? "../image/microphone_muted.png" : "../image/microphone.png"
+								source: Config.audioProvider.micMuted ? "../image/microphone_muted.png" : "../image/microphone.png"
 							}
 						}
 
-						Text2 { id: micVolumeText; text: PulseAudio.micVolume + "%" }
+						Text2 { id: micVolumeText; text: Config.audioProvider.micVolume + "%" }
 					}
 				}
 				// Text2 { text: Connman.network }

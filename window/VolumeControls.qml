@@ -21,34 +21,34 @@ PopupWindow {
 		ColumnLayout2 {
 			autoSize: true
 			VProgressBar {
-				fraction: PulseAudio.volume * 0.01
+				fraction: Config.audioProvider.volume * 0.01
 				width: 48
 				height: 224
-				onInput: fraction => PulseAudio.setVolume(fraction * 100)
+				onInput: fraction => Config.audioProvider.setVolume(fraction * 100)
 			}
 			HoverIcon {
 				Layout.alignment: Qt.AlignHCenter
-				source: PulseAudio.muted ? "../image/speaker_muted.png" :
-					PulseAudio.volume < 25 ? "../image/speaker_volume_very_low.png" :
-					PulseAudio.volume < 50 ? "../image/speaker_volume_low.png" :
-					PulseAudio.volume < 75 ? "../image/speaker_volume_medium.png" :
+				source: Config.audioProvider.muted ? "../image/speaker_muted.png" :
+					Config.audioProvider.volume < 25 ? "../image/speaker_volume_very_low.png" :
+					Config.audioProvider.volume < 50 ? "../image/speaker_volume_low.png" :
+					Config.audioProvider.volume < 75 ? "../image/speaker_volume_medium.png" :
 					"../image/speaker_volume_high.png"
-				onClicked: PulseAudio.toggleMute()
+				onClicked: Config.audioProvider.toggleMute()
 			}
 		}
 
 		ColumnLayout2 {
 			autoSize: true
 			VProgressBar {
-				fraction: PulseAudio.micVolume * 0.01
+				fraction: Config.audioProvider.micVolume * 0.01
 				width: 48
 				height: 224
-				onInput: fraction => PulseAudio.setMicVolume(fraction * 100)
+				onInput: fraction => Config.audioProvider.setMicVolume(fraction * 100)
 			}
 			HoverIcon {
 				Layout.alignment: Qt.AlignHCenter
-				source: PulseAudio.micMuted ? "../image/microphone_muted.png" : "../image/microphone.png"
-				onClicked: PulseAudio.toggleMicMute()
+				source: Config.audioProvider.micMuted ? "../image/microphone_muted.png" : "../image/microphone.png"
+				onClicked: Config.audioProvider.toggleMicMute()
 			}
 		}
 	}
