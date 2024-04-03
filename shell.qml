@@ -14,6 +14,13 @@ ShellRoot {
 	StatBar { screen: Quickshell.screens[0] }
 	MediaBar { screen: Quickshell.screens[0] }
 
+	CPUInfoGrid {
+		screen: Quickshell.screens[0]
+		anchors.right: true
+		height: 480
+		width: 48
+	}
+
 	HAudioVisualizerBars {
 		screen: Quickshell.screens[0]
 		fillColor: "#30ffeef8"

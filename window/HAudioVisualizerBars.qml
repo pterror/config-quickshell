@@ -19,9 +19,10 @@ PanelWindow {
 	property int noiseReduction: 70
 	property string channels: "mono" // or stereo
 	property string monoOption: "average" // or left or right
-	property string fillColor: "#30ffeef8"
+	property string fillColor: Config.colors.rectangle.bg
 	property string strokeColor: "transparent"
 	property int strokeWidth: 0
+	property int barRadius: Config.layout.rectangle.radius
 	height: 320
 	
 	Cava {
@@ -56,6 +57,7 @@ PanelWindow {
 				border.width: root.strokeWidth
 				implicitHeight: value * content.scale
 				implicitWidth: content.childSize
+				radius: root.barRadius
 
 				Connections {
 					target: cava

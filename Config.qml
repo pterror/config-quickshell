@@ -31,6 +31,11 @@ Singleton {
 	})
 
 	readonly property QtObject layout: QtObject {
+		// fallback values for arbitrary rectangles
+		readonly property QtObject rectangle: QtObject {
+			readonly property int radius: 4
+		}
+
 		readonly property QtObject popup: QtObject {
 			readonly property int gap: 8
 		}
@@ -94,6 +99,11 @@ Singleton {
 	}
 
 	readonly property QtObject colors: QtObject {
+		// fallback values for arbitrary rectangles
+		readonly property QtObject rectangle: QtObject {
+			readonly property string bg: "#30ffeef8"
+		}
+
 		readonly property QtObject accent: QtObject {
 			readonly property string fg: "#ffffaaaa"
 		}
