@@ -10,16 +10,18 @@ PanelWindow {
 	id: root
 	color: "transparent"
 	WlrLayershell.namespace: "shell:audio_visualizer"
+	exclusiveZone: 0
 	Component.onCompleted: {
 		if (this.WlrLayershell) this.WlrLayershell.layer = WlrLayer.Bottom
 	}
-	property var columnAlignment: anchors.bottom ? Qt.AlignBottom : Qt.AlignTop
+	property var childAlignment: anchors.bottom ? Qt.AlignBottom : Qt.AlignTop
 	property int bars: 32
-	property int noiseReduction: 60
+	property int noiseReduction: 70
 	property string channels: "mono" // or stereo
 	property string monoOption: "average" // or left or right
-	property string innerColor: "white"
-	width: 1920
+	property string fillColor: "#30ffeef8"
+	property string strokeColor: "transparent"
+	property int strokeWidth: 0
 	height: 320
 	
 	Cava {
@@ -38,10 +40,9 @@ PanelWindow {
 
 	RowLayout2 {
 		id: content
-		width: root.width
-		height: root.height
+		anchors.fill: parent
 		property real scale: height / 128.0
-		property real columnWidth: (width + Config.layout.audioVisualizer.gap) / bars - Config.layout.audioVisualizer.gap
+		property real childSize: (width + Config.layout.audioVisualizer.gap) / bars - Config.layout.audioVisualizer.gap
 
 		Repeater {
 			model: cava.count
@@ -49,10 +50,12 @@ PanelWindow {
 			Rectangle {
 				required property int modelData
 				property int value: 1
-				Layout.alignment: root.columnAlignment
-				color: root.innerColor
+				Layout.alignment: root.childAlignment
+				color: root.fillColor
+				border.color: root.strokeColor
+				border.width: root.strokeWidth
 				implicitHeight: value * content.scale
-				implicitWidth: content.columnWidth
+				implicitWidth: content.childSize
 
 				Connections {
 					target: cava

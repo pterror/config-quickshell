@@ -14,18 +14,22 @@ ShellRoot {
 	StatBar { screen: Quickshell.screens[0] }
 	MediaBar { screen: Quickshell.screens[0] }
 
-	AudioVisualizer {
+	HAudioVisualizerBars {
 		screen: Quickshell.screens[0]
-		innerColor: "#30ffeef8"
+		fillColor: "#30ffeef8"
 		bars: 48
 		anchors.top: true
+		anchors.left: true
+		anchors.right: true
 	}
 
-	AudioVisualizer {
+	HAudioVisualizerBars {
 		screen: Quickshell.screens[0]
-		innerColor: "#30ffeef8"
+		fillColor: "#30ffeef8"
 		bars: 48
 		anchors.bottom: true
+		anchors.left: true
+		anchors.right: true
 	}
 
 	LazyLoader {

@@ -15,7 +15,7 @@ Singleton {
 		property string klass: ""
 	}
 	property list<var> windows: ({}) // { address: { workspace, klass, title, initialClass, initialTitle } }
-	property list<var> workspaceInfosArray: Array.from({ length: 9 }, (_, i) => {
+	property list<var> workspaceInfosArray: Array.from({ length: 10 }, (_, i) => {
 		return { id: i + 1, name: String(i + 1), focused: false, exists: false }
 	})
 	property var workspaceInfos: workspaceInfosArray.reduce((p, c) => { p[c.name] = c; return p }, {})
