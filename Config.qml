@@ -30,6 +30,17 @@ Singleton {
 		family: "Unicorn Scribbles"
 	})
 
+	readonly property QtObject shaderWallpaper: QtObject {
+		readonly property string shader: "Fractal_Flythrough"
+		readonly property real speed: 1.0
+		readonly property bool mouse: true
+		readonly property real mouseSpeedBias: 1.0
+		readonly property string channel0: "../blank.png"
+		readonly property string channel1: "../blank.png"
+		readonly property string channel2: "../blank.png"
+		readonly property string channel3: "../blank.png"
+	}
+
 	readonly property QtObject layout: QtObject {
 		// fallback values for arbitrary rectangles
 		readonly property QtObject rectangle: QtObject {

@@ -1,0 +1,19 @@
+Broken:
+Bouncing_Circle: global function tanh requires "#version 130" or later
+CubeLines: 0(84) : error C7548: '&' requires "#extension GL_EXT_gpu_shader4 : enable" before use
+Clock: 0(5) : error C7516: OpenGL does not allow constant arrays
+Clock: 0(5) : error C7553: OpenGL array assignments require #version 120
+FlyOnBuckaroo: global function isnan requires "#version 130" or later
+Inside_Matrix: global type mat4x3 requires "#version 120" or later
+Inside_Matrix: error C0000: ... or #extension GL_NV_non_square_matrices : enable
+
+No errors but blank:
+Flow_Cells     Light_Clock    Pretty_Hip     Procgen_Planet
+Sin_Wave       Tetragrammaton wave_propagation_bufferA
+wave_propagation
+
+No matching version:
+Auroras        Digital_Rain   DVD            E1M1
+Earthbound     Earthbound2    Earthbound3    Inercia_IntendedOne
+Kaleidoscope   Paint_Archipelago             Psychedelic_Curlnoise
+Space_Curvature               Wolfenstein

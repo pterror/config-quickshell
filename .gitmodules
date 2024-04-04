@@ -1,0 +1,4 @@
+[submodule "dep/shader-wallpaper"]
+	path = dep/shader-wallpaper
+	url = https://github.com/y4my4my4m/kde-shader-wallpaper.git
+	branch = plasma6

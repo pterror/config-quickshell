@@ -92,6 +92,8 @@ ShellRoot {
 					asynchronous: false
 				}
 
+				// ShaderView {}
+
 				SelectionLayer {
 					id: selectionLayer
 
