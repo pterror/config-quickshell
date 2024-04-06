@@ -14,6 +14,8 @@ ShellRoot {
 	StatBar { screen: Quickshell.screens[0] }
 	MediaBar { screen: Quickshell.screens[0] }
 
+	Greeter { screen: Quickshell.screens[0] }
+
 	CPUInfoGrid {
 		screen: Quickshell.screens[0]
 		anchors.right: true
@@ -41,12 +43,12 @@ ShellRoot {
 
 	LazyLoader {
 		id: volumeOsdLoader
-		loading: Config.audioProvider.initialized
-		VProgressBarWindow { fraction: Config.audioProvider.volume * 0.01 }
+		loading: Config.providers.audio.initialized
+		VProgressBarWindow { fraction: Config.providers.audio.volume * 0.01 }
 	}
 
 	Connections {
-		target: Config.audioProvider
+		target: Config.providers.audio
 		function onVolumeChanged() {
 			if (!volumeOsdLoader.active || !volumeOsdLoader.item) return
 			if (volumeOsdLoader.item.screen.id !== HyprlandIpc.activeScreen.id) {

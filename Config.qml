@@ -5,20 +5,24 @@ import Quickshell
 import "./input"
 
 Singleton {
-	readonly property bool debug: false
-	readonly property QtObject debugFlags: QtObject {
-		readonly property bool debugRectangles: Config.debug && true
+	property string name: "n_n"
+	property bool debug: false
+	property QtObject debugFlags: QtObject {
+		property bool debugRectangles: Config.debug && true
 	}
 
-	readonly property var audioProvider: WirePlumber
-
-	readonly property QtObject network: QtObject {
-		readonly property string interface_: "wlp10s0" // enp11s0, wlan0, eth0
+	property QtObject providers: QtObject {
+		property var audio: WirePlumber
+		// property var network: NetworkManager
 	}
 
-	readonly property QtObject wallpapers: QtObject {
-		readonly property string folder: Quickshell.env("HOME") + "/.config/wallpapers/"
-		readonly property list<string> formats: ["*.png"]
+	property QtObject network: QtObject {
+		property string interface_: "wlp10s0" // enp11s0, wlan0, eth0
+	}
+
+	property QtObject wallpapers: QtObject {
+		property string folder: Quickshell.env("HOME") + "/.config/wallpapers/"
+		property list<string> formats: ["*.png"]
 		function getSeed() {
 			// NOTE: The following line makes wallpaper selection essentially random:
 			// return new Date()
@@ -26,157 +30,155 @@ Singleton {
 		}
 	}
 
-	readonly property font font: Qt.font({
+	property font font: Qt.font({
 		family: "Unicorn Scribbles"
 	})
 
-	readonly property QtObject shaderWallpaper: QtObject {
-		readonly property string shader: "Fractal_Flythrough"
-		readonly property real speed: 1.0
-		readonly property bool mouse: true
-		readonly property real mouseSpeedBias: 1.0
-		readonly property string channel0: "../blank.png"
-		readonly property string channel1: "../blank.png"
-		readonly property string channel2: "../blank.png"
-		readonly property string channel3: "../blank.png"
+	property QtObject shaderWallpaper: QtObject {
+		property string shader: "Fractal_Flythrough"
+		property real speed: 1.0
+		property bool mouse: true
+		property real mouseSpeedBias: 1.0
+		property string channel0: "../blank.png"
+		property string channel1: "../blank.png"
+		property string channel2: "../blank.png"
+		property string channel3: "../blank.png"
 	}
 
-	readonly property QtObject layout: QtObject {
+	property QtObject layout: QtObject {
 		// fallback values for arbitrary rectangles
-		readonly property QtObject rectangle: QtObject {
-			readonly property int radius: 4
+		property QtObject rectangle: QtObject {
+			property int radius: 4
 		}
 
-		readonly property QtObject popup: QtObject {
-			readonly property int gap: 8
+		property QtObject popup: QtObject {
+			property int gap: 8
 		}
 
-		readonly property QtObject icon: QtObject {
-			readonly property int size: 32
+		property QtObject icon: QtObject {
+			property int size: 32
 		}
 
-		readonly property QtObject widget: QtObject {
-			readonly property int radius: 8
-			readonly property int margins: 4
-			readonly property int border: 0
-			readonly property int fontSize: 11
+		property QtObject widget: QtObject {
+			property int radius: 8
+			property int margins: 4
+			property int border: 0
+			property int fontSize: 11
 		}
 
-		readonly property QtObject button: QtObject {
-			readonly property int radius: 8
-			readonly property int margins: 4
-			readonly property int border: 0
-			readonly property int fontSize: 11
+		property QtObject button: QtObject {
+			property int radius: 8
+			property int margins: 4
+			property int border: 0
+			property int fontSize: 11
 		}
 
-		readonly property QtObject iconButton: QtObject {
-			readonly property int size: 32
+		property QtObject iconButton: QtObject {
+			property int size: 32
 		}
 
-		readonly property QtObject panel: QtObject {
-			readonly property int radius: Config.layout.widget.radius * 2
-			readonly property int margins: Config.layout.widget.margins * 2
-			readonly property int innerRadius: Config.layout.panel.radius - Config.layout.panel.margins
+		property QtObject panel: QtObject {
+			property int radius: Config.layout.widget.radius * 2
+			property int margins: Config.layout.widget.margins * 2
+			property int innerRadius: Config.layout.panel.radius - Config.layout.panel.margins
 		}
 
-		readonly property QtObject hBar: QtObject {
-			readonly property int radius: Config.layout.widget.radius
-			readonly property int margins: Config.layout.widget.margins
-			readonly property int border: Config.layout.widget.border
+		property QtObject hBar: QtObject {
+			property int radius: Config.layout.widget.radius
+			property int margins: Config.layout.widget.margins
+			property int border: Config.layout.widget.border
 			// NOTE: Currently unused
-			readonly property int fontSize: Config.layout.widget.fontSize
-			readonly property int height: 32
+			property int fontSize: Config.layout.widget.fontSize
+			property int height: 32
 		}
 
-		readonly property QtObject barItem: QtObject {
-			readonly property int radius: 4
-			readonly property int margins: Config.layout.button.margins
+		property QtObject barItem: QtObject {
+			property int radius: 4
+			property int margins: Config.layout.button.margins
 		}
 
-		readonly property QtObject selection: QtObject {
-			readonly property int radius: Config.layout.widget.radius
-			readonly property int border: Config.layout.widget.border
+		property QtObject selection: QtObject {
+			property int radius: Config.layout.widget.radius
+			property int border: Config.layout.widget.border
 		}
 
-		readonly property QtObject mediaPlayer: QtObject {
-			readonly property int imageSize: 256
-			readonly property int controlsGap: 16
-			readonly property int controlGap: 8
+		property QtObject mediaPlayer: QtObject {
+			property int imageSize: 256
+			property int controlsGap: 16
+			property int controlGap: 8
 		}
 
-		readonly property QtObject audioVisualizer: QtObject {
-			readonly property int gap: 4
+		property QtObject audioVisualizer: QtObject {
+			property int gap: 4
 		}
 	}
 
-	readonly property QtObject colors: QtObject {
+	property QtObject colors: QtObject {
 		// fallback values for arbitrary rectangles
-		readonly property QtObject rectangle: QtObject {
-			readonly property string bg: "#30ffeef8"
+		property QtObject rectangle: QtObject {
+			property string bg: "#30ffeef8"
 		}
 
-		readonly property QtObject accent: QtObject {
-			readonly property string fg: "#ffffaaaa"
+		property QtObject accent: QtObject {
+			property string fg: "#a0ffaaaa"
 		}
 
-		readonly property QtObject bar: QtObject {
-			readonly property string bg: "#00e0ffff"
-			readonly property string outline: "#00ffffff"
+		property QtObject bar: QtObject {
+			property string bg: "#00e0ffff"
+			property string outline: "#00ffffff"
 		}
 
-		readonly property QtObject barItem: QtObject {
-			readonly property string bg: "#00e0ffff"
-			readonly property string hoverBg: "#20e0ffff"
-			readonly property string outline: "#00ffffff"
+		property QtObject barItem: QtObject {
+			property string bg: "#00e0ffff"
+			property string hoverBg: "#20e0ffff"
+			property string outline: "#00ffffff"
 		}
 
-		readonly property QtObject widget: QtObject {
-			readonly property string fg: "#a0ffffff"
-			readonly property string bg: "#40e0ffff"
-			readonly property string accent: Config.colors.accent.fg
-			readonly property string hoverBg: "#60e0ffff"
-			readonly property string outline: "#00ffffff"
+		property QtObject widget: QtObject {
+			property string fg: "#a0ffffff"
+			property string bg: "#40e0ffff"
+			property string accent: Config.colors.accent.fg
+			property string hoverBg: "#60e0ffff"
+			property string outline: "#00ffffff"
 		}
 
-		readonly property QtObject button: QtObject {
-			readonly property string fg: "#a0ffffff"
-			readonly property string bg: "#00e0ffff"
-			readonly property string accent: Config.colors.accent.fg
-			readonly property string hoverBg: "#60e0ffff"
-			readonly property string outline: "#00ffffff"
+		property QtObject button: QtObject {
+			property string fg: Config.colors.widget.fg
+			property string bg: "#00e0ffff"
+			property string accent: Config.colors.accent.fg
+			property string hoverBg: Config.colors.widget.hoverBg
+			property string outline: Config.colors.widget.outline
 		}
 
-		readonly property QtObject panel: QtObject {
-			readonly property string fg: Config.colors.widget.fg
-			// readonly property string bg: Config.colors.widget.bg
-			readonly property string bg: "#20e0ffff"
-			readonly property string accent: Config.colors.widget.accent
-			readonly property string hoverBg: Config.colors.widget.hoverBg
-			readonly property string outline: Config.colors.widget.outline
+		property QtObject panel: QtObject {
+			property string fg: Config.colors.widget.fg
+			// property string bg: Config.colors.widget.bg
+			property string bg: "#20e0ffff"
+			property string accent: Config.colors.widget.accent
+			property string hoverBg: Config.colors.widget.hoverBg
+			property string outline: Config.colors.widget.outline
 		}
 
-		readonly property QtObject selection: QtObject {
-			readonly property string bg: "#66001017"
-			readonly property string outline: "#ee33ccff"
-			readonly property string outlineInvalid: "#aa595959"
+		property QtObject greeter: QtObject {
+			property string fg: "#40e0ffff"
+			property string bg: Config.colors.panel.bg
+			property string outline: Config.colors.panel.outline
 		}
 
-		readonly property QtObject workspaceIndicator: QtObject {
-			readonly property string focused: Config.colors.accent.fg
-			readonly property string visible: "#80ffffff"
-			readonly property string empty: "#20ffffff"
+		property QtObject selection: QtObject {
+			property string bg: "#66001017"
+			property string outline: "#ee33ccff"
+			property string outlineInvalid: "#aa595959"
+		}
+
+		property QtObject workspaceIndicator: QtObject {
+			property string focused: Config.colors.accent.fg
+			property string visible: "#80ffffff"
+			property string empty: "#20ffffff"
 		}
 	}
 
-	readonly property EasingCurve popoutXCurve: EasingCurve {
-		curve.type: Easing.OutQuint
-	}
-
-	readonly property EasingCurve popoutYCurve: EasingCurve {
-		curve.type: Easing.InQuart
-	}
-
-	readonly property real _MIN_MS: 60000
-	readonly property real _HOUR_MS: 3600000
-	readonly property real _DAY_MS: 86400000
+	property real _MIN_MS: 60000
+	property real _HOUR_MS: 3600000
+	property real _DAY_MS: 86400000
 }

@@ -55,14 +55,6 @@ PanelWindow {
 						Text2 {
 							id: mediaText
 							text: MPRIS.title + " - " + MPRIS.artist
-
-							MediaControls {
-								id: mediaControls
-								relativeX: root.width / 2 - width / 2
-								relativeY: -height - Config.layout.popup.gap
-								parentWindow: root
-								visible: false
-							}
 						}
 					}
 				}
@@ -88,27 +80,16 @@ PanelWindow {
 								width: 16
 								height: 16
 								anchors.verticalCenter: parent.verticalCenter
-								source: Config.audioProvider.muted ? "../image/speaker_muted.png" :
-									Config.audioProvider.volume < 25 ? "../image/speaker_volume_very_low.png" :
-									Config.audioProvider.volume < 50 ? "../image/speaker_volume_low.png" :
-									Config.audioProvider.volume < 75 ? "../image/speaker_volume_medium.png" :
+								source: Config.providers.audio.muted ? "../image/speaker_muted.png" :
+									Config.providers.audio.volume < 25 ? "../image/speaker_volume_very_low.png" :
+									Config.providers.audio.volume < 50 ? "../image/speaker_volume_low.png" :
+									Config.providers.audio.volume < 75 ? "../image/speaker_volume_medium.png" :
 									"../image/speaker_volume_high.png"
 							}
 						}
 
 						Text2 {
-							text: Config.audioProvider.volume + "%"
-
-							VolumeControls {
-								id: volumeControls
-								relativeY: -height - Config.layout.popup.gap
-								parentWindow: root
-								visible: false
-								onVisibleChanged: {
-									if (!visible) return
-									relativeX = volumeItem.mapToItem(rootRect, volumeItem.width / 2, 0).x - width / 2
-								}
-							}
+							text: Config.providers.audio.volume + "%"
 						}
 
 						Rectangle { width: 0 }
@@ -122,11 +103,11 @@ PanelWindow {
 								width: 16
 								height: 16
 								anchors.verticalCenter: parent.verticalCenter
-								source: Config.audioProvider.micMuted ? "../image/microphone_muted.png" : "../image/microphone.png"
+								source: Config.providers.audio.micMuted ? "../image/microphone_muted.png" : "../image/microphone.png"
 							}
 						}
 
-						Text2 { id: micVolumeText; text: Config.audioProvider.micVolume + "%" }
+						Text2 { id: micVolumeText; text: Config.providers.audio.micVolume + "%" }
 					}
 				}
 				// Text2 { text: Connman.network }
@@ -141,6 +122,26 @@ PanelWindow {
 					Text2 { color: "#a0ff88aa"; text: NetworkInfo.downloadSecText }
 				}
 			}
+		}
+	}
+
+	// moved here until reload graph is fixed
+	MediaControls {
+		id: mediaControls
+		relativeX: root.width / 2 - width / 2
+		relativeY: -height - Config.layout.popup.gap
+		parentWindow: root
+		visible: false
+	}
+
+	VolumeControls {
+		id: volumeControls
+		relativeY: -height - Config.layout.popup.gap
+		parentWindow: root
+		visible: false
+		onVisibleChanged: {
+			if (!visible) return
+			relativeX = volumeItem.mapToItem(rootRect, volumeItem.width / 2, 0).x - width / 2
 		}
 	}
 }

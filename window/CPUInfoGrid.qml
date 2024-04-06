@@ -9,8 +9,11 @@ import ".."
 PanelWindow {
 	id: root
 	color: "transparent"
-	WlrLayershell.namespace: "shell:audio_visualizer"
+	WlrLayershell.namespace: "shell:cpu_info_grid"
 	exclusiveZone: 0
+	Component.onCompleted: {
+		if (this.WlrLayershell) this.WlrLayershell.layer = WlrLayer.Bottom
+	}
 
 	GridLayout {
 		columns: 4

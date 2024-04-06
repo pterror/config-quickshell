@@ -1,0 +1,134 @@
+{
+	"debug": {
+		"enabled": false,
+		"debugRectangles": true
+	},
+	"providers": {
+		"audio": "WirePlumber",
+		"network": "NetworkManager"
+	},
+	"network": {
+		"//interface": "e.g.: enp11s0, wlan0, eth0",
+		"interface": "wlp10s0"
+	},
+	"wallpapers": {
+		"folder": ["+", ["env", "HOME"], "/.config/wallpapers/"],
+		"formats": ["raw", ["*.png", "*.jpeg", "*.jpg"]],
+		"getSeed": ["user-lib", "getWallpaperSeed"]
+	},
+	"font": {
+		"family": "Liberation Sans"
+	},
+	"//shaderWallpaper": "TODO: be able to set wallpaper/shader for each desktop",
+	"shaderWallpaper": {
+		"shader": "Night_Sky",
+		"speed": 1.0,
+		"mouse": true,
+		"mouseSpeedBias": 1.0,
+		"channel0": "../blank.png",
+		"channel1": "../blank.png",
+		"channel2": "../blank.png",
+		"channel3": "../blank.png"
+	},
+	"icon": {
+		"theme": "flat",
+		"opacity": "80"
+	},
+	"layout": {
+		"//rectangle": "fallback values for arbitrary rectangles",
+		"rectangle": {
+			"radius": 4,
+			"bg": "#30ffeef8"
+		},
+		"popup": {
+			"gap": 8
+		},
+		"icon": {
+			"size": 32
+		},
+		"widget": {
+			"radius": 8,
+			"margins": 4,
+			"border": 0,
+			"fontSize": 11,
+			"fg": "#a0ffffff",
+			"bg": "#40e0ffff",
+			"accent": ["config", "colors", "accent", "fg"],
+			"hoverBg": "#60e0ffff",
+			"outline": "#00ffffff"
+		},
+		"button": {
+			"radius": 8,
+			"margins": 4,
+			"border": 0,
+			"fontSize": 11,
+			"fg": "#a0ffffff",
+			"bg": "#00e0ffff",
+			"accent": ["config", "colors", "accent", "fg"],
+			"hoverBg": "#60e0ffff",
+			"outline": "#00ffffff"
+		},
+		"iconButton": {
+			"size": 32
+		},
+		"hBar": {
+			"radius": ["config", "layout", "widget", "radius"],
+			"margins": ["config", "layout", "widget", "margins"],
+			"border": ["config", "layout", "widget", "border"],
+			"fontSize": ["config", "layout", "widget", "fontSize"],
+			"height": 32
+		},
+		"barItem": {
+			"radius": 4,
+			"margins": ["config", "layout", "button", "margins"],
+			"bg": "#00e0ffff",
+			"hoverBg": "#20e0ffff",
+			"outline": "#00ffffff"
+		},
+		"selection": {
+			"radius": ["config", "layout", "widget", "radius"],
+			"border": ["config", "layout", "widget", "border"],
+			"bg": "#66001017",
+			"outline": "#ee33ccff",
+			"outlineInvalid": "#aa595959"
+		},
+		"mediaPlayer": {
+			"imageSize": 256,
+			"controlsGap": 16,
+			"controlGap": 8
+		},
+		"audioVisualizer": {
+			"gap": 4
+		},
+		"accent": {
+			"fg": "#ffffaaaa"
+		},
+		"bar": {
+			"bg": "#00e0ffff",
+			"outline": "#00ffffff"
+		},
+		"panel": [
+			"inherit",
+			["config", "widget"],
+			{
+				"radius": ["*", 2, ["config", "layout", "widget", "radius"]],
+				"margins": ["*", 2, ["config", "layout", "widget", "margins"]],
+				"innerRadius": [
+					"-",
+					["config", "layout", "panel", "radius"],
+					["config", "layout", "panel", "margins"]
+				]
+			}
+		],
+		"greeter": {
+			"fg": ["config", "colors", "panel", "fg"],
+			"bg": ["config", "colors", "panel", "bg"],
+			"outline": ["config", "colors", "panel", "outline"]
+		},
+		"workspaceIndicator": {
+			"focused": ["config", "colors", "accent", "fg"],
+			"visible": "#80ffffff",
+			"empty": "#20ffffff"
+		}
+	}
+}
