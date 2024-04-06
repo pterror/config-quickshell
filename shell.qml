@@ -52,7 +52,7 @@ ShellRoot {
 		target: Config.providers.audio
 		function onVolumeChanged() {
 			if (!volumeOsdLoader.active || !volumeOsdLoader.item) return
-			if (volumeOsdLoader.item.screen.id !== HyprlandIpc.activeScreen.id) {
+			if (volumeOsdLoader.item.screen?.id !== HyprlandIpc.activeScreen.id) {
 				volumeOsdLoader.item.screen = HyprlandIpc.activeScreen
 			}
 			volumeOsdLoader.item.show()

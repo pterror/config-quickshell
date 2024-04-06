@@ -47,20 +47,37 @@ FloatingWindow {
 				}
 			}
 
-			SettingsDynamicItem { modelData: data.tabInfos[root.tab] }
+			Loader {
+				Layout.alignment: Qt.AlignTop
+				Layout.fillWidth: true
+				sourceComponent: SettingsDynamicItem.component
+				onLoaded: item.modelData = data.tabInfos[root.tab]
+			}
 		}
 	}
 
 	Item {
 		id: data
 		readonly property list<string> tabs: Object.keys(tabInfos)
+		function getSet(path, default_) {
+			let parent = config
+			const keys = path.split(".")
+			for (const key of keys.slice(-1)) {
+				parent = parent[key] = parent[key] ?? {}
+			}
+			const lastKey = keys[keys.length - 1]
+			return {
+				get: () => parent[lastKey] ?? default_,
+				set: v => parent[lastKey] = v,
+			}
+		}
 		function orObj(obj, k) { return obj[k] = obj[k] ?? {} }
 		readonly property var tabInfos: {
 			"Theme": ["Tab", {
-				"Base text color": ["ColorInput", () => config?.theme?.base?.fg ?? "black", v => orObj(orObj(config, "theme"), "base").fg = v],
-				"Base background color": ["ColorInput", () => config?.theme?.base?.bg ?? "white", v => orObj(orObj(config, "theme"), "base").bg = v],
-				"Corner radius (px)": ["NumberInput", () => config?.theme?.base?.radius ?? 0, v => orObj(orObj(config, "theme"), "base").radius = v],
-				"Margins (px)": ["NumberInput", () => config?.theme?.base?.margins ?? 0, v => orObj(orObj(config, "theme"), "base").margins = v],
+				"Base text color": ["ColorInput", getSet("theme.base.fg", "black")],
+				"Base background color": ["ColorInput", getSet("theme.base.bg", "white")],
+				"Corner radius (px)": ["NumberInput", getSet("theme.base.radius", 0)],
+				"Margins (px)": ["NumberInput", getSet("theme.base.margins", 0)],
 			}],
 			"Layout": ["Tab", {
 				//

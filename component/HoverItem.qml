@@ -17,6 +17,7 @@ Button {
 		radius: Config.layout.button.radius
 		color: root.hovered ? Config.colors.barItem.hoverBg : Config.colors.barItem.bg
 	}
+
 	MouseArea {
 		id: mouseArea
 		anchors.fill: parent

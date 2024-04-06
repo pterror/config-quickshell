@@ -43,14 +43,14 @@ Widget {
 			color: windowMouseArea.containsMouse ? Config.colors.widget.hoverBg : Config.colors.widget.bg
 			Behavior on color { PropertyAnimation { duration: 100 } }
 
-			Button {
-				anchors.fill: parent
-				flat: true
-				icon {
-					name: modelData.class
-					height: Config.layout.icon.size
-					width: Config.layout.icon.size
-				}
+			Image {
+				readonly property int size: Math.max(1, Math.min(parent.height, parent.width, Config.layout.icon.size))
+				anchors.verticalCenter: parent.verticalCenter
+				anchors.horizontalCenter: parent.horizontalCenter
+				source: "image://icon/" + modelData.class
+				width: size
+				height: size
+				sourceSize: Qt.size(width, height)
 			}
 
 			MouseArea {

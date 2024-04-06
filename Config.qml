@@ -125,6 +125,10 @@ Singleton {
 	}
 
 	property QtObject colors: QtObject {
+		property QtObject textSelection: QtObject {
+			property string bg: "#20e0ffff"
+		}
+
 		// fallback values for arbitrary rectangles
 		property QtObject rectangle: QtObject {
 			property string bg: "#30ffeef8"
