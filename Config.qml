@@ -11,6 +11,10 @@ Singleton {
 		property bool debugRectangles: Config.debug && true
 	}
 
+	property QtObject activateLinux: QtObject {
+		property string name: "NixOS"
+	}
+
 	property QtObject providers: QtObject {
 		property var audio: WirePlumber
 		// property var network: NetworkManager
@@ -160,6 +164,12 @@ Singleton {
 		}
 
 		property QtObject greeter: QtObject {
+			property string fg: "#40e0ffff"
+			property string bg: Config.colors.panel.bg
+			property string outline: Config.colors.panel.outline
+		}
+
+		property QtObject activateLinux: QtObject {
 			property string fg: "#40e0ffff"
 			property string bg: Config.colors.panel.bg
 			property string outline: Config.colors.panel.outline

@@ -13,8 +13,8 @@ ShellRoot {
 
 	StatBar { screen: Quickshell.screens[0] }
 	MediaBar { screen: Quickshell.screens[0] }
-
 	Greeter { screen: Quickshell.screens[0] }
+	ActivateLinux { screen: Quickshell.screens[0] }
 
 	CPUInfoGrid {
 		screen: Quickshell.screens[0]
