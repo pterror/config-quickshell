@@ -4,6 +4,7 @@ import ".."
 
 Button {
 	default property alias content: mouseArea.children
+	property bool alias: false
 	required property var inner
 	id: root
 	signal clicked()

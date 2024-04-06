@@ -1,5 +1,0 @@
-import Quickshell
-
-FloatingWindow {
-
-}

@@ -15,6 +15,7 @@ ShellRoot {
 	MediaBar { screen: Quickshell.screens[0] }
 	Greeter { screen: Quickshell.screens[0] }
 	ActivateLinux { screen: Quickshell.screens[0] }
+	SettingsWindow { screen: Quickshell.screens[0] }
 
 	CPUInfoGrid {
 		screen: Quickshell.screens[0]

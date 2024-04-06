@@ -7,22 +7,28 @@ const functions = {
 	config: (ctx, ...keys) =>
 		// @ts-expect-error
 		keys.reduce((obj, key) => obj?.[String(key)], ctx.config),
-	raw: (_ctx, arg) => arg,
-	"user-lib": () => {
-		//
-	},
+	// @ts-expect-error
+	"user-lib": (ctx, key) => userLib[String(key)],
 };
 
 /** @param {ConfigContext} ctx @param {unknown[]} expr @returns {unknown} */
 function evaluate(ctx, expr) {
+	if (expr[0] === "raw") return expr[1];
 	const fn =
 		typeof expr[0] === "string"
 			? functions[expr[0]]
 			: Array.isArray(expr[0])
 			? evaluate(ctx, expr[0])
 			: undefined;
-	// @ts-expect-error
-	return fn ? fn(ctx, ...expr.slice(1)) : expr;
+	return fn
+		? // @ts-expect-error
+		  fn(
+				ctx,
+				...expr
+					.slice(1)
+					.map((val) => (Array.isArray(val) ? evaluate(ctx, val) : val))
+		  )
+		: expr;
 }
 
 /** @param {Record<string, Config>} config @param {{ env: (name: string) => string; config?: Config; }} context */

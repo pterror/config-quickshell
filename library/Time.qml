@@ -9,7 +9,7 @@ Singleton {
 	property int minute: 0
 	property int second: 0
 	property list<var> days: [
-		undefined, "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday",
+		"Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday",
 	]
 	property list<string> months: [
 		"January", "February", "March", "April", "May", "June",

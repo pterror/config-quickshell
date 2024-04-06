@@ -70,6 +70,13 @@ Singleton {
 			property int fontSize: 11
 		}
 
+		property QtObject window: QtObject {
+			property int radius: 8
+			property int margins: 4
+			property int border: 0
+			property int fontSize: 11
+		}
+
 		property QtObject button: QtObject {
 			property int radius: 8
 			property int margins: 4
@@ -154,13 +161,20 @@ Singleton {
 			property string outline: Config.colors.widget.outline
 		}
 
-		property QtObject panel: QtObject {
+		property QtObject window: QtObject {
 			property string fg: Config.colors.widget.fg
-			// property string bg: Config.colors.widget.bg
 			property string bg: "#20e0ffff"
 			property string accent: Config.colors.widget.accent
 			property string hoverBg: Config.colors.widget.hoverBg
 			property string outline: Config.colors.widget.outline
+		}
+
+		property QtObject panel: QtObject {
+			property string fg: Config.colors.window.fg
+			property string bg: Config.colors.window.bg
+			property string accent: Config.colors.window.accent
+			property string hoverBg: Config.colors.window.hoverBg
+			property string outline: Config.colors.window.outline
 		}
 
 		property QtObject greeter: QtObject {
