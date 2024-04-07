@@ -15,7 +15,7 @@ ShellRoot {
 	MediaBar { screen: Quickshell.screens[0] }
 	Greeter { screen: Quickshell.screens[0] }
 	ActivateLinux { screen: Quickshell.screens[0] }
-	SettingsWindow { screen: Quickshell.screens[0] }
+	// SettingsWindow { screen: Quickshell.screens[0] }
 
 	CPUInfoGrid {
 		screen: Quickshell.screens[0]
@@ -44,12 +44,12 @@ ShellRoot {
 
 	LazyLoader {
 		id: volumeOsdLoader
-		loading: Config.providers.audio.initialized
-		VProgressBarWindow { fraction: Config.providers.audio.volume * 0.01 }
+		loading: Config.services.audio.initialized
+		VProgressBarWindow { fraction: Config.services.audio.volume * 0.01 }
 	}
 
 	Connections {
-		target: Config.providers.audio
+		target: Config.services.audio
 		function onVolumeChanged() {
 			if (!volumeOsdLoader.active || !volumeOsdLoader.item) return
 			if (volumeOsdLoader.item.screen?.id !== HyprlandIpc.activeScreen.id) {

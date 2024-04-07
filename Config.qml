@@ -15,7 +15,7 @@ Singleton {
 		property string name: "NixOS"
 	}
 
-	property QtObject providers: QtObject {
+	property QtObject services: QtObject {
 		property var audio: WirePlumber
 		// property var network: NetworkManager
 	}

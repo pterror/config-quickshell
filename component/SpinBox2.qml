@@ -29,13 +29,18 @@ SpinBox {
 		radius: Config.layout.barItem.radius
 		Text {
 			text: "▴"
-			font.pixelSize: root.font.pixelSize * 2
 			color: Config.colors.widget.fg
 			anchors.fill: parent
 			fontSizeMode: Text.Fit
 			horizontalAlignment: Text.AlignHCenter
 			verticalAlignment: Text.AlignVCenter
 		}
+		MouseArea { // for cursor only
+			enabled: false
+			anchors.fill: parent
+			cursorShape: Qt.PointingHandCursor
+		}
+		Behavior on color { PropertyAnimation { duration: 100 } }
 	}
 	down.indicator: Rectangle {
 		anchors.right: parent.right
@@ -46,16 +51,21 @@ SpinBox {
 		radius: Config.layout.barItem.radius
 		Text {
 			text: "▾"
-			font.pixelSize: root.font.pixelSize * 2
 			color: Config.colors.widget.fg
 			anchors.fill: parent
 			fontSizeMode: Text.Fit
 			horizontalAlignment: Text.AlignHCenter
 			verticalAlignment: Text.AlignVCenter
 		}
+		MouseArea { // for cursor only
+			enabled: false
+			anchors.fill: parent
+			cursorShape: Qt.PointingHandCursor
+		}
+		Behavior on color { PropertyAnimation { duration: 100 } }
 	}
 	background: Rectangle {
-		color: Config.colors.widget.hoverBg
+		color: Config.colors.widget.bg
 		radius: Config.layout.barItem.radius
 	}
 }

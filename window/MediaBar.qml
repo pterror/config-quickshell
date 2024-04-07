@@ -80,16 +80,16 @@ PanelWindow {
 								width: 16
 								height: 16
 								anchors.verticalCenter: parent.verticalCenter
-								source: Config.providers.audio.muted ? "../image/speaker_muted.png" :
-									Config.providers.audio.volume < 25 ? "../image/speaker_volume_very_low.png" :
-									Config.providers.audio.volume < 50 ? "../image/speaker_volume_low.png" :
-									Config.providers.audio.volume < 75 ? "../image/speaker_volume_medium.png" :
+								source: Config.services.audio.muted ? "../image/speaker_muted.png" :
+									Config.services.audio.volume < 25 ? "../image/speaker_volume_very_low.png" :
+									Config.services.audio.volume < 50 ? "../image/speaker_volume_low.png" :
+									Config.services.audio.volume < 75 ? "../image/speaker_volume_medium.png" :
 									"../image/speaker_volume_high.png"
 							}
 						}
 
 						Text2 {
-							text: Config.providers.audio.volume + "%"
+							text: Config.services.audio.volume + "%"
 						}
 
 						Rectangle { width: 0 }
@@ -103,11 +103,11 @@ PanelWindow {
 								width: 16
 								height: 16
 								anchors.verticalCenter: parent.verticalCenter
-								source: Config.providers.audio.micMuted ? "../image/microphone_muted.png" : "../image/microphone.png"
+								source: Config.services.audio.micMuted ? "../image/microphone_muted.png" : "../image/microphone.png"
 							}
 						}
 
-						Text2 { id: micVolumeText; text: Config.providers.audio.micVolume + "%" }
+						Text2 { id: micVolumeText; text: Config.services.audio.micVolume + "%" }
 					}
 				}
 				// Text2 { text: Connman.network }

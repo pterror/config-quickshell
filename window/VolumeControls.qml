@@ -21,34 +21,34 @@ PopupWindow {
 		ColumnLayout2 {
 			autoSize: true
 			VProgressBar {
-				fraction: Config.providers.audio.volume * 0.01
+				fraction: Config.services.audio.volume * 0.01
 				width: 48
 				height: 224
-				onInput: fraction => Config.providers.audio.setVolume(fraction * 100)
+				onInput: fraction => Config.services.audio.setVolume(fraction * 100)
 			}
 			HoverIcon {
 				Layout.alignment: Qt.AlignHCenter
-				source: Config.providers.audio.muted ? "../image/speaker_muted.png" :
-					Config.providers.audio.volume < 25 ? "../image/speaker_volume_very_low.png" :
-					Config.providers.audio.volume < 50 ? "../image/speaker_volume_low.png" :
-					Config.providers.audio.volume < 75 ? "../image/speaker_volume_medium.png" :
+				source: Config.services.audio.muted ? "../image/speaker_muted.png" :
+					Config.services.audio.volume < 25 ? "../image/speaker_volume_very_low.png" :
+					Config.services.audio.volume < 50 ? "../image/speaker_volume_low.png" :
+					Config.services.audio.volume < 75 ? "../image/speaker_volume_medium.png" :
 					"../image/speaker_volume_high.png"
-				onClicked: Config.providers.audio.toggleMute()
+				onClicked: Config.services.audio.toggleMute()
 			}
 		}
 
 		ColumnLayout2 {
 			autoSize: true
 			VProgressBar {
-				fraction: Config.providers.audio.micVolume * 0.01
+				fraction: Config.services.audio.micVolume * 0.01
 				width: 48
 				height: 224
-				onInput: fraction => Config.providers.audio.setMicVolume(fraction * 100)
+				onInput: fraction => Config.services.audio.setMicVolume(fraction * 100)
 			}
 			HoverIcon {
 				Layout.alignment: Qt.AlignHCenter
-				source: Config.providers.audio.micMuted ? "../image/microphone_muted.png" : "../image/microphone.png"
-				onClicked: Config.providers.audio.toggleMicMute()
+				source: Config.services.audio.micMuted ? "../image/microphone_muted.png" : "../image/microphone.png"
+				onClicked: Config.services.audio.toggleMicMute()
 			}
 		}
 	}

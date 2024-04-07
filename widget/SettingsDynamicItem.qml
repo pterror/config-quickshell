@@ -53,15 +53,49 @@ Singleton {
 				}
 			}
 
+			// readonly property Component textInputComponent: Component {
+			// 	TextInput {
+			// 		color: Config.colors.widget.fg
+			// 		font.family: Config.font.family
+			// 		font.pointSize: Config.layout.widget.fontSize
+			// 		text: modelDataInner.get()
+			// 		onAccepted: {
+			// 			modelDataInner.set(text)
+			// 			text = modelDataInner.get()
+			// 		}
+
+			// 		Rectangle {
+			// 			anchors.fill: parent
+			// 			anchors.margins: Config.layout.hBar.margins
+			// 			color: Config.colors.widget.bg
+			// 			radius: Config.layout.barItem.radius
+			// 		}
+			// 	}
+			// }
+
 			readonly property Component textInputComponent: Component {
-				TextInput {
-					text: modelDataInner.get()
-					onAccepted: {
-						modelDataInner.set(text)
-						text = modelDataInner.get()
+				Rectangle {
+					anchors.margins: Config.layout.hBar.margins
+					width: 80
+					height: 16
+					color: Config.colors.widget.bg
+					radius: Config.layout.barItem.radius
+
+					TextInput {
+						anchors.fill: parent
+						color: Config.colors.widget.fg
+						font.family: Config.font.family
+						font.pointSize: Config.layout.widget.fontSize
+						horizontalAlignment: Qt.AlignHCenter
+						text: modelDataInner.get()
+						onAccepted: {
+							modelDataInner.set(text)
+							text = modelDataInner.get()
+						}
 					}
 				}
 			}
+
 
 			readonly property Component numberInputComponent: Component {
 				SpinBox2 {
@@ -74,11 +108,35 @@ Singleton {
 			}
 
 			readonly property Component colorInputComponent: Component {
-				ColorDialog {
-					selectedColor: modelDataInner.get()
-					onAccepted: {
-						modelDataInner.set(selectedColor)
-						selectedColor = modelDataInner.get()
+				Item {
+					Rectangle {
+						id: colorDisplay
+						anchors.margins: Config.layout.hBar.margins
+						width: 80
+						height: 16
+						radius: Config.layout.barItem.radius
+						color: modelDataInner.get()
+
+						MouseArea {
+							anchors.fill: parent
+							cursorShape: Qt.PointingHandCursor
+							onClicked: colorInput.visible = !colorInput.visible
+						}
+
+						ColorDialog {
+							id: colorDialog
+							selectedColor: modelDataInner.get()
+							onAccepted: {
+								modelDataInner.set(selectedColor)
+								selectedColor = modelDataInner.get()
+								colorDisplay.color = modelDataInner.get()
+							}
+						}
+					}
+
+					ColumnLayout2 {
+						id: colorInput
+						visible: false
 					}
 				}
 			}
