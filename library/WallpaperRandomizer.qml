@@ -29,6 +29,9 @@ QtObject {
 		for (const screen of Quickshell.screens) {
 			newWallpapers[screen.name] = shuffled.pop()
 		}
+		if (Config.debug) {
+			console.log("Newwallpapers:", JSON.stringify(newWallpapers))
+		}
 		return newWallpapers
 	}
 

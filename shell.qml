@@ -3,6 +3,7 @@ import Quickshell.Io
 import Quickshell.Wayland
 import QtQuick
 import QtQuick.Layouts
+// import QtMultimedia
 import "./input"
 import "./component"
 import "./window"
@@ -26,7 +27,7 @@ ShellRoot {
 
 	HAudioVisualizerBars {
 		screen: Quickshell.screens[0]
-		fillColor: "#30ffeef8"
+		fillColor: Config.colors.audioVisualizer.barsBg
 		bars: 48
 		anchors.top: true
 		anchors.left: true
@@ -35,7 +36,7 @@ ShellRoot {
 
 	HAudioVisualizerBars {
 		screen: Quickshell.screens[0]
-		fillColor: "#30ffeef8"
+		fillColor: Config.colors.audioVisualizer.barsBg
 		bars: 48
 		anchors.bottom: true
 		anchors.left: true
@@ -93,6 +94,26 @@ ShellRoot {
 					fillMode: Image.PreserveAspectCrop
 					source: wallpaperRandomizer.wallpapers[modelData.name] ?? "blank.png"
 					asynchronous: false
+				}
+
+				// requires QtMultimedia to be installed
+				// MediaPlayer {
+				// 	source: wallpaperRandomizer.wallpapers[modelData.name] ?? "blank.png"
+				// 	videoOutput: videoOutput
+				// 	loops: MediaPlayer.Infinite
+				// 	Component.onCompleted: play()
+				// 	onSourceChanged: play()
+				// }
+
+				// VideoOutput {
+				// 	id: videoOutput
+				// 	anchors.fill: parent
+				// 	fillMode: Image.PreserveAspectCrop
+				// }
+
+				Rectangle {
+					anchors.fill: parent
+					color: Config.colors.backgroundBlend
 				}
 
 				// ShaderView {}

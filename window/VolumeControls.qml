@@ -28,11 +28,11 @@ PopupWindow {
 			}
 			HoverIcon {
 				Layout.alignment: Qt.AlignHCenter
-				source: Config.services.audio.muted ? "../image/speaker_muted.png" :
-					Config.services.audio.volume < 25 ? "../image/speaker_volume_very_low.png" :
-					Config.services.audio.volume < 50 ? "../image/speaker_volume_low.png" :
-					Config.services.audio.volume < 75 ? "../image/speaker_volume_medium.png" :
-					"../image/speaker_volume_high.png"
+				source: Config.services.audio.muted ? "../icon/flat/speaker_muted.svg" :
+					Config.services.audio.volume < 25 ? "../icon/flat/speaker_volume_very_low.svg" :
+					Config.services.audio.volume < 50 ? "../icon/flat/speaker_volume_low.svg" :
+					Config.services.audio.volume < 75 ? "../icon/flat/speaker_volume_medium.svg" :
+					"../icon/flat/speaker_volume_high.svg"
 				onClicked: Config.services.audio.toggleMute()
 			}
 		}
@@ -47,7 +47,7 @@ PopupWindow {
 			}
 			HoverIcon {
 				Layout.alignment: Qt.AlignHCenter
-				source: Config.services.audio.micMuted ? "../image/microphone_muted.png" : "../image/microphone.png"
+				source: Config.services.audio.micMuted ? "../icon/flat/microphone_muted.svg" : "../icon/flat/microphone.svg"
 				onClicked: Config.services.audio.toggleMicMute()
 			}
 		}

@@ -49,12 +49,21 @@ PanelWindow {
 				RowLayout2 {
 					autoSize: true
 					Layout.alignment: Qt.AlignVCenter | Qt.AlignHCenter
+
 					HoverItem {
 						inner: mediaText
 						onClicked: mediaControls.visible = !mediaControls.visible
+
 						Text2 {
 							id: mediaText
 							text: MPRIS.title + " - " + MPRIS.artist
+							MediaControls {
+								id: mediaControls
+								relativeX: root.width / 2 - width / 2
+								relativeY: -height - Config.layout.popup.gap
+								parentWindow: root
+								visible: false
+							}
 						}
 					}
 				}
@@ -68,6 +77,7 @@ PanelWindow {
 					inner: volumeItem
 					Layout.fillHeight: true
 					onClicked: volumeControls.visible = !volumeControls.visible
+
 					RowLayout2 {
 						id: volumeItem
 						autoSize: true
@@ -80,16 +90,26 @@ PanelWindow {
 								width: 16
 								height: 16
 								anchors.verticalCenter: parent.verticalCenter
-								source: Config.services.audio.muted ? "../image/speaker_muted.png" :
-									Config.services.audio.volume < 25 ? "../image/speaker_volume_very_low.png" :
-									Config.services.audio.volume < 50 ? "../image/speaker_volume_low.png" :
-									Config.services.audio.volume < 75 ? "../image/speaker_volume_medium.png" :
-									"../image/speaker_volume_high.png"
+								source: Config.services.audio.muted ? "../icon/flat/speaker_muted.svg" :
+									Config.services.audio.volume < 25 ? "../icon/flat/speaker_volume_very_low.svg" :
+									Config.services.audio.volume < 50 ? "../icon/flat/speaker_volume_low.svg" :
+									Config.services.audio.volume < 75 ? "../icon/flat/speaker_volume_medium.svg" :
+									"../icon/flat/speaker_volume_high.svg"
 							}
 						}
 
 						Text2 {
 							text: Config.services.audio.volume + "%"
+							VolumeControls {
+								id: volumeControls
+								relativeY: -height - Config.layout.popup.gap
+								parentWindow: root
+								visible: false
+								onVisibleChanged: {
+									if (!visible) return
+									relativeX = volumeItem.mapToItem(rootRect, volumeItem.width / 2, 0).x - width / 2
+								}
+							}
 						}
 
 						Rectangle { width: 0 }
@@ -103,14 +123,32 @@ PanelWindow {
 								width: 16
 								height: 16
 								anchors.verticalCenter: parent.verticalCenter
-								source: Config.services.audio.micMuted ? "../image/microphone_muted.png" : "../image/microphone.png"
+								source: Config.services.audio.micMuted ? "../icon/flat/microphone_muted.svg" : "../icon/flat/microphone.svg"
 							}
 						}
 
 						Text2 { id: micVolumeText; text: Config.services.audio.micVolume + "%" }
 					}
 				}
-				// Text2 { text: Connman.network }
+				RowLayout2 {
+					autoSize: true
+					Rectangle {
+						implicitWidth: wifiImage.width
+						implicitHeight: wifiImage.height
+						color: "transparent"
+						Image {
+							id: wifiImage
+							width: 16
+							height: 16
+							anchors.verticalCenter: parent.verticalCenter
+							source: !Config.services.network.connected ? "../icon/flat/wifi_disconnected.svg" :
+								Config.services.network.strength < 33 ? "../icon/flat/wifi_low.svg" :
+								Config.services.network.strength < 67 ? "../icon/flat/wifi_medium.svg" :
+								"../icon/flat/wifi_high.svg"
+					}
+					}
+					Text2 { text: Config.services.network.network }
+				}
 				RowLayout2 {
 					Layout.fillHeight: true
 					width: 48
@@ -122,26 +160,6 @@ PanelWindow {
 					Text2 { color: "#a0ff88aa"; text: NetworkInfo.downloadSecText }
 				}
 			}
-		}
-	}
-
-	// moved here until reload graph is fixed
-	MediaControls {
-		id: mediaControls
-		relativeX: root.width / 2 - width / 2
-		relativeY: -height - Config.layout.popup.gap
-		parentWindow: root
-		visible: false
-	}
-
-	VolumeControls {
-		id: volumeControls
-		relativeY: -height - Config.layout.popup.gap
-		parentWindow: root
-		visible: false
-		onVisibleChanged: {
-			if (!visible) return
-			relativeX = volumeItem.mapToItem(rootRect, volumeItem.width / 2, 0).x - width / 2
 		}
 	}
 }

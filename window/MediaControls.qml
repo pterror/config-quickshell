@@ -32,15 +32,15 @@ PopupWindow {
 			autoSize: true
 			spacing: Config.layout.mediaPlayer.controlGap
 			HoverIcon {
-				source: "../image/media_previous.png"
+				source: "../icon/flat/media_previous.svg"
 				onClicked: MPRIS.previous()
 			}
 			HoverIcon {
-				source: MPRIS.playing ? "../image/media_pause.png" : "../image/media_play.png"
+				source: MPRIS.playing ? "../icon/flat/media_pause.svg" : "../icon/flat/media_play.svg"
 				onClicked: MPRIS.playing ? MPRIS.pause() : MPRIS.play()
 			}
 			HoverIcon {
-				source: "../image/media_next.png"
+				source: "../icon/flat/media_next.svg"
 				onClicked: MPRIS.next()
 			}
 		}

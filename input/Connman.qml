@@ -9,6 +9,7 @@ Singleton {
 	property string network: ""
 	property string networkId: ""
 	property var strengths: ({})
+	property int strength: strengths[networkId]
 
 	Process {
 		running: true

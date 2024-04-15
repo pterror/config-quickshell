@@ -1,7 +1,9 @@
-import QtQuick
 import Quickshell
 import Quickshell.Io
 import Quickshell.Wayland
+import QtQuick
+import QtQuick.Layouts
+import "../input"
 import "../component"
 import "../widget"
 import ".."
@@ -13,6 +15,10 @@ PanelWindow {
 	property var workspacesData: []
 	property var clientsData: []
 	property var workspaces: recomputeWorkspaces()
+	property int maxWidth: 384
+	property int columns: 3
+	property int rows: -1
+	property int spacing: 8
 	width: content.implicitWidth
 	height: content.implicitHeight
 
@@ -21,22 +27,33 @@ PanelWindow {
 
 	onVisibleChanged: reload()
 
-	RowLayout2 {
+	Rectangle {
 		id: content
-		autoSize: true
-		radius: Config.layout.panel.radius
-		margins: Config.layout.panel.margins
 		color: Config.colors.panel.bg
+		radius: Config.layout.panel.radius
+		implicitWidth: grid.implicitWidth + Config.layout.panel.margins * 2
+		implicitHeight: grid.implicitHeight + Config.layout.panel.margins * 2
 
-		Repeater {
-			model: workspaces
+		GridLayout {
+			id: grid
+			anchors.fill: parent
+			anchors.margins: Config.layout.panel.margins
+			columns: root.columns
+			rows: root.rows
+			columnSpacing: root.spacing
+			rowSpacing: root.spacing
 
-			WorkspaceOverview {
-				required property var modelData
-				workspaceId: modelData.id
-				workspaceWidth: modelData.width
-				workspaceHeight: modelData.height
-				clients: modelData.clients
+			Repeater {
+				model: workspaces
+
+				WorkspaceOverview {
+					required property var modelData
+					width: Math.min(maxWidth, (1920 - 64) / columns)
+					workspaceId: modelData.id
+					workspaceWidth: modelData.width
+					workspaceHeight: modelData.height
+					clients: modelData.clients
+				}
 			}
 		}
 	}
@@ -65,7 +82,7 @@ PanelWindow {
 	}
 
 	function recomputeWorkspaces() {
-		const result = Array.from({ length: 9 }, (_, i) => ({ id: i + 1, x: 0, y: 0, width: 1920, height: 1080, clients: [] }))
+		const result = HyprlandIpc.workspaceInfosArray.map((_, i) => ({ id: i + 1, x: 0, y: 0, width: 1920, height: 1080, clients: [] }))
 		for (const workspace of workspacesData) {
 			const screen = Quickshell.screens.find(m => m.name === workspace.monitor)
 			if (!screen) continue
