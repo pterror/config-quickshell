@@ -1,7 +1,7 @@
 import QtQuick
 import QtQuick.Layouts
 import Quickshell
-import "../input"
+import "../io"
 import "../component"
 import ".."
 

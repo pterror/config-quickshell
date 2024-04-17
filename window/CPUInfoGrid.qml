@@ -3,7 +3,7 @@ import Quickshell.Wayland
 import QtQuick
 import QtQuick.Layouts
 import "../component"
-import "../input"
+import "../io"
 import ".."
 
 PanelWindow {

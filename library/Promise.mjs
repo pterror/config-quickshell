@@ -2,46 +2,51 @@
 export class Promise {
 	/** @param {(resolve: (value: T) => void, reject: (reason: E) => void) => void} fn */
 	constructor(fn) {
-		/** @type {"pending" | "fulfilled" | "rejected"} */
+		/** @protected @type {"pending" | "fulfilled" | "rejected"} */
 		this.status = "pending";
-		/** @private @type {T} */
+		/** @protected @type {T} */
 		this.value;
-		/** @private @type {E} */
+		/** @protected @type {E} */
 		this.reason;
-		/** @type {((value: T) => void)[]} */
+		/** @protected @type {((value: T) => void)[]} */
 		this.thens = [];
-		/** @type {((reason: E) => void)[]} */
+		/** @protected @type {((reason: E) => void)[]} */
 		this.catches = [];
-		fn(
-			(value) => {
-				if (this.status === "pending") {
-					this.status = "fulfilled";
-					this.value = value;
-					if (value instanceof Promise) {
-						for (const handler of this.thens) {
-							value.then(handler);
-						}
-					} else {
-						for (const handler of this.thens) {
-							handler(value);
-						}
-					}
-					this.thens = [];
-					this.catches = [];
+		/** @param {E} reason */
+		const reject = (reason) => {
+			if (this.status === "pending") {
+				this.status = "rejected";
+				this.reason = reason;
+				for (const handler of this.catches) {
+					handler(reason);
 				}
-			},
-			(reason) => {
-				if (this.status === "pending") {
-					this.status = "rejected";
-					this.reason = reason;
-					for (const handler of this.catches) {
-						handler(reason);
-					}
-					this.thens = [];
-					this.catches = [];
-				}
+				this.thens = [];
+				this.catches = [];
 			}
-		);
+		};
+		/** @param {T} value */
+		const resolve = (value) => {
+			if (this.status === "pending") {
+				this.value = value;
+				if (value instanceof Promise) {
+					value.then(resolve, reject);
+					value.thens.push(...this.thens);
+					value.catches.push(...this.catches);
+				} else {
+					this.status = "fulfilled";
+					for (const handler of this.thens) {
+						handler(value);
+					}
+				}
+				this.thens = [];
+				this.catches = [];
+			}
+		};
+		fn(resolve, reject);
+	}
+
+	toString() {
+		return "<Promise status=" + this.status + ">";
 	}
 
 	/** @template R
@@ -53,12 +58,13 @@ export class Promise {
 		if (!onFulfilled && !onRejected) return this;
 		if (this.status === "pending") {
 			return new Promise((resolve, reject) => {
-				if (onFulfilled)
+				if (onFulfilled) {
 					this.thens.push((value) => resolve(onFulfilled(value)));
+				}
 				if (onRejected) {
 					this.catches.push((reason) => resolve(onRejected(reason)));
 				} else {
-					this.catches.push((reason) => reject(reason));
+					this.catches.push(reject);
 				}
 			});
 		} else if (this.status === "fulfilled") {
@@ -89,12 +95,20 @@ export class Promise {
 
 	/** @template T @template E @param {T} value @return {Promise<T, E>} */
 	static resolve(value) {
-		return new Promise((resolve) => resolve(value));
+		/** @type {Promise<T, E>} */
+		const result = new Promise(() => {});
+		result.status = "fulfilled";
+		result.value = value;
+		return result;
 	}
 
 	/** @template E @template T @param {E} reason @return {Promise<T, E>} */
 	static reject(reason) {
-		return new Promise((_, reject) => reject(reason));
+		/** @type {Promise<T, E>} */
+		const result = new Promise(() => {});
+		result.status = "rejected";
+		result.reason = reason;
+		return result;
 	}
 	// TODO: all, allSettled, race
 }

@@ -3,7 +3,7 @@ pragma Singleton
 // unused. swap this file and Config.qml to switch themes.
 import QtQuick
 import Quickshell
-import "./input"
+import "./io"
 
 Singleton {
 	property string name: "n_n"

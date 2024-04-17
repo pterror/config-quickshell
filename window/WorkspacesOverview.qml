@@ -3,7 +3,7 @@ import Quickshell.Io
 import Quickshell.Wayland
 import QtQuick
 import QtQuick.Layouts
-import "../input"
+import "../io"
 import "../component"
 import "../widget"
 import ".."

@@ -7,7 +7,6 @@ Button {
 	property bool alias: false
 	required property var inner
 	id: root
-	signal clicked()
 	flat: true
 	implicitWidth: inner.implicitWidth + Config.layout.barItem.margins * 2
 	implicitHeight: inner.implicitHeight + Config.layout.barItem.margins * 2

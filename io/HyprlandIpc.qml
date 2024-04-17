@@ -4,6 +4,7 @@ import Quickshell
 import Quickshell.Io
 import QtQuick
 import ".."
+import "../library/Promise.mjs" as Promise
 
 Singleton {
 	property string submap: ""
@@ -160,7 +161,7 @@ Singleton {
 							const [name] = args
 							const info = workspaceInfos[name]
 							if (!info) break
-							info.focused = false
+							// info.focused = false
 							info.exists = false
 							setWorkspaceInfo(info)
 							break
@@ -171,73 +172,96 @@ Singleton {
 		}
 	}
 
-	Process {
-		running: true
-		command: ["hyprctl", "activewindow", "-j"]
-		stdout: SplitParser {
-			splitMarker: ""
-			onRead: json => {
-				const data = JSON.parse(json)
-				activeWindow.address = data.address.slice(2)
-				activeWindow.title = data.title
-				activeWindow.klass = data.class
-				activeWorkspace.id = data.workspace.id
-				activeWorkspace.name = data.workspace.name
+	property bool hyprctlErrored: false
+	property string queuedCtl: ""
+	property string queuedCtlResponse: ""
+	property var ctlPromise: Promise.Promise.resolve(null)
+	property var resolveCtlPromise: () => {}
+	property var rejectCtlPromise: () => {}
+
+	Socket {
+		id: hyprctl
+		onConnectedChanged: {
+			if (connected) {
+				write(queuedCtl)
+			} else if (!hyprctlErrored) {
+				resolveCtlPromise(queuedCtlResponse)
+				queuedCtl = ""
+				queuedCtlResponse = ""
 			}
+			hyprctlErrored = false
+		}
+		path: `/tmp/hypr/${Quickshell.env("HYPRLAND_INSTANCE_SIGNATURE")}/.socket.sock`
+		parser: SplitParser {
+			splitMarker: ""
+			onRead: data => {
+				queuedCtlResponse = data
+				hyprctl.connected = false
+			}
+		}
+		onError: error => {
+			hyprctlErrored = true
+			// FIXME: this SHOULD work, but breaks during initialization
+			// it's possible that something else is occuping the socket during initialization
+			// rejectCtlPromise(error)
+			workaround.running = true
 		}
 	}
 
-	Process {
-		running: true
-		command: ["hyprctl", "workspaces", "-j"]
-		stdout: SplitParser {
-			splitMarker: ""
-			onRead: json => {
-				const data = JSON.parse(json)
-				for (const datum of data) {
-					const info = workspaceInfos[datum.name]
-					if (!info) continue
-					info.exists = true
-					setWorkspaceInfo(info)
-				}
-			}
-		}
+	Timer {
+		id: workaround
+		interval: 100
+		onTriggered: hyprctl.connected = true
 	}
 
-	Process {
-		running: true
-		command: ["hyprctl", "clients", "-j"]
-		stdout: SplitParser {
-			splitMarker: ""
-			onRead: json => {
-				const data = JSON.parse(json)
-				for (const datum of data) {
-					const address = datum.address.slice(2)
-					const info = windows[address] ?? {}
-					info.address = address
-					info.klass = datum.class
-					info.title = datum.title
-					info.initialClass = datum.initialClass
-					info.initialTitle = datum.initialTitle
-					windows[datum.address] = info
-				}
-			}
-		}
+	function exec(flags, ...args) {
+		const ctl = (flags ?? "") + "/" + args.join(" ")
+		return ctlPromise = ctlPromise.then(() => new Promise.Promise((resolve, reject) => {
+			queuedCtl = ctl
+			resolveCtlPromise = resolve
+			rejectCtlPromise = reject
+			hyprctl.connected = true
+		}))
 	}
 
-	Process {
-		running: true
-		command: ["hyprctl", "activeworkspace", "-j"]
-		stdout: SplitParser {
-			splitMarker: ""
-			onRead: json => {
-				const data = JSON.parse(json)
-				const info = workspaceInfos[data.name]
-				if (!info) return
-				info.focused = true
+	Component.onCompleted: {
+		exec("j", "activewindow").then(json => {
+			const data = JSON.parse(json)
+			activeWindow.address = data.address.slice(2)
+			activeWindow.title = data.title
+			activeWindow.klass = data.class
+			activeWorkspace.id = data.workspace.id
+			activeWorkspace.name = data.workspace.name
+		})
+		exec("j", "workspaces").then(json => {
+			const data = JSON.parse(json)
+			for (const datum of data) {
+				const info = workspaceInfos[datum.name]
+				if (!info) continue
+				info.exists = true
 				setWorkspaceInfo(info)
 			}
-		}
+		})
+		exec("j", "clients").then(json => {
+			const data = JSON.parse(json)
+			for (const datum of data) {
+				const address = datum.address.slice(2)
+				const info = windows[address] ?? {}
+				info.address = address
+				info.klass = datum.class
+				info.title = datum.title
+				info.initialClass = datum.initialClass
+				info.initialTitle = datum.initialTitle
+				windows[datum.address] = info
+			}
+		})
+		exec("j", "activeworkspace").then(json => {
+			const data = JSON.parse(json)
+			const info = workspaceInfos[data.name]
+			if (!info) return
+			info.focused = true
+			setWorkspaceInfo(info)
+		})
 	}
 
 	function setWorkspaceInfo(info) {
@@ -245,33 +269,15 @@ Singleton {
 		if (info.id >= 1 && info.id <= 9) workspaceInfosArray[info.id - 1] = info
 	}
 
-	Process {
-		id: focusWindowProcess
-		command: ["hyprctl", "dispatch", "focuswindow", windowToFocus]
-	}
-
 	function focusWindow(id) {
-		windowToFocus = String(id)
-		focusWindowProcess.running = true
-	}
-
-	Process {
-		id: focusWorkspaceProcess
-		command: ["hyprctl", "dispatch", "workspace", workspaceToFocus]
+		exec(null, "dispatch", "focuswindow", String(id))
 	}
 
 	function focusWorkspace(address) {
-		workspaceToFocus = String(address)
-		focusWorkspaceProcess.running = true
-	}
-
-	Process {
-		id: focusWorkspaceOnCurrentMonitorProcess
-		command: ["hyprctl", "dispatch", "workspace", workspaceToFocusOnCurrentMonitor]
+		exec(null, "dispatch", "workspace", String(address))
 	}
 
 	function focusWorkspaceOnCurrentMonitor(id) {
-		workspaceToFocusOnCurrentMonitor = String(id)
-		focusWorkspaceOnCurrentMonitorProcess.running = true
+		exec(null, "dispatch", "workspace", String(id))
 	}
 }

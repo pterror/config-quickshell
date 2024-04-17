@@ -22,6 +22,12 @@ export class Response {
 		this.headers = new Headers(options?.headers ?? []);
 	}
 
+	toString() {
+		return (
+			"<Response status=" + this.status + " statusText=" + this.statusText + ">"
+		);
+	}
+
 	/** @return {Promise<string>} */
 	text() {
 		return Promise.resolve(this._body);

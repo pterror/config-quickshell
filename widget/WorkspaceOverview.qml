@@ -1,7 +1,7 @@
 import QtQuick
 import QtQuick.Controls
 import Quickshell
-import "../input"
+import "../io"
 import "../component"
 import ".."
 

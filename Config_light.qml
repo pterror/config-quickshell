@@ -2,7 +2,7 @@ pragma Singleton
 
 import QtQuick
 import Quickshell
-import "./input"
+import "./io"
 
 Singleton {
 	property string name: "n_n"

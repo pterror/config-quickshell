@@ -4,7 +4,7 @@ import Quickshell.Wayland
 import QtQuick
 import QtQuick.Layouts
 // import QtMultimedia
-import "./input"
+import "./io"
 import "./component"
 import "./window"
 import "./library"
@@ -15,7 +15,7 @@ ShellRoot {
 	StatBar { screen: Quickshell.screens[0] }
 	MediaBar { screen: Quickshell.screens[0] }
 	Greeter { screen: Quickshell.screens[0] }
-	ActivateLinux { screen: Quickshell.screens[0] }
+	// ActivateLinux { screen: Quickshell.screens[0] }
 	// SettingsWindow { screen: Quickshell.screens[0] }
 
 	CPUInfoGrid {

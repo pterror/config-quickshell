@@ -3,7 +3,7 @@ import QtQuick.Layouts
 import QtQuick.Controls
 import Quickshell
 import "../component"
-import "../input"
+import "../io"
 import ".."
 
 PopupWindow {

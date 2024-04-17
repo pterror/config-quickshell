@@ -4,7 +4,7 @@ import QtQuick.Shapes
 import Quickshell
 import Quickshell.Wayland
 import "../component"
-import "../input"
+import "../io"
 import ".."
 
 PanelWindow {
