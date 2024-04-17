@@ -53,8 +53,8 @@ ShellRoot {
 		target: Config.services.audio
 		function onVolumeChanged() {
 			if (!volumeOsdLoader.active || !volumeOsdLoader.item) return
-			if (volumeOsdLoader.item.screen?.id !== HyprlandIpc.activeScreen.id) {
-				volumeOsdLoader.item.screen = HyprlandIpc.activeScreen
+			if (volumeOsdLoader.item.screen?.id !== Hyprland.activeScreen.id) {
+				volumeOsdLoader.item.screen = Hyprland.activeScreen
 			}
 			volumeOsdLoader.item.show()
 		}
@@ -63,18 +63,18 @@ ShellRoot {
 	WorkspacesOverview { id: workspacesOverview }
 
 	Connections {
-		target: ShellIpc
+		target: Shell
 		function onWorkspacesOverviewChanged() {
-			workspacesOverview.visible = ShellIpc.workspacesOverview
+			workspacesOverview.visible = Shell.workspacesOverview
 			if (!workspacesOverview.visible) return
-			if (workspacesOverview.screen.id !== HyprlandIpc.activeScreen.id) {
-				workspacesOverview.screen = HyprlandIpc.activeScreen
+			if (workspacesOverview.screen.id !== Hyprland.activeScreen.id) {
+				workspacesOverview.screen = Hyprland.activeScreen
 			}
 		}
 	}
 
 	PersistentProperties {
-		onLoaded: workspacesOverview.visible = ShellIpc.workspacesOverview
+		onLoaded: workspacesOverview.visible = Shell.workspacesOverview
 	}
 
 	Variants {
@@ -145,10 +145,10 @@ ShellRoot {
 					}
 
 					Connections {
-						target: ShellIpc
+						target: Shell
 
 						function onTermSelectChanged() {
-							if (ShellIpc.termSelect) {
+							if (Shell.termSelect) {
 								selectionLayer.selectionArea.startSelection(true)
 							} else {
 								selectionLayer.selectionArea.endSelection()
@@ -157,7 +157,7 @@ ShellRoot {
 					}
 
 					Connections {
-						target: HyprlandIpc
+						target: Hyprland
 
 						function onWindowOpened(_, _, klass, _) {
 							if (klass === "AlacrittyTermselect") {

@@ -50,14 +50,14 @@ Singleton {
 			splitMarker: ""
 			onRead: message => {
 				if (Config.debug) {
-					console.log("HyprlandIpc [stdin]: " + message)
+					console.log("Hyprland [stdin]: " + message)
 				}
 				const lines = message.split(/\n(?=.+>>|$)/)
 				for (const line of lines) {
 					if (!line) continue
 					const [, type, body] = line.match(/(.+)>>([\s\S]+)/)
 					if (body === undefined) {
-						console.log("HyprlandIpc: error: malformed message: " + message)
+						console.log("Hyprland: error: malformed message: " + message)
 						continue
 					}
 					const args = body.split(",")
@@ -69,7 +69,7 @@ Singleton {
 						case "submap": {
 							[submap] = args
 							if (submap === "quickshell:workspaces_overview:toggle") {
-								ShellIpc.workspacesOverview = !ShellIpc.workspacesOverview
+								Shell.workspacesOverview = !Shell.workspacesOverview
 							}
 							break
 						}

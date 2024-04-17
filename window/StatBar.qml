@@ -40,7 +40,7 @@ PanelWindow {
 				Layout.fillHeight: true
 				Layout.fillWidth: true
 
-				Text2 { text: HyprlandIpc.activeWindow.title }
+				Text2 { text: Hyprland.activeWindow.title }
 			}
 			RowLayout2 {
 				Layout.fillHeight: true
@@ -50,7 +50,7 @@ PanelWindow {
 				HSpace {}
 				HoverItem {
 					inner: workspacesStatus
-					onClicked: ShellIpc.workspacesOverview = !ShellIpc.workspacesOverview
+					onClicked: Shell.workspacesOverview = !Shell.workspacesOverview
 					WorkspacesStatus { id: workspacesStatus }
 				}
 			}

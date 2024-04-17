@@ -16,7 +16,7 @@ Singleton {
 			parser: SplitParser {
 				onRead: message => {
 					if (Config.debug) {
-						console.log("ShellIpc: " + message)
+						console.log("Shell: " + message)
 					}
 					switch (message) {
 						case "termselect:start": { termSelect = true; break }
@@ -25,7 +25,7 @@ Singleton {
 						case "workspaces_overview:close": { workspacesOverview = false; break }
 						case "workspaces_overview:toggle": { workspacesOverview = !workspacesOverview; break }
 						default: {
-							console.error(`ShellIpc received unknown message: ${message}`)
+							console.error(`Shell received unknown message: ${message}`)
 							break
 						}
 					}

@@ -82,7 +82,7 @@ PanelWindow {
 	}
 
 	function recomputeWorkspaces() {
-		const result = HyprlandIpc.workspaceInfosArray.map((_, i) => ({ id: i + 1, x: 0, y: 0, width: 1920, height: 1080, clients: [] }))
+		const result = Hyprland.workspaceInfosArray.map((_, i) => ({ id: i + 1, x: 0, y: 0, width: 1920, height: 1080, clients: [] }))
 		for (const workspace of workspacesData) {
 			const screen = Quickshell.screens.find(m => m.name === workspace.monitor)
 			if (!screen) continue

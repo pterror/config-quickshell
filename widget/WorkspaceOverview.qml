@@ -24,8 +24,8 @@ Widget {
 		anchors.fill: parent
 		cursorShape: Qt.PointingHandCursor
 		onClicked: {
-			HyprlandIpc.focusWorkspace(workspaceId)
-			ShellIpc.workspacesOverview = false
+			Hyprland.focusWorkspace(workspaceId)
+			Shell.workspacesOverview = false
 		}
 	}
 
@@ -59,8 +59,8 @@ Widget {
 				anchors.fill: parent
 				cursorShape: Qt.PointingHandCursor
 				onClicked: {
-					HyprlandIpc.focusWindow("address:" + modelData.address)
-					ShellIpc.workspacesOverview = false
+					Hyprland.focusWindow("address:" + modelData.address)
+					Shell.workspacesOverview = false
 				}
 			}
 		}

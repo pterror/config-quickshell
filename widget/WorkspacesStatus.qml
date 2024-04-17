@@ -8,7 +8,7 @@ import ".."
 RowLayout2 {
 	autoSize: true
 	Repeater {
-		model: HyprlandIpc.workspaceInfosArray
+		model: Hyprland.workspaceInfosArray
 		Text2 {
 			Layout.minimumWidth: 13
 			required property var modelData
