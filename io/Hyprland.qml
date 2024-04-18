@@ -172,7 +172,6 @@ Singleton {
 		}
 	}
 
-	property bool hyprctlErrored: false
 	property string queuedCtl: ""
 	property string queuedCtlResponse: ""
 	property var ctlPromise: Promise.Promise.resolve(null)
@@ -184,12 +183,12 @@ Singleton {
 		onConnectedChanged: {
 			if (connected) {
 				write(queuedCtl)
-			} else if (!hyprctlErrored) {
+				flush()
+			} else {
 				resolveCtlPromise(queuedCtlResponse)
 				queuedCtl = ""
 				queuedCtlResponse = ""
 			}
-			hyprctlErrored = false
 		}
 		path: `/tmp/hypr/${Quickshell.env("HYPRLAND_INSTANCE_SIGNATURE")}/.socket.sock`
 		parser: SplitParser {
@@ -199,19 +198,6 @@ Singleton {
 				hyprctl.connected = false
 			}
 		}
-		onError: error => {
-			hyprctlErrored = true
-			// FIXME: this SHOULD work, but breaks during initialization
-			// it's possible that something else is occuping the socket during initialization
-			// rejectCtlPromise(error)
-			workaround.running = true
-		}
-	}
-
-	Timer {
-		id: workaround
-		interval: 100
-		onTriggered: hyprctl.connected = true
 	}
 
 	function exec(flags, ...args) {
