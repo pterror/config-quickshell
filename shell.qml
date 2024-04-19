@@ -43,10 +43,16 @@ ShellRoot {
 		anchors.right: true
 	}
 
-	ScrollSpinner {
+	AnalogClock {
 		screen: Quickshell.screens[0]
 		anchors.left: true; anchors.top: true
-		margins.left: 32; margins.top: 32
+		margins.left: 32; margins.top: (screen.height - Config.layout.hBar.height - height) / 2
+	}
+
+	ScrollSpinner {
+		screen: Quickshell.screens[0]
+		anchors.right: true; anchors.top: true
+		margins.right: 64; margins.top: (screen.height - Config.layout.hBar.height - height) / 2
 	}
 
 	LazyLoader {

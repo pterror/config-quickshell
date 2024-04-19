@@ -13,12 +13,5 @@ PanelWindow {
 		if (this.WlrLayershell) this.WlrLayershell.layer = WlrLayer.Bottom
 	}
 
-	Spinner { id: content }
-
-	WheelHandler {
-		acceptedDevices: PointerDevice.Mouse | PointerDevice.TouchPad
-		onWheel: (event) => {
-			content.spin((event.angleDelta.x + event.angleDelta.y) / 4)
-		}
-	}
+	AnalogClockWidget { id: content }
 }

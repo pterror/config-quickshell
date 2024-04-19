@@ -8,9 +8,9 @@ Rectangle {
 	property int ticks: 12
 	property int tickHeight: 24
 	property int tickWidth: 6
+	property int tickRadius: 2
 	property real angle: 0
 	property real smoothedAngle: angle
-	property bool clickQueued: false
 	property real degreesPerTick: 360 / ticks
 	implicitWidth: radius * 2
 	implicitHeight: radius * 2
@@ -22,7 +22,7 @@ Rectangle {
 		required property int modelData
 		width: root.tickWidth
 		height: root.tickHeight
-		radius: 2
+		radius: tickRadius
 		color: Config.colors.widget.accent
 		x: root.radius + root.radius * Math.cos((-root.smoothedAngle - 90) * Math.PI / 180)
 		y: root.radius + root.radius * Math.sin((-root.smoothedAngle - 90) * Math.PI / 180)
@@ -41,7 +41,7 @@ Rectangle {
 			required property int modelData
 			width: root.tickWidth
 			height: root.tickHeight
-			radius: 2
+			radius: tickRadius
 			color: Config.colors.widget.bg
 			x: root.radius + root.radius * Math.cos(modelData * 2 * Math.PI / root.ticks)
 			y: root.radius + root.radius * Math.sin(modelData * 2 * Math.PI / root.ticks)
