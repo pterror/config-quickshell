@@ -37,8 +37,8 @@ QtObject {
 
 	property Connections timeConnection: Connections {
 		target: Time
-		function onMinuteChanged(hour, minute) {
-			if (hour === 7 && minute === 30) wallpapers = getWallpapers()
+		function onMinuteChanged() {
+			if (Time.hour === 7 && Time.minute === 30) wallpapers = getWallpapers()
 		}
 	}
 }

@@ -28,13 +28,6 @@ PanelWindow {
 			RowLayout2 {
 				Layout.fillHeight: true
 				width: 400
-
-				Text2 {
-					Layout.alignment: Qt.AlignLeft
-					function n(n) { return String(n).padStart(2, "0") }
-					text: n(Time.time.getDate()) + "/" + n(Time.time.getMonth() + 1) + " " +
-						n(Time.time.getHours()) + ":" + n(Time.time.getMinutes()) + ":" + n(Time.time.getSeconds())
-				}
 			}
 			RowLayout2 {
 				Layout.fillHeight: true

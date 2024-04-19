@@ -26,7 +26,7 @@ PanelWindow {
 			font.pointSize: 64
 			color: Config.colors.greeter.fg
 			function n(n) { return String(n).padStart(2, "0") }
-			text: n(Time.time.getHours()) + ":" + n(Time.time.getMinutes())
+			text: n(Time.hour) + ":" + n(Time.minute)
 		}
 		Text2 {
 			font.pointSize: 12
@@ -34,7 +34,7 @@ PanelWindow {
 			text: Time.days[Time.time.getDay()] + ", " + Time.months[Time.time.getMonth()] + " " + Time.time.getDate()
 		}
 		Text2 {
-			property string period: Time.time.getHours() < 12 ? "morning" : Time.time.getHours() < 18 ? "afternoon" : "evening"
+			property string period: Time.hour < 12 ? "morning" : Time.hour < 18 ? "afternoon" : "evening"
 			font.pointSize: 16
 			color: Config.colors.greeter.fg
 			text: "Good " + period + ", " + Config.name + "."

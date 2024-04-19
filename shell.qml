@@ -43,6 +43,12 @@ ShellRoot {
 		anchors.right: true
 	}
 
+	ScrollSpinner {
+		screen: Quickshell.screens[0]
+		anchors.left: true; anchors.top: true
+		margins.left: 32; margins.top: 32
+	}
+
 	LazyLoader {
 		id: volumeOsdLoader
 		loading: Config.services.audio.initialized

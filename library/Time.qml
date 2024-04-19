@@ -5,9 +5,9 @@ import Quickshell
 
 Singleton {
 	property date time: new Date()
-	property int hour: 0
-	property int minute: 0
-	property int second: 0
+	property int hour: time.getHours()
+	property int minute: time.getMinutes()
+	property int second: time.getSeconds()
 	property list<var> days: [
 		"Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday",
 	]
