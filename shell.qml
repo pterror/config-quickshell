@@ -1,3 +1,6 @@
+//@ pragma Env QML_XHR_ALLOW_FILE_READ = 1
+//@ pragma Env QML2_IMPORT_PATH = /run/current-system/sw/lib/qt-6/qml
+
 import Quickshell
 import Quickshell.Io
 import Quickshell.Wayland

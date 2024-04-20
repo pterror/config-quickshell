@@ -1,15 +1,13 @@
-pragma Singleton
-
-// unused. swap this file and Config.qml to switch themes.
 import QtQuick
 import Quickshell
-import "./io"
+import "../io"
 
 Singleton {
-	property string name: "n_n"
+	id: root
+	required property string name
 	property bool debug: false
 	property QtObject debugFlags: QtObject {
-		property bool debugRectangles: Config.debug && true
+		property bool debugRectangles: root.debug && true
 	}
 
 	property QtObject activateLinux: QtObject {
@@ -18,7 +16,7 @@ Singleton {
 
 	property QtObject services: QtObject {
 		property var audio: WirePlumber
-		property var network: NetworkManager
+		// property var network: NetworkManager
 	}
 
 	property QtObject network: QtObject {
@@ -26,7 +24,7 @@ Singleton {
 	}
 
 	property QtObject wallpapers: QtObject {
-		property string folder: Quickshell.env("HOME") + "/.config/wallpapers/"
+		property string folder: Quickshell.env("HOME") + "/.config/wallpapers_light/"
 		property list<string> formats: ["*"]
 		function getSeed() {
 			// NOTE: The following line makes wallpaper selection essentially random:
@@ -90,28 +88,28 @@ Singleton {
 		}
 
 		property QtObject panel: QtObject {
-			property int radius: Config.layout.widget.radius * 2
-			property int margins: Config.layout.widget.margins * 2
-			property int innerRadius: Config.layout.panel.radius - Config.layout.panel.margins
+			property int radius: root.layout.widget.radius * 2
+			property int margins: root.layout.widget.margins * 2
+			property int innerRadius: root.layout.panel.radius - root.layout.panel.margins
 		}
 
 		property QtObject hBar: QtObject {
-			property int radius: Config.layout.widget.radius
-			property int margins: Config.layout.widget.margins
-			property int border: Config.layout.widget.border
+			property int radius: root.layout.widget.radius
+			property int margins: root.layout.widget.margins
+			property int border: root.layout.widget.border
 			// NOTE: Currently unused
-			property int fontSize: Config.layout.widget.fontSize
+			property int fontSize: root.layout.widget.fontSize
 			property int height: 32
 		}
 
 		property QtObject barItem: QtObject {
 			property int radius: 4
-			property int margins: Config.layout.button.margins
+			property int margins: root.layout.button.margins
 		}
 
 		property QtObject selection: QtObject {
-			property int radius: Config.layout.widget.radius
-			property int border: Config.layout.widget.border
+			property int radius: root.layout.widget.radius
+			property int border: root.layout.widget.border
 		}
 
 		property QtObject mediaPlayer: QtObject {
@@ -125,12 +123,10 @@ Singleton {
 		}
 	}
 
-	property real iconOpacity: 0xa0 / 0xff
-
 	property QtObject colors: QtObject {
-		property string backgroundBlend: "#00000000"
+		property string backgroundBlend: "#20ffffff"
 		property QtObject textSelection: QtObject {
-			property string bg: "#20e0ffff"
+			property string bg: "#20080f0f"
 		}
 
 		// fallback values for arbitrary rectangles
@@ -143,58 +139,58 @@ Singleton {
 		}
 
 		property QtObject bar: QtObject {
-			property string bg: "#00e0ffff"
-			property string outline: "#00ffffff"
+			property string bg: "#00080f0f"
+			property string outline: "#000f0f0f"
 		}
 
 		property QtObject barItem: QtObject {
-			property string bg: "#00e0ffff"
-			property string hoverBg: "#20e0ffff"
-			property string outline: "#00ffffff"
+			property string bg: "#00080f0f"
+			property string hoverBg: "#20080f0f"
+			property string outline: "#000f0f0f"
 		}
 
 		property QtObject widget: QtObject {
-			property string fg: "#a0ffffff"
-			property string bg: "#40e0ffff"
-			property string accent: Config.colors.accent.fg
-			property string hoverBg: "#60e0ffff"
-			property string outline: "#00ffffff"
+			property string fg: "#a00f0f0f"
+			property string bg: "#40080f0f"
+			property string accent: root.colors.accent.fg
+			property string hoverBg: "#60080f0f"
+			property string outline: "#000f0f0f"
 		}
 
 		property QtObject button: QtObject {
-			property string fg: Config.colors.widget.fg
-			property string bg: "#00e0ffff"
-			property string accent: Config.colors.accent.fg
-			property string hoverBg: Config.colors.widget.hoverBg
-			property string outline: Config.colors.widget.outline
+			property string fg: root.colors.widget.fg
+			property string bg: "#00080f0f"
+			property string accent: root.colors.accent.fg
+			property string hoverBg: root.colors.widget.hoverBg
+			property string outline: root.colors.widget.outline
 		}
 
 		property QtObject window: QtObject {
-			property string fg: Config.colors.widget.fg
-			property string bg: "#20e0ffff"
-			property string accent: Config.colors.widget.accent
-			property string hoverBg: Config.colors.widget.hoverBg
-			property string outline: Config.colors.widget.outline
+			property string fg: root.colors.widget.fg
+			property string bg: "#20080f0f"
+			property string accent: root.colors.widget.accent
+			property string hoverBg: root.colors.widget.hoverBg
+			property string outline: root.colors.widget.outline
 		}
 
 		property QtObject panel: QtObject {
-			property string fg: Config.colors.window.fg
-			property string bg: Config.colors.window.bg
-			property string accent: Config.colors.window.accent
-			property string hoverBg: Config.colors.window.hoverBg
-			property string outline: Config.colors.window.outline
+			property string fg: root.colors.window.fg
+			property string bg: root.colors.window.bg
+			property string accent: root.colors.window.accent
+			property string hoverBg: root.colors.window.hoverBg
+			property string outline: root.colors.window.outline
 		}
 
 		property QtObject greeter: QtObject {
-			property string fg: "#40e0ffff"
-			property string bg: Config.colors.panel.bg
-			property string outline: Config.colors.panel.outline
+			property string fg: "#40080f0f"
+			property string bg: root.colors.panel.bg
+			property string outline: root.colors.panel.outline
 		}
 
 		property QtObject activateLinux: QtObject {
-			property string fg: "#40e0ffff"
-			property string bg: Config.colors.panel.bg
-			property string outline: Config.colors.panel.outline
+			property string fg: "#40080f0f"
+			property string bg: root.colors.panel.bg
+			property string outline: root.colors.panel.outline
 		}
 
 		property QtObject selection: QtObject {
@@ -204,13 +200,13 @@ Singleton {
 		}
 
 		property QtObject workspaceIndicator: QtObject {
-			property string focused: Config.colors.accent.fg
-			property string visible: "#80ffffff"
-			property string empty: "#20ffffff"
+			property string focused: root.colors.accent.fg
+			property string visible: "#800f0f0f"
+			property string empty: "#200f0f0f"
 		}
 
 		property QtObject audioVisualizer: QtObject {
-			property string barsBg: "#30ffeef8"
+			property string barsBg: "#300f0e0f"
 		}
 	}
 

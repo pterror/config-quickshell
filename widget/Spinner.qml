@@ -58,8 +58,7 @@ Rectangle {
 		x: root.radius + root.radius * Math.cos((-root.angle - 90) * Math.PI / 180)
 		y: root.radius + root.radius * Math.sin((-root.angle - 90) * Math.PI / 180)
 		transform: Rotation {
-			origin.x: 0
-			origin.y: 0
+			origin.x: root.tickWidth / 2; origin.y: 0
 			axis { x: 0; y: 0; z: 1 }
 			angle: -root.angle
 		}

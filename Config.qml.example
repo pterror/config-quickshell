@@ -1,0 +1,8 @@
+// Copy to `Config.qml`
+pragma Singleton
+
+import "./config"
+
+ConfigDark {
+  name: "your name"
+}

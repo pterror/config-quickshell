@@ -1,1 +1,0 @@
-Config_dark.qml
