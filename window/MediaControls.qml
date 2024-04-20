@@ -1,6 +1,7 @@
 import QtQuick
 import QtQuick.Layouts
 import QtQuick.Controls
+import QtQuick.Effects
 import Quickshell
 import "../component"
 import "../io"
@@ -19,39 +20,36 @@ PopupWindow {
 		color: Config.colors.panel.bg
 		spacing: Config.layout.mediaPlayer.controlsGap
 
-		Image {
+		Rectangle {
 			Layout.alignment: Qt.AlignVCenter | Qt.AlignHCenter
-			width: Config.layout.mediaPlayer.imageSize
-			height: Config.layout.mediaPlayer.imageSize
-			fillMode: Image.PreserveAspectFit
-			source: MPRIS.image.startsWith("file://") ? MPRIS.image : "../" + MPRIS.image
+			color: "transparent"
+			property real aspectRatio: (image.implicitWidth / image.implicitHeight) || 0
+			implicitWidth: Config.layout.mediaPlayer.imageSize * Math.min(aspectRatio, 1)
+			implicitHeight: Config.layout.mediaPlayer.imageSize * Math.min(1 / aspectRatio, 1)
 
-			layer.enabled: true
-			layer.effect: ShaderEffect {
-        property real adjustX: Math.max(width / height, 1)
-        property real adjustY: Math.max(1 / (width / height), 1)
+			Image {
+				id: image
+				anchors.fill: parent
+				source: MPRIS.image.startsWith("file://") ? MPRIS.image : "../" + MPRIS.image
+				visible: false
+			}
 
-        fragmentShader: "
-        #ifdef GL_ES
-            precision lowp float;
-        #endif // GL_ES
-        varying highp vec2 qt_TexCoord0;
-        uniform highp float qt_Opacity;
-        uniform lowp sampler2D source;
-        uniform lowp float adjustX;
-        uniform lowp float adjustY;
+			Rectangle {
+				id: mask
+				layer.enabled: true
+				width: image.width
+				height: image.height
+				radius: Config.layout.panel.innerRadius
+				color: "black"
+			}
 
-        void main(void) {
-            lowp float x, y;
-            x = (qt_TexCoord0.x - 0.5) * adjustX;
-            y = (qt_TexCoord0.y - 0.5) * adjustY;
-            float delta = adjustX != 1.0 ? fwidth(y) / 2.0 : fwidth(x) / 2.0;
-            gl_FragColor = texture2D(source, qt_TexCoord0).rgba
-                * step(x * x + y * y, 0.25)
-                * smoothstep((x * x + y * y) , 0.25 + delta, 0.25)
-                * qt_Opacity;
-        }"
-    }
+			MultiEffect {
+				Layout.alignment: Qt.AlignVCenter | Qt.AlignHCenter
+				source: image
+				anchors.fill: parent
+				maskEnabled: true
+				maskSource: mask
+			}
 		}
 
 		RowLayout2 {
