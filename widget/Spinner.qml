@@ -10,6 +10,7 @@ Rectangle {
 	property int tickWidth: 6
 	property int tickRadius: 2
 	property real angle: 0
+	property var mouseAngle: null
 	property real velocity: 0
 	property real newVelocity: 0
 	property real degreesPerTick: 360 / ticks
@@ -27,6 +28,16 @@ Rectangle {
 	FrameAnimation {
 		running: true
 		onTriggered: {
+			if (mouseAngle != null) {
+				velocity = 0
+				newVelocity = 0
+				if (Math.floor(mouseAngle / degreesPerTick) !== Math.floor(angle / degreesPerTick)) {
+					playClick()
+				}
+				angle = mouseAngle
+				mouseAngle = null
+				return
+			}
 			if (velocity === 0 && newVelocity === 0) return
 			if (Math.abs(newVelocity) < epsilon) newVelocity = 0
 			if (Math.abs(velocity) < epsilon) velocity = 0
@@ -37,15 +48,19 @@ Rectangle {
 			newVelocity = 0
 			const newAngle = angle + velocity
 			if (Math.floor(newAngle / degreesPerTick) !== Math.floor(angle / degreesPerTick)) {
-				if (!click.playing) {
-					click.loops = 1
-					click.play()
-				} else {
-					click.loops = click.loopsRemaining
-				}
+				playClick()
 			}
 			// modulo 100 revolutions because overflow breaks SmoothedAnimation
 			angle = (newAngle + 360) % 360
+		}
+	}
+
+	function playClick() {
+		if (!click.playing) {
+			click.loops = 1
+			click.play()
+		} else {
+			click.loops = click.loopsRemaining
 		}
 	}
 
@@ -84,6 +99,18 @@ Rectangle {
 	}
 
 	SoundEffect { id: click; source: "../sound/click.wav" }
+
+	MouseArea {
+		anchors.fill: parent
+		onPressed: updateAngle()
+		onPositionChanged: updateAngle()
+
+		function updateAngle(initial) {
+			const x = mouseX - radius
+			const y = mouseY - radius
+			mouseAngle = Math.atan2(-y, x) * 180 / Math.PI - 90
+		}
+	}
 
 	function spin(angleDelta) {
 		newVelocity += angleDelta
