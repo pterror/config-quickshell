@@ -35,7 +35,6 @@ Rectangle {
 				? velocity * momentumUpFrame + newVelocity * (1 - momentumUpFrame)
 				: velocity * momentumDownFrame + newVelocity * (1 - momentumDownFrame)
 			newVelocity = 0
-			console.log(velocity)
 			const newAngle = angle + velocity
 			if (Math.floor(newAngle / degreesPerTick) !== Math.floor(angle / degreesPerTick)) {
 				if (!click.playing) {
@@ -78,27 +77,16 @@ Rectangle {
 			x: root.radius + root.radius * Math.cos(modelData * 2 * Math.PI / root.ticks)
 			y: root.radius + root.radius * Math.sin(modelData * 2 * Math.PI / root.ticks)
 			transform: Rotation {
-				origin.x: 0
-				origin.y: 0
+				origin.x: root.tickWidth / 2; origin.y: 0
 				axis { x: 0; y: 0; z: 1 }
 				angle: 90 + 360 * modelData / root.ticks
 			}
 		}
 	}
 
-	SoundEffect {
-		id: click
-		source: "../sound/click.wav"
-		onLoopsRemainingChanged: {
-			unstuck.restart()
-		}
-	}
+	SoundEffect { id: click; source: "../sound/click.wav" }
 
 	function spin(angleDelta) {
 		newVelocity += angleDelta
 	}
-
-	// FIXME: required to work around a QML bug where `playing`` occasionally stays stuck at `true`
-	// with constantly increasing loop count
-	Timer { id: unstuck; interval: 100; onTriggered: click.loopsRemaining != 0 && click.play() }
 }

@@ -43,6 +43,16 @@ ShellRoot {
 		anchors.right: true
 	}
 
+	// OutwardsRadialAudioVisualizerBars {
+	// 	screen: Quickshell.screens[0]
+	// 	fillColor: Config.colors.audioVisualizer.barsBg
+	// 	bars: 40
+	// 	anchors.top: true
+	// 	anchors.bottom: true
+	// 	anchors.left: true
+	// 	anchors.right: true
+	// }
+
 	AnalogClock {
 		screen: Quickshell.screens[0]
 		anchors.left: true; anchors.top: true
