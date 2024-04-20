@@ -104,12 +104,15 @@ Rectangle {
 				hourDragAmplitude = hourAngle - actualHourAngle
 			}
 			onPositionChanged: {
+				hourDragged = false
 				const coord = mapToItem(root, mouseX, mouseY)
 				const x = coord.x - radius
 				const y = coord.y - radius
 				const rawAngle = Math.atan2(-x, -y) * 180 / Math.PI
 				const rawAngle2 = Math.floor(hourAngle / 360 + 0.5) * 360 + rawAngle
-				hourAngle = rawAngle2 + 180 < hourAngle ? rawAngle2 + 360 : rawAngle2
+				hourAngle = rawAngle2 + 180 < hourAngle ? rawAngle2 + 360
+					: rawAngle2 - 180 > hourAngle ? rawAngle2 - 360
+					: rawAngle2
 			}
 		}
 	}
@@ -139,12 +142,15 @@ Rectangle {
 				minuteDragAmplitude = minuteAngle - actualMinuteAngle
 			}
 			onPositionChanged: {
+				minuteDragged = false
 				const coord = mapToItem(root, mouseX, mouseY)
 				const x = coord.x - radius
 				const y = coord.y - radius
 				const rawAngle = Math.atan2(-x, -y) * 180 / Math.PI
 				const rawAngle2 = Math.floor(minuteAngle / 360 + 0.5) * 360 + rawAngle
-				minuteAngle = rawAngle2 + 180 < minuteAngle ? rawAngle2 + 360 : rawAngle2
+				minuteAngle = rawAngle2 + 180 < minuteAngle ? rawAngle2 + 360
+					: rawAngle2 - 180 > minuteAngle ? rawAngle2 - 360
+					: rawAngle2
 			}
 		}
 	}
@@ -173,12 +179,15 @@ Rectangle {
 				secondDragAmplitude = secondAngle - actualSecondAngle
 			}
 			onPositionChanged: {
+				secondDragged = false
 				const coord = mapToItem(root, mouseX, mouseY)
 				const x = coord.x - radius
 				const y = coord.y - radius
 				const rawAngle = Math.atan2(-x, -y) * 180 / Math.PI
 				const rawAngle2 = Math.floor(secondAngle / 360 + 0.5) * 360 + rawAngle
-				secondAngle = rawAngle2 + 180 < secondAngle ? rawAngle2 + 360 : rawAngle2
+				secondAngle = rawAngle2 + 180 < secondAngle ? rawAngle2 + 360
+					: rawAngle2 - 180 > secondAngle ? rawAngle2 - 360
+					: rawAngle2
 			}
 		}
 	}
