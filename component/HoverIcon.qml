@@ -19,6 +19,7 @@ Rectangle {
 		source: root.source
 		width: size
 		height: size
+		opacity: Config.iconOpacity
 		sourceSize: Qt.size(width, height)
 	}
 

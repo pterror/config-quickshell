@@ -125,6 +125,8 @@ Singleton {
 		}
 	}
 
+	property real iconOpacity: 0xa0 / 0xff
+
 	property QtObject colors: QtObject {
 		property string backgroundBlend: "#00000000"
 		property QtObject textSelection: QtObject {
