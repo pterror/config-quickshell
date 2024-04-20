@@ -6,7 +6,7 @@ import ".."
 Rectangle {
 	id: root
 	Layout.alignment: Qt.AlignVCenter | Qt.AlignHCenter
-	required property string source
+	property alias source: image.source
 	property alias radius: mask.radius
 	property int size: 256
 	property real aspectRatio: (image.implicitWidth / image.implicitHeight) || 0
@@ -18,7 +18,6 @@ Rectangle {
 	Image {
 		id: image
 		anchors.fill: parent
-		source: root.source.startsWith("file://") ? root.source : "../" + root.source
 		visible: false
 	}
 

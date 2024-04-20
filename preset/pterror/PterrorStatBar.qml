@@ -2,11 +2,11 @@ import QtQuick
 import QtQuick.Layouts
 import Quickshell
 import Quickshell.Wayland
-import "../io"
-import "../component"
-import "../widget"
-import "../library"
-import ".."
+import "../../io"
+import "../../component"
+import "../../widget"
+import "../../library"
+import "../.."
 
 PanelWindow {
 	anchors { left: true; right: true; top: true }

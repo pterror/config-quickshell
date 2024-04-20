@@ -9,7 +9,7 @@ Singleton {
 	property bool playing: false
 	property string title: ""
 	property string artist: ""
-	property string image: "blank.png"
+	property string image: "../image/dark_pixel.png"
 
 	Process {
 		running: true
@@ -32,7 +32,7 @@ Singleton {
 				}
 				let newTitle = ""
 				let newArtist = ""
-				let newImage = "blank.png"
+				let newImage = "../image/dark_pixel.png"
 				for (const line of data.split("\n")) {
 					const [, player, key, value] = line.match(/(.+?) +(.+?) +(.+)/) ?? []
 					switch (key) {

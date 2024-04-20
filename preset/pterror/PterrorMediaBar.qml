@@ -2,9 +2,10 @@ import QtQuick
 import QtQuick.Layouts
 import Quickshell
 import Quickshell.Wayland
-import "../io"
-import "../component"
-import ".."
+import "../../io"
+import "../../component"
+import "../../window"
+import "../.."
 
 PanelWindow {
 	id: root
@@ -91,11 +92,11 @@ PanelWindow {
 								height: 16
 								anchors.verticalCenter: parent.verticalCenter
 								opacity: Config.iconOpacity
-								source: Config.services.audio.muted ? "../icon/flat/speaker_muted.svg" :
-									Config.services.audio.volume < 25 ? "../icon/flat/speaker_volume_very_low.svg" :
-									Config.services.audio.volume < 50 ? "../icon/flat/speaker_volume_low.svg" :
-									Config.services.audio.volume < 75 ? "../icon/flat/speaker_volume_medium.svg" :
-									"../icon/flat/speaker_volume_high.svg"
+								source: Config.services.audio.muted ? "../../icon/flat/speaker_muted.svg" :
+									Config.services.audio.volume < 25 ? "../../icon/flat/speaker_volume_very_low.svg" :
+									Config.services.audio.volume < 50 ? "../../icon/flat/speaker_volume_low.svg" :
+									Config.services.audio.volume < 75 ? "../../icon/flat/speaker_volume_medium.svg" :
+									"../../icon/flat/speaker_volume_high.svg"
 							}
 						}
 
@@ -125,7 +126,7 @@ PanelWindow {
 								height: 16
 								anchors.verticalCenter: parent.verticalCenter
 								opacity: Config.iconOpacity
-								source: Config.services.audio.micMuted ? "../icon/flat/microphone_muted.svg" : "../icon/flat/microphone.svg"
+								source: Config.services.audio.micMuted ? "../../icon/flat/microphone_muted.svg" : "../../icon/flat/microphone.svg"
 							}
 						}
 
@@ -144,10 +145,10 @@ PanelWindow {
 							height: 16
 							anchors.verticalCenter: parent.verticalCenter
 							opacity: Config.iconOpacity
-							source: !Config.services.network.connected ? "../icon/flat/wifi_disconnected.svg" :
-								Config.services.network.strength < 33 ? "../icon/flat/wifi_low.svg" :
-								Config.services.network.strength < 67 ? "../icon/flat/wifi_medium.svg" :
-								"../icon/flat/wifi_high.svg"
+							source: !Config.services.network.connected ? "../../icon/flat/wifi_disconnected.svg" :
+								Config.services.network.strength < 33 ? "../../icon/flat/wifi_low.svg" :
+								Config.services.network.strength < 67 ? "../../icon/flat/wifi_medium.svg" :
+								"../../icon/flat/wifi_high.svg"
 					}
 					}
 					Text2 { text: Config.services.network.network }

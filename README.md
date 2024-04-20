@@ -1,7 +1,9 @@
 # quickshell config
 
 ## getting started
+
 1. copy `Config.qml.example` to `Config.qml`
+2. copy `shell.qml.example` to `shell.qml`
 
 ### keybinds (optional)
 

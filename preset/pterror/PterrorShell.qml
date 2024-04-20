@@ -1,22 +1,20 @@
-//@ pragma Env QML_XHR_ALLOW_FILE_READ = 1
-//@ pragma Env QML2_IMPORT_PATH = /run/current-system/sw/lib/qt-6/qml
-
 import Quickshell
 import Quickshell.Io
 import Quickshell.Wayland
 import QtQuick
 import QtQuick.Layouts
 // import QtMultimedia
-import "./io"
-import "./component"
-import "./window"
-import "./library"
+import "../../io"
+import "../../component"
+import "../../window"
+import "../../library"
+import "../.."
 
 ShellRoot {
 	WallpaperRandomizer { id: wallpaperRandomizer }
 
-	StatBar { screen: Quickshell.screens[0] }
-	MediaBar { screen: Quickshell.screens[0] }
+	PterrorStatBar { screen: Quickshell.screens[0] }
+	PterrorMediaBar { screen: Quickshell.screens[0] }
 	Greeter { screen: Quickshell.screens[0] }
 	// ActivateLinux { screen: Quickshell.screens[0] }
 	// SettingsWindow { screen: Quickshell.screens[0] }
@@ -117,13 +115,13 @@ ShellRoot {
 				Image {
 					anchors.fill: parent
 					fillMode: Image.PreserveAspectCrop
-					source: wallpaperRandomizer.wallpapers[modelData.name] ?? "blank.png"
+					source: wallpaperRandomizer.wallpapers[modelData.name] ?? "../../image/dark_pixel.png"
 					asynchronous: false
 				}
 
 				// requires QtMultimedia to be installed
 				// MediaPlayer {
-				// 	source: wallpaperRandomizer.wallpapers[modelData.name] ?? "blank.png"
+				// 	source: wallpaperRandomizer.wallpapers[modelData.name] ?? "../../image/dark_pixel.png"
 				// 	videoOutput: videoOutput
 				// 	loops: MediaPlayer.Infinite
 				// 	Component.onCompleted: play()
