@@ -8,14 +8,17 @@ Rectangle {
 	property int tickHeight: 24
 	property int tickWidth: 6
 	property int tickRadius: 2
-	property real secondAngle: -((Number(Time.time) + 1500) / 1000 % 6000 * (360 / 60))
-	property real minuteAngle: -(Number(Time.time) / 60000 % 6000 * (360 / 60))
-	property real hourAngle: -((Number(Time.time) - Time.time.getTimezoneOffset() * 60000) / 3600000 % 2400 * (360 / 12))
+	property real secondAngle: -(Number(new Date()) / 1000 % 60 * (360 / 60))
+	property real minuteAngle: -(Number(Time.time) / 60000 % 60 * (360 / 60))
+	property real hourAngle: -((Number(Time.time) - Time.time.getTimezoneOffset() * 60000) / 3600000 % 24 * (360 / 12))
 	implicitWidth: radius * 2
 	implicitHeight: radius * 2
 	color: "transparent"
 
-	Behavior on secondAngle { SmoothedAnimation { velocity: 3.6 } }
+	FrameAnimation {
+		running: true
+		onTriggered: secondAngle = -(Number(new Date()) / 1000 % 60 * (360 / 60))
+	}
 
 	Rectangle {
 		required property int modelData
