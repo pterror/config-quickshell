@@ -50,7 +50,7 @@ PanelWindow {
 
 			Rectangle {
 				required property int modelData
-				property int value: 1
+				property int value: 0
 				Layout.alignment: root.childAlignment
 				color: root.fillColor
 				border.color: root.strokeColor

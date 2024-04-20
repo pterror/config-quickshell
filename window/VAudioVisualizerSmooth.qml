@@ -62,7 +62,7 @@ PanelWindow {
 
 				PathCurve {
 					id: curve
-					property int value: 1
+					property int value: 0
 					y: shape.spacing * modelData
 					property Connections cavaConnections: Connections {
 						target: cava

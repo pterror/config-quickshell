@@ -49,7 +49,7 @@ PanelWindow {
 
 		Rectangle {
 			required property int modelData
-			property int value: 1
+			property int value: 0
 			color: root.fillColor
 			border.color: root.strokeColor
 			border.width: root.strokeWidth

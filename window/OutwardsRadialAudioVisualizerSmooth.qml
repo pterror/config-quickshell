@@ -75,7 +75,6 @@ PanelWindow {
 
 				PathCurve {
 					id: curve
-					property int value: 1
 					property Connections cavaConnections: Connections {
 						target: cava
 						property real xMultiplier: Math.cos(((modelData % cava.count) / root.bars - 0.25) * 2 * Math.PI)
