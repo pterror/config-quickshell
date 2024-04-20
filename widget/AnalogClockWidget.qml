@@ -8,6 +8,9 @@ Rectangle {
 	property int tickHeight: 24
 	property int tickWidth: 6
 	property int tickRadius: 2
+	property bool secondHandVisible: true
+	property bool minuteHandVisible: true
+	property bool hourHandVisible: true
 	property real secondAngle: -(Number(new Date()) / 1000 % 60 * (360 / 60))
 	property real minuteAngle: -(Number(Time.time) / 60000 % 60 * (360 / 60))
 	property real hourAngle: -((Number(Time.time) - Time.time.getTimezoneOffset() * 60000) / 3600000 % 24 * (360 / 12))
@@ -16,12 +19,12 @@ Rectangle {
 	color: "transparent"
 
 	FrameAnimation {
-		running: true
+		running: secondHandVisible
 		onTriggered: secondAngle = -(Number(new Date()) / 1000 % 60 * (360 / 60))
 	}
 
 	Rectangle {
-		required property int modelData
+		visible: hourHandVisible
 		width: root.tickWidth
 		height: root.tickHeight
 		radius: tickRadius
@@ -37,7 +40,7 @@ Rectangle {
 	}
 
 	Rectangle {
-		required property int modelData
+		visible: minuteHandVisible
 		width: root.tickWidth
 		height: root.tickHeight
 		radius: tickRadius
@@ -53,7 +56,7 @@ Rectangle {
 	}
 
 	Rectangle {
-		required property int modelData
+		visible: secondHandVisible
 		width: root.tickWidth
 		height: root.tickHeight
 		radius: tickRadius
