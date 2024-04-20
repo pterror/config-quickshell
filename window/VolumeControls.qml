@@ -3,14 +3,21 @@ import "../widget"
 import ".."
 
 PopupWindow {
-	property alias color: content.color
-	property alias radius: content.radius
-	property alias margins: content.margins
-	property alias spacing: content.spacing
+	id: root
+	property string widgetColor: Config.colors.panel.bg
+	property int radius: Config.layout.panel.radius
+	property int margins: Config.layout.panel.margins
+	property int spacing: Config.layout.mediaPlayer.controlsGap
 
 	color: "transparent"
 	width: content.implicitWidth
 	height: content.implicitHeight
 
-	VolumeControlsWidget { id: content; color: Config.colors.panel.bg }
+	VolumeControlsWidget {
+		id: content
+		color: root.widgetColor
+		radius: root.radius
+		margins: root.margins
+		spacing: root.spacing
+	}
 }

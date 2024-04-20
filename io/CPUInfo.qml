@@ -23,13 +23,13 @@ Singleton {
 			Fetch.fetch("file:///proc/stat")
 				.then(res => res.text())
 				.then(text => {
-          const cpuAll = text.match(/^.+/)[0]
-          const [user, nice, system, newIdle, iowait, irq, softirq, steal, guest, guestNice] = cpuAll.match(/\d+/g).map(Number)
-          const newTotal = user + nice + system + newIdle + iowait + irq + softirq + steal + guest + guestNice
-	        idleSec = newIdle - idle
-          totalSec = newTotal - total
-          idle = newIdle
-          total = newTotal
+					const cpuAll = text.match(/^.+/)[0]
+					const [user, nice, system, newIdle, iowait, irq, softirq, steal, guest, guestNice] = cpuAll.match(/\d+/g).map(Number)
+					const newTotal = user + nice + system + newIdle + iowait + irq + softirq + steal + guest + guestNice
+					idleSec = newIdle - idle
+					totalSec = newTotal - total
+					idle = newIdle
+					total = newTotal
 					let i = 0
 					for (const line of text.match(/cpu(\d+).+/g)) {
 						const [id, user, nice, system, newIdle, iowait, irq, softirq, steal, guest, guestNice] = line.match(/\d+/g).map(Number)

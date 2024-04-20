@@ -9,7 +9,7 @@ import ".."
 PanelWindow {
 	id: root
 	color: "transparent"
-  mask: Region {}
+	mask: Region {}
 	WlrLayershell.namespace: "shell:cpu_info_grid"
 	exclusiveZone: 0
 	Component.onCompleted: {

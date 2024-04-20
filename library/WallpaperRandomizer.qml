@@ -11,7 +11,7 @@ import "../library/Random.mjs" as Random
 QtObject {
 	property var wallpapers: getWallpapers()
 	readonly property var random: new Random.Random()
-  readonly property FolderListModel folder: FolderListModel {
+	readonly property FolderListModel folder: FolderListModel {
 		showDirs: false; showOnlyReadable: true
 		folder: "file://" + Config.wallpapers.folder
 		nameFilters: Config.wallpapers.formats
