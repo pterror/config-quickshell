@@ -17,7 +17,7 @@ Rectangle {
 	property real momentum: -1
 	property real momentumUp: momentum !== -1 ? momentum : 0
 	property real momentumDown: momentum !== -1 ? momentum : 0.2
-	property int frameRate: 60
+	property int frameRate: Config.frameRate
 	property real momentumUpFrame: Math.pow(momentumUp, 1 / frameRate)
 	property real momentumDownFrame: Math.pow(momentumDown, 1 / frameRate)
 	property real epsilon: 0.01

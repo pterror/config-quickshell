@@ -4,3 +4,4 @@
   - [ ] live preview of components, plus drag n drop of components
   - [ ] snapping to edges, properties sidebar
   - [ ] maybe the settings window itself can be configurable too
+- [ ] desktop piano

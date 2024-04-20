@@ -6,6 +6,7 @@ import "../io"
 Singleton {
 	id: root
 	required property string name
+	property int frameRate: 60
 	property bool debug: false
 	property QtObject debugFlags: QtObject {
 		property bool debugRectangles: root.debug && true
