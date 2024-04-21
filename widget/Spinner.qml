@@ -11,6 +11,7 @@ Rectangle {
 	property int tickRadius: 2
 	property real angle: 0
 	property var mouseAngle: null
+	property bool mouseReleased: false
 	property real velocity: 0
 	property real newVelocity: 0
 	property real degreesPerTick: 360 / ticks
@@ -29,13 +30,14 @@ Rectangle {
 		running: true
 		onTriggered: {
 			if (mouseAngle != null) {
-				velocity = 0
+				velocity = mouseReleased ? mouseAngle - angle : 0
 				newVelocity = 0
 				if (Math.floor(mouseAngle / degreesPerTick) !== Math.floor(angle / degreesPerTick)) {
 					playClick()
 				}
 				angle = mouseAngle
 				mouseAngle = null
+				mouseReleased = false
 				return
 			}
 			if (velocity === 0 && newVelocity === 0) return
@@ -103,6 +105,7 @@ Rectangle {
 	MouseArea {
 		anchors.fill: parent
 		onPressed: updateAngle()
+		onReleased: mouseReleased = true
 		onPositionChanged: updateAngle()
 
 		function updateAngle(initial) {
