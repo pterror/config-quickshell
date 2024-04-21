@@ -20,7 +20,7 @@ Rectangle {
 	property int frameRate: Config.frameRate
 	property real minAmplitude: 0.1
 	property real dragDuration: 2 // in seconds
-	property bool setTimeDelta: true
+	property bool setTimeDelta: false
 	property bool hourDragged: false
 	property real hourDragAmplitude: 0
 	property real hourDragAngle: 0
@@ -88,6 +88,37 @@ Rectangle {
 		}
 	}
 
+	MouseArea {
+		property string draggingHand: ""
+		anchors.fill: parent
+		onPressed: {
+			const x = mouseX - radius
+			const y = mouseY - radius
+			const r2 = x * x + y * y
+			if (r2 > radius * radius) {} // ignore
+			else if (r2 > (radius - tickHeight) ** 2) { draggingHand = "second" }
+			else if (r2 > (radius - tickHeight * 2) ** 2) { draggingHand = "minute" }
+			else if (r2 > (radius - tickHeight * 3) ** 2) { draggingHand = "hour" }
+		}
+		onPositionChanged: {
+			if (draggingHand === "") { return }
+			const coord = Qt.point(mouseX, mouseY)
+			switch (draggingHand) {
+				case "hour": { updateHourDrag(coord); break }
+				case "minute": { updateMinuteDrag(coord); break }
+				case "second": { updateSecondDrag(coord); break }
+			}
+		}
+		onReleased: {
+			switch (draggingHand) {
+				case "hour": { startHourSpring(); break }
+				case "minute": { startMinuteSpring(); break }
+				case "second": { startSecondSpring(); break }
+			}
+			draggingHand = ""
+		}
+	}
+
 	Rectangle {
 		visible: hourHandVisible
 		width: root.tickWidth
@@ -107,26 +138,29 @@ Rectangle {
 			anchors.leftMargin: -8
 			anchors.rightMargin: -8
 			cursorShape: Qt.PointingHandCursor
-			onReleased: {
-				if (hourAngle === actualHourAngle) return
-				hourDragged = true
-				hourDragStartTime = Number(new Date())
-				hourDragAmplitude = hourAngle - actualHourAngle
-				hourDragDecayFrame =
-					Math.pow(Math.abs(minAmplitude / hourDragAmplitude), 1 / frameRate / dragDuration) || 0
-			}
-			onPositionChanged: {
-				hourDragged = false
-				const coord = mapToItem(root, mouseX, mouseY)
-				const x = coord.x - radius
-				const y = coord.y - radius
-				const rawAngle = Math.atan2(-x, -y) * 180 / Math.PI
-				const rawAngle2 = Math.floor(hourAngle / 360 + 0.5) * 360 + rawAngle
-				hourAngle = rawAngle2 + 180 < hourAngle ? rawAngle2 + 360
-					: rawAngle2 - 180 > hourAngle ? rawAngle2 - 360
-					: rawAngle2
-			}
+			onReleased: startHourSpring()
+			onPositionChanged: updateHourDrag(mapToItem(root, mouseX, mouseY))
 		}
+	}
+
+	function startHourSpring() {
+		if (hourAngle === actualHourAngle) return
+		hourDragged = true
+		hourDragStartTime = Number(new Date())
+		hourDragAmplitude = hourAngle - actualHourAngle
+		hourDragDecayFrame =
+			Math.pow(Math.abs(minAmplitude / hourDragAmplitude), 1 / frameRate / dragDuration) || 0
+	}
+
+	function updateHourDrag(coord) {
+		hourDragged = false
+		const x = coord.x - radius
+		const y = coord.y - radius
+		const rawAngle = Math.atan2(-x, -y) * 180 / Math.PI
+		const rawAngle2 = Math.floor(hourAngle / 360 + 0.5) * 360 + rawAngle
+		hourAngle = rawAngle2 + 180 < hourAngle ? rawAngle2 + 360
+			: rawAngle2 - 180 > hourAngle ? rawAngle2 - 360
+			: rawAngle2
 	}
 
 	Rectangle {
@@ -148,26 +182,29 @@ Rectangle {
 			anchors.leftMargin: -8
 			anchors.rightMargin: -8
 			cursorShape: Qt.PointingHandCursor
-			onReleased: {
-				if (minuteAngle === actualMinuteAngle) return
-				minuteDragged = true
-				minuteDragStartTime = Number(new Date())
-				minuteDragAmplitude = minuteAngle - actualMinuteAngle
-				minuteDragDecayFrame =
-					Math.pow(Math.abs(minAmplitude / minuteDragAmplitude), 1 / frameRate / dragDuration)
-			}
-			onPositionChanged: {
-				minuteDragged = false
-				const coord = mapToItem(root, mouseX, mouseY)
-				const x = coord.x - radius
-				const y = coord.y - radius
-				const rawAngle = Math.atan2(-x, -y) * 180 / Math.PI
-				const rawAngle2 = Math.floor(minuteAngle / 360 + 0.5) * 360 + rawAngle
-				minuteAngle = rawAngle2 + 180 < minuteAngle ? rawAngle2 + 360
-					: rawAngle2 - 180 > minuteAngle ? rawAngle2 - 360
-					: rawAngle2
-			}
+			onReleased: startMinuteSpring()
+			onPositionChanged: updateMinuteDrag(mapToItem(root, mouseX, mouseY))
 		}
+	}
+
+	function startMinuteSpring() {
+		if (minuteAngle === actualMinuteAngle) return
+		minuteDragged = true
+		minuteDragStartTime = Number(new Date())
+		minuteDragAmplitude = minuteAngle - actualMinuteAngle
+		minuteDragDecayFrame =
+			Math.pow(Math.abs(minAmplitude / minuteDragAmplitude), 1 / frameRate / dragDuration)
+	}
+
+	function updateMinuteDrag(coord) {
+		minuteDragged = false
+		const x = coord.x - radius
+		const y = coord.y - radius
+		const rawAngle = Math.atan2(-x, -y) * 180 / Math.PI
+		const rawAngle2 = Math.floor(minuteAngle / 360 + 0.5) * 360 + rawAngle
+		minuteAngle = rawAngle2 + 180 < minuteAngle ? rawAngle2 + 360
+			: rawAngle2 - 180 > minuteAngle ? rawAngle2 - 360
+			: rawAngle2
 	}
 
 	Rectangle {
@@ -188,26 +225,29 @@ Rectangle {
 			anchors.leftMargin: -8
 			anchors.rightMargin: -8
 			cursorShape: Qt.PointingHandCursor
-			onReleased: {
-				if (secondAngle === actualSecondAngle) return
-				secondDragged = true
-				secondDragStartTime = Number(new Date())
-				secondDragAmplitude = secondAngle - actualSecondAngle
-				secondDragDecayFrame =
-					Math.pow(Math.abs(minAmplitude / secondDragAmplitude), 1 / frameRate / dragDuration) || 0
-			}
-			onPositionChanged: {
-				secondDragged = false
-				const coord = mapToItem(root, mouseX, mouseY)
-				const x = coord.x - radius
-				const y = coord.y - radius
-				const rawAngle = Math.atan2(-x, -y) * 180 / Math.PI
-				const rawAngle2 = Math.floor(secondAngle / 360 + 0.5) * 360 + rawAngle
-				secondAngle = rawAngle2 + 180 < secondAngle ? rawAngle2 + 360
-					: rawAngle2 - 180 > secondAngle ? rawAngle2 - 360
-					: rawAngle2
-			}
+			onReleased: startSecondSpring()
+			onPositionChanged: updateSecondDrag(mapToItem(root, mouseX, mouseY))
 		}
+	}
+
+	function startSecondSpring() {
+		if (secondAngle === actualSecondAngle) return
+		secondDragged = true
+		secondDragStartTime = Number(new Date())
+		secondDragAmplitude = secondAngle - actualSecondAngle
+		secondDragDecayFrame =
+			Math.pow(Math.abs(minAmplitude / secondDragAmplitude), 1 / frameRate / dragDuration) || 0
+	}
+
+	function updateSecondDrag(coord) {
+		secondDragged = false
+		const x = coord.x - radius
+		const y = coord.y - radius
+		const rawAngle = Math.atan2(-x, -y) * 180 / Math.PI
+		const rawAngle2 = Math.floor(secondAngle / 360 + 0.5) * 360 + rawAngle
+		secondAngle = rawAngle2 + 180 < secondAngle ? rawAngle2 + 360
+			: rawAngle2 - 180 > secondAngle ? rawAngle2 - 360
+			: rawAngle2
 	}
 
 	Repeater {
