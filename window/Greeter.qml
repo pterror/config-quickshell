@@ -7,6 +7,7 @@ import "../library"
 import ".."
 
 PanelWindow {
+	id: root
 	color: "transparent"
 	width: content.implicitWidth
 	height: content.implicitHeight
@@ -21,6 +22,8 @@ PanelWindow {
 		margins: Config.layout.panel.margins
 		// color: Config.colors.panel.bg
 		spacing: 8
+
+		onImplicitWidthChanged: root.width = Math.max(root.width, implicitWidth)
 
 		Text2 {
 			font.pointSize: 64

@@ -20,7 +20,7 @@ Rectangle {
 	property int frameRate: Config.frameRate
 	property real minAmplitude: 0.1
 	property real dragDuration: 2 // in seconds
-	property bool setTimeDelta: false
+	property bool setTimeDelta: true
 	property bool hourDragged: false
 	property real hourDragAmplitude: 0
 	property real hourDragAngle: 0
