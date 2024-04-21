@@ -2,6 +2,7 @@
 import QtQuick
 import Quickshell
 import "../io"
+import "../library"
 
 Singleton {
 	id: root
@@ -30,11 +31,7 @@ Singleton {
 	property QtObject wallpapers: QtObject {
 		property string folder: Quickshell.env("HOME") + "/.config/wallpapers/"
 		property list<string> formats: ["*"]
-		function getSeed() {
-			// NOTE: The following line makes wallpaper selection essentially random:
-			// return new Date()
-			return Math.floor((Number(new Date()) - 7.5 * _HOUR_MS - new Date().getTimezoneOffset() * _MIN_MS) / _DAY_MS)
-		}
+		property real seed: Math.floor((Number(Time.time) - 7.5 * _HOUR_MS - Time.time.getTimezoneOffset() * _MIN_MS) / _DAY_MS)
 	}
 
 	property font font: Qt.font({

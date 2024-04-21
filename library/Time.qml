@@ -4,6 +4,10 @@ import QtQuick
 import Quickshell
 
 Singleton {
+	property date rawTime: new Date()
+	property int rawHour: rawTime.getHours()
+	property int rawMinute: rawTime.getMinutes()
+	property int rawSecond: rawTime.getSeconds()
 	property date time: new Date()
 	property real timeDelta: 0
 	property int hour: time.getHours()
@@ -19,7 +23,10 @@ Singleton {
 
 	Timer {
 		interval: 1000; running: true; repeat: true
-		onTriggered: time = new Date()
+		onTriggered: {
+			rawTime = new Date()
+			time = timeDelta === 0 ? rawTime : new Date(Number(rawTime) + timeDelta)
+		}
 	}
 
 	Timer {

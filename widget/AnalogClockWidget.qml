@@ -12,33 +12,30 @@ Rectangle {
 	property bool minuteHandVisible: true
 	property bool hourHandVisible: true
 	property real actualSecondAngle: -(Number(new Date()) / 1000 % 60 * (360 / 60))
-	property real actualMinuteAngle: -(Number(Time.time) / 60000 % 60 * (360 / 60))
-	property real actualHourAngle: -((Number(Time.time) - Time.time.getTimezoneOffset() * 60000) / 3600000 % 24 * (360 / 12))
+	property real actualMinuteAngle: -(Number(Time.rawTime) / 60000 % 60 * (360 / 60))
+	property real actualHourAngle: -((Number(Time.rawTime) - Time.time.getTimezoneOffset() * 60000) / 3600000 % 24 * (360 / 12))
 	property real secondAngle: actualSecondAngle
 	property real minuteAngle: actualMinuteAngle
 	property real hourAngle: actualHourAngle
 	property int frameRate: Config.frameRate
 	property real minAmplitude: 0.1
-	property real dragDecay: 0.2
+	property real dragDuration: 2 // in seconds
 	property bool setTimeDelta: true
 	property bool hourDragged: false
 	property real hourDragAmplitude: 0
 	property real hourDragAngle: 0
 	property real hourDragStartTime: 0
-	property real hourDragDecay: dragDecay
-	property real hourDragDecayFrame: Math.pow(hourDragDecay, 1 / frameRate)
+	property real hourDragDecayFrame: 0
 	property bool minuteDragged: false
 	property real minuteDragAmplitude: 0
 	property real minuteDragAngle: 0
 	property real minuteDragStartTime: 0
-	property real minuteDragDecay: dragDecay
-	property real minuteDragDecayFrame: Math.pow(minuteDragDecay, 1 / frameRate)
+	property real minuteDragDecayFrame: 0
 	property bool secondDragged: false
 	property real secondDragAmplitude: 0
 	property real secondDragAngle: 0
 	property real secondDragStartTime: 0
-	property real secondDragDecay: dragDecay
-	property real secondDragDecayFrame: Math.pow(secondDragDecay, 1 / frameRate)
+	property real secondDragDecayFrame: 0
 	implicitWidth: radius * 2
 	implicitHeight: radius * 2
 	color: "transparent"
@@ -51,13 +48,11 @@ Rectangle {
 	FrameAnimation {
 		running: secondHandVisible || hourDragged || minuteDraged || secondDragged
 		onTriggered: {
-			actualSecondAngle = -((Number(new Date()) + Time.timeDelta) / 1000 % 60 * (360 / 60))
-			let timeDelta = 0
+			actualSecondAngle = -(Number(new Date()) / 1000 % 60 * (360 / 60))
 			if (hourDragged) {
 				hourDragAmplitude *= hourDragDecayFrame
 				const deltaTime = (new Date() - hourDragStartTime) / 1000
 				const delta = hourDragAmplitude * Math.cos(deltaTime * 2 * Math.PI)
-				timeDelta += delta / 15 /* 1 / 15 = 24 / 360 */ * 3600000
 				hourAngle = actualHourAngle + delta
 				if (Math.abs(hourDragAmplitude) < minAmplitude) {
 					hourAngle = Qt.binding(() => actualHourAngle)
@@ -68,7 +63,6 @@ Rectangle {
 				minuteDragAmplitude *= minuteDragDecayFrame
 				const deltaTime = (new Date() - minuteDragStartTime) / 1000
 				const delta = minuteDragAmplitude * Math.cos(deltaTime * 2 * Math.PI)
-				timeDelta += delta / 6 /* 1 / 6 = 60 / 360 */ * 60000
 				minuteAngle = actualMinuteAngle + delta
 				if (Math.abs(minuteDragAmplitude) < minAmplitude) {
 					minuteAngle = Qt.binding(() => actualMinuteAngle)
@@ -80,13 +74,17 @@ Rectangle {
 				const deltaTime = (new Date() - secondDragStartTime) / 1000
 				const delta = secondDragAmplitude * Math.cos(deltaTime * 2 * Math.PI)
 				secondAngle = actualSecondAngle + delta
-				timeDelta += delta / 6 /* 1 / 6 = 60 / 360 */ * 1000
 				if (Math.abs(secondDragAmplitude) < minAmplitude) {
 					secondAngle = Qt.binding(() => actualSecondAngle)
 					secondDragged = false
 				}
 			}
-			if (setTimeDelta) { Time.timeDelta = timeDelta }
+			if (setTimeDelta) {
+				Time.timeDelta =
+					(actualHourAngle - hourAngle) / 30 /* 1 / 30 = 12 / 360 */ * 3600000 +
+					(actualMinuteAngle - minuteAngle) / 6 /* 1 / 6 = 60 / 360 */ * 60000 +
+					(actualSecondAngle - secondAngle) / 6 /* 1 / 6 = 60 / 360 */ * 1000
+			}
 		}
 	}
 
@@ -110,9 +108,12 @@ Rectangle {
 			anchors.rightMargin: -8
 			cursorShape: Qt.PointingHandCursor
 			onReleased: {
+				if (hourAngle === actualHourAngle) return
 				hourDragged = true
 				hourDragStartTime = Number(new Date())
 				hourDragAmplitude = hourAngle - actualHourAngle
+				hourDragDecayFrame =
+					Math.pow(Math.abs(minAmplitude / hourDragAmplitude), 1 / frameRate / dragDuration) || 0
 			}
 			onPositionChanged: {
 				hourDragged = false
@@ -148,9 +149,12 @@ Rectangle {
 			anchors.rightMargin: -8
 			cursorShape: Qt.PointingHandCursor
 			onReleased: {
+				if (minuteAngle === actualMinuteAngle) return
 				minuteDragged = true
 				minuteDragStartTime = Number(new Date())
 				minuteDragAmplitude = minuteAngle - actualMinuteAngle
+				minuteDragDecayFrame =
+					Math.pow(Math.abs(minAmplitude / minuteDragAmplitude), 1 / frameRate / dragDuration)
 			}
 			onPositionChanged: {
 				minuteDragged = false
@@ -185,9 +189,12 @@ Rectangle {
 			anchors.rightMargin: -8
 			cursorShape: Qt.PointingHandCursor
 			onReleased: {
+				if (secondAngle === actualSecondAngle) return
 				secondDragged = true
 				secondDragStartTime = Number(new Date())
 				secondDragAmplitude = secondAngle - actualSecondAngle
+				secondDragDecayFrame =
+					Math.pow(Math.abs(minAmplitude / secondDragAmplitude), 1 / frameRate / dragDuration) || 0
 			}
 			onPositionChanged: {
 				secondDragged = false

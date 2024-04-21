@@ -9,6 +9,7 @@ import "../library/Arrays.mjs" as Arrays
 import "../library/Random.mjs" as Random
 
 QtObject {
+	property real seed: Config.wallpapers.seed
 	property var wallpapers: getWallpapers()
 	readonly property var random: new Random.Random()
 	readonly property FolderListModel folder: FolderListModel {
@@ -19,7 +20,7 @@ QtObject {
 	}
 
 	function getWallpapers() {
-		random.seed(Config.wallpapers.getSeed())
+		random.seed(seed)
 		const unshuffled = []
 		for (let i = 0; i < folder.count; i += 1) {
 			unshuffled.push(folder.get(i, "filePath"))
@@ -34,11 +35,6 @@ QtObject {
 		}
 		return newWallpapers
 	}
-
-	property Connections timeConnection: Connections {
-		target: Time
-		function onMinuteChanged() {
-			if (Time.hour === 7 && Time.minute === 30) wallpapers = getWallpapers()
-		}
-	}
+	
+	onSeedChanged: wallpapers = getWallpapers()
 }
