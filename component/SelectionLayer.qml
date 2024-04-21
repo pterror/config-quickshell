@@ -4,22 +4,14 @@ import Quickshell.Wayland
 import ".."
 
 WlrLayershell {
+	property var selectionArea: area
 	signal selectionComplete(x: real, y: real, width: real, height: real)
-
 	color: "transparent"
 	visible: selectionArea.selecting || selectionArea.initializing
 	exclusionMode: ExclusionMode.Ignore
 	layer: WlrLayer.Overlay
 	namespace: "termspawner"
-
-	anchors {
-		left: true
-		right: true
-		top: true
-		bottom: true
-	}
-
-	property var selectionArea: area
+	anchors { left: true; right: true; top: true; bottom: true }
 
 	Rectangle {
 		id: area

@@ -4,7 +4,7 @@ import Quickshell
 import Quickshell.Io
 
 Singleton {
-	property bool termSelect: false
+	property bool selectingWindowArea: false
 	property bool workspacesOverview: false
 
 	SocketServer {
@@ -19,8 +19,8 @@ Singleton {
 						console.log("Shell: " + message)
 					}
 					switch (message) {
-						case "termselect:start": { termSelect = true; break }
-						case "termselect:stop": { termSelect = false; break }
+						case "window_selection_area:start": { selectingWindowArea = true; break }
+						case "window_selection_area:stop": { selectingWindowArea = false; break }
 						case "workspaces_overview:open": { workspacesOverview = true; break }
 						case "workspaces_overview:close": { workspacesOverview = false; break }
 						case "workspaces_overview:toggle": { workspacesOverview = !workspacesOverview; break }

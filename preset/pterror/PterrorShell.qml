@@ -7,6 +7,7 @@ import QtQuick.Layouts
 import "../../io"
 import "../../component"
 import "../../window"
+import "../../widget"
 import "../../library"
 import "../.."
 
@@ -76,7 +77,7 @@ ShellRoot {
 		target: Config.services.audio
 		function onVolumeChanged() {
 			if (!volumeOsdLoader.active || !volumeOsdLoader.item) return
-			if (volumeOsdLoader.item.screen?.id !== Hyprland.activeScreen.id) {
+			if (volumeOsdLoader.item.screen?.name !== Hyprland.activeScreen.name) {
 				volumeOsdLoader.item.screen = Hyprland.activeScreen
 			}
 			volumeOsdLoader.item.show()
@@ -90,7 +91,7 @@ ShellRoot {
 		function onWorkspacesOverviewChanged() {
 			workspacesOverview.visible = Shell.workspacesOverview
 			if (!workspacesOverview.visible) return
-			if (workspacesOverview.screen.id !== Hyprland.activeScreen.id) {
+			if (workspacesOverview.screen.name !== Hyprland.activeScreen.name) {
 				workspacesOverview.screen = Hyprland.activeScreen
 			}
 		}
@@ -141,60 +142,7 @@ ShellRoot {
 
 				// ShaderView {}
 
-				SelectionLayer {
-					id: selectionLayer
-
-					onSelectionComplete: (x, y, width, height) => {
-						termSpawner.x = x
-						termSpawner.y = y
-						termSpawner.width = width
-						termSpawner.height = height
-						termSpawner.running = true
-					}
-
-					Process {
-						id: termSpawner
-						property real x
-						property real y
-						property real width
-						property real height
-
-						command: [
-							"hyprctl",
-							"dispatch",
-							"exec",
-							`[float;; noanim; move ${x} ${y}; size ${width} ${height}] alacritty --class AlacrittyTermselect`
-						]
-					}
-
-					Connections {
-						target: Shell
-
-						function onTermSelectChanged() {
-							if (Shell.termSelect) {
-								selectionLayer.selectionArea.startSelection(true)
-							} else {
-								selectionLayer.selectionArea.endSelection()
-							}
-						}
-					}
-
-					Connections {
-						target: Hyprland
-
-						function onWindowOpened(_, _, klass, _) {
-							if (klass === "AlacrittyTermselect") {
-								selectionLayer.selectionArea.selecting = false
-							}
-						}
-					}
-				}
-
-				SelectionArea {
-					anchors.fill: parent
-					screen: window.screen
-					selectionArea: selectionLayer.selectionArea
-				}
+				WindowSpawnerSelectionArea {}
 			}
 		}
 	}

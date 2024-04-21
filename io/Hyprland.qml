@@ -55,7 +55,7 @@ Singleton {
 				const lines = message.split(/\n(?=.+>>|$)/)
 				for (const line of lines) {
 					if (!line) continue
-					const [, type, body] = line.match(/(.+)>>([\s\S]+)/)
+					const [, type, body] = line.match(/(.+)>>([\s\S]*)/)
 					if (body === undefined) {
 						console.log("Hyprland: error: malformed message: " + message)
 						continue
