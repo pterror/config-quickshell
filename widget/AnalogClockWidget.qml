@@ -20,6 +20,7 @@ Rectangle {
 	property int frameRate: Config.frameRate
 	property real minAmplitude: 0.1
 	property real dragDecay: 0.2
+	property bool setTimeDelta: true
 	property bool hourDragged: false
 	property real hourDragAmplitude: 0
 	property real hourDragAngle: 0
@@ -42,14 +43,21 @@ Rectangle {
 	implicitHeight: radius * 2
 	color: "transparent"
 
+	onSetTimeDeltaChanged: {
+		if (setTimeDelta) return
+		Time.timeDelta = 0
+	}
+
 	FrameAnimation {
 		running: secondHandVisible || hourDragged || minuteDraged || secondDragged
 		onTriggered: {
-			actualSecondAngle = -(Number(new Date()) / 1000 % 60 * (360 / 60))
+			actualSecondAngle = -((Number(new Date()) + Time.timeDelta) / 1000 % 60 * (360 / 60))
+			let timeDelta = 0
 			if (hourDragged) {
 				hourDragAmplitude *= hourDragDecayFrame
 				const deltaTime = (new Date() - hourDragStartTime) / 1000
 				const delta = hourDragAmplitude * Math.cos(deltaTime * 2 * Math.PI)
+				timeDelta += delta / 15 /* 1 / 15 = 24 / 360 */ * 3600000
 				hourAngle = actualHourAngle + delta
 				if (Math.abs(hourDragAmplitude) < minAmplitude) {
 					hourAngle = Qt.binding(() => actualHourAngle)
@@ -60,6 +68,7 @@ Rectangle {
 				minuteDragAmplitude *= minuteDragDecayFrame
 				const deltaTime = (new Date() - minuteDragStartTime) / 1000
 				const delta = minuteDragAmplitude * Math.cos(deltaTime * 2 * Math.PI)
+				timeDelta += delta / 6 /* 1 / 6 = 60 / 360 */ * 60000
 				minuteAngle = actualMinuteAngle + delta
 				if (Math.abs(minuteDragAmplitude) < minAmplitude) {
 					minuteAngle = Qt.binding(() => actualMinuteAngle)
@@ -71,11 +80,13 @@ Rectangle {
 				const deltaTime = (new Date() - secondDragStartTime) / 1000
 				const delta = secondDragAmplitude * Math.cos(deltaTime * 2 * Math.PI)
 				secondAngle = actualSecondAngle + delta
+				timeDelta += delta / 6 /* 1 / 6 = 60 / 360 */ * 1000
 				if (Math.abs(secondDragAmplitude) < minAmplitude) {
 					secondAngle = Qt.binding(() => actualSecondAngle)
 					secondDragged = false
 				}
 			}
+			if (setTimeDelta) { Time.timeDelta = timeDelta }
 		}
 	}
 

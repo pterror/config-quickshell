@@ -5,6 +5,7 @@ import Quickshell
 
 Singleton {
 	property date time: new Date()
+	property real timeDelta: 0
 	property int hour: time.getHours()
 	property int minute: time.getMinutes()
 	property int second: time.getSeconds()
@@ -23,11 +24,18 @@ Singleton {
 
 	Timer {
 		interval: 500; running: true; repeat: true
-		onTriggered: {
-			const date = new Date()
-			hour = date.getHours()
-			minute = date.getMinutes()
-			second = date.getSeconds()
-		}
+		onTriggered: refreshDate()
+	}
+
+	onTimeDeltaChanged: {
+		refreshDate()
+		time = timeDelta === 0 ? new Date() : new Date(Number(new Date()) + timeDelta)
+	}
+
+	function refreshDate() {
+		const date = timeDelta === 0 ? new Date() : new Date(Number(new Date()) + timeDelta)
+		hour = date.getHours()
+		minute = date.getMinutes()
+		second = date.getSeconds()
 	}
 }
