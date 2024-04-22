@@ -5,6 +5,7 @@ Widget {
 	id: root
 	required property real fraction
 	property int animationSpeed: 50
+	property int animationDuration: -1
 	property string fg: Config.colors.panel.accent
 	property int margins: Config.layout.panel.margins
 	property int innerRadius: Config.layout.panel.innerRadius
@@ -24,7 +25,12 @@ Widget {
 		color: root.fg
 		radius: root.innerRadius
 
-		Behavior on width { SmoothedAnimation { velocity: mouseArea.pressed ? 5000 : animationSpeed } }
+		Behavior on width {
+			SmoothedAnimation {
+				velocity: mouseArea.pressed ? 5000 : animationSpeed
+				duration: animationDuration
+			}
+		}
 	}
 
 	MouseArea {

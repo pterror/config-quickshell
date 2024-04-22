@@ -29,7 +29,8 @@ PanelWindow {
 				id: progressBar
 				Layout.fillHeight: true
 				Layout.fillWidth: true
-				animationSpeed: 50
+				animationDuration: CPUInfo.interval
+				animationSpeed: -1
 				fraction: 0
 				radius: 0
 				margins: 0
