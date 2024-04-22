@@ -18,6 +18,7 @@ PanelWindow {
 	ColumnLayout2 {
 		id: content
 		autoSize: true
+		anchors.horizontalCenter: parent.horizontalCenter
 		radius: Config.layout.panel.radius
 		margins: Config.layout.panel.margins
 		// color: Config.colors.panel.bg

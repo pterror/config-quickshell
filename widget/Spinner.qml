@@ -4,6 +4,7 @@ import ".."
 
 Rectangle {
 	id: root
+	property bool muted: false
 	property int radius: 128
 	property int ticks: 12
 	property int tickHeight: 24
@@ -58,6 +59,7 @@ Rectangle {
 	}
 
 	function playClick() {
+		if (muted) { return }
 		if (!click.playing) {
 			click.loops = 1
 			click.play()
