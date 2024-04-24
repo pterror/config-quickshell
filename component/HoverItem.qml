@@ -14,11 +14,12 @@ Button {
 	background: Rectangle {
 		anchors.margins: Config.layout.button.margins
 		radius: Config.layout.button.radius
-		color: root.hovered ? Config.colors.barItem.hoverBg : Config.colors.barItem.bg
+		color: mouseArea.containsMouse ? Config.colors.barItem.hoverBg : Config.colors.barItem.bg
 	}
 
 	MouseArea {
 		id: mouseArea
+		hoverEnabled: true
 		anchors.fill: parent
 		anchors.margins: Config.layout.barItem.margins
 		cursorShape: Qt.PointingHandCursor
