@@ -1,6 +1,4 @@
-/*
- *
- *  Shader Wallpaper
+/*  Shader Wallpaper
  *  Copyright (C) 2020 @y4my4my4m | github.com/y4my4my4m
  *
  *  This program is free software: you can redistribute it and/or modify
@@ -36,33 +34,33 @@ Rectangle {
 	ShaderEffect {
 		anchors.fill: parent
 		id: shader
+		blending: false
 		property vector3d iResolution: Qt.vector3d(width, height, 0)
 		property real iTime: 0
 		property list<real> iChannelTime: [0., 0., 0., 0.]
 		property real iFrameRate: 60
 		property real iTimeDelta: 1 / iFrameRate
 		property real iSampleRate: 1
-		property int iFrame: 10
+		property int iFrame: 0
 		property vector4d iMouse: Qt.vector4d(0., 0., 0., 0.)
 		property vector4d iDate
 		property Image iChannel0: Image {
-			source: Config.shaderWallpaper.channel0
+			source: "../image/" + Config.shaderWallpaper.channel0
 			visible: false
 		}
 		property Image iChannel1: Image {
-			source: Config.shaderWallpaper.channel1
+			source: "../image/" + Config.shaderWallpaper.channel1
 			visible: false
 		}
 		property Image iChannel2: Image {
-			source: Config.shaderWallpaper.channel2
+			source: "../image/" + Config.shaderWallpaper.channel2
 			visible: false
 		}
 		property Image iChannel3: Image {
-			source: Config.shaderWallpaper.channel3
+			source: "../image/" + Config.shaderWallpaper.channel3
 			visible: false
 		}
-		
-		readonly property vector3d defaultResolution: Qt.vector3d(width, height, width / height)
+
 		property list<vector3d> iChannelResolution: [
 			Qt.vector3d(iChannel0.width, iChannel0.height, iChannel0.width / iChannel0.height),
 			Qt.vector3d(iChannel1.width, iChannel1.height, iChannel1.width / iChannel1.height),
@@ -89,7 +87,7 @@ Rectangle {
 				shader.iMouse.y = -mouseY * root.config.mouseSpeedBias
 			}
 			onClicked: {
-				if (!Config.wallpaper.mouse) return
+				if (!root.config.mouse) return
 				shader.iMouse.z = mouseX
 				shader.iMouse.w = mouseY
 			}
@@ -99,26 +97,12 @@ Rectangle {
 	)
 
 	Timer {
-		id: timer1
-		running: true
-		triggeredOnStart: true
-		interval: 16
-		repeat: true
+		interval: 1000 / shader.iFrameRate; running: true; repeat: true; triggeredOnStart: true
 		onTriggered: {
-			var now = new Date()
-			var year = now.getFullYear()
-			var month = now.getMonth() +1
-			var day = now.getDate()
-			var hour = now.getHours()
-			var minute = now.getMinutes()
-			var second = now.getSeconds()
-			var now = new Date()
-			var startOfDay = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 0, 0, 0)
-			var secondsSinceMidnight = (now - startOfDay) / 1000
-			shader.iTime += shader.iTimeDelta * (Config.shaderWallpaper.speed || 1.0)
+			shader.iTime += shader.iTimeDelta * Config.shaderWallpaper.speed
 			shader.iChannelTime = [shader.iTime, shader.iTime, shader.iTime, shader.iTime]
 			shader.iFrame += 1
-			shader.iDate = Qt.vector4d(0., 0., 0., secondsSinceMidnight)
+			shader.iDate = Qt.vector4d(0., 0., 0., Number(new Date()) / 1000 % 86400)
 		}
 	}
 }

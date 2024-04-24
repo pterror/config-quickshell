@@ -9,11 +9,11 @@ Rectangle {
 	property alias source: image.source
 	property alias radius: mask.radius
 	property int size: 256
-	property real aspectRatio: (image.implicitWidth / image.implicitHeight) || 0
+	property real aspectRatio: (image.implicitWidth / image.implicitHeight) || 0.01
 
 	color: "transparent"
 	implicitWidth: Config.layout.mediaPlayer.imageSize * Math.min(aspectRatio, 1)
-	implicitHeight: Config.layout.mediaPlayer.imageSize * Math.min(1 / aspectRatio, 1)
+	implicitHeight: Config.layout.mediaPlayer.imageSize / Math.max(aspectRatio, 1)
 
 	Image {
 		id: image

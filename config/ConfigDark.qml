@@ -43,10 +43,27 @@ Singleton {
 		property real speed: 1.0
 		property bool mouse: true
 		property real mouseSpeedBias: 1.0
-		property string channel0: "../blank.png"
-		property string channel1: "../blank.png"
-		property string channel2: "../blank.png"
-		property string channel3: "../blank.png"
+		property string channel0: "blank.png"
+		property string channel1: "blank.png"
+		property string channel2: "blank.png"
+		property string channel3: "blank.png"
+	}
+
+	property QtObject bouncingMaskedShader: QtObject {
+		property real opacity: 0.3
+		property real speed: 1.0
+		property bool mouse: false
+		property real mouseSpeedBias: 1.0
+		property real velocityX: 256.0
+		property real velocityY: 192.0
+		property string shader: "full_spectrum_cyber_masked"
+		property string mask: "dvd_logo.svg"
+		property int maskWidth: 320
+		property int maskHeight: -1
+		property string channel0: "blank.png"
+		property string channel1: "blank.png"
+		property string channel2: "blank.png"
+		property string channel3: "blank.png"
 	}
 
 	property QtObject layout: QtObject {
