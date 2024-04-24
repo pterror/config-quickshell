@@ -150,11 +150,11 @@ ShellRoot {
 		}
 	}
 
-	PanelWindow {
-		screen: Quickshell.screens[1]
-		WlrLayershell.layer: WlrLayer.Background
-		anchors { top: true; bottom: true; left: true; right: true }
-		color: "transparent"
-		BouncingMaskedShaderWidget {}
-	}
+	// PanelWindow {
+	// 	screen: Quickshell.screens[1]
+	// 	WlrLayershell.layer: WlrLayer.Background
+	// 	anchors { top: true; bottom: true; left: true; right: true }
+	// 	color: "transparent"
+	// 	BouncingMaskedShaderWidget {}
+	// }
 }
