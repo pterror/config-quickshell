@@ -3,7 +3,6 @@ import Quickshell.Io
 import Quickshell.Wayland
 import QtQuick
 import QtQuick.Layouts
-// import QtMultimedia
 import "../../io"
 import "../../component"
 import "../../window"
@@ -123,19 +122,9 @@ ShellRoot {
 					asynchronous: false
 				}
 
-				// requires QtMultimedia to be installed
-				// MediaPlayer {
-				// 	source: wallpaperRandomizer.wallpapers[modelData.name] ?? "../../image/dark_pixel.png"
-				// 	videoOutput: videoOutput
-				// 	loops: MediaPlayer.Infinite
-				// 	Component.onCompleted: play()
-				// 	onSourceChanged: play()
-				// }
-
-				// VideoOutput {
-				// 	id: videoOutput
+				// VideoPlayer {
 				// 	anchors.fill: parent
-				// 	fillMode: Image.PreserveAspectCrop
+				// 	source: wallpaperRandomizer.wallpapers[modelData.name] ?? "../image/dark_pixel.png"
 				// }
 
 				Rectangle {

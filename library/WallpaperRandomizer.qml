@@ -25,13 +25,16 @@ QtObject {
 		for (let i = 0; i < folder.count; i += 1) {
 			unshuffled.push(folder.get(i, "filePath"))
 		}
-		const shuffled = Arrays.shuffle(unshuffled, () => random.random())
+		let shuffled = Arrays.shuffle(unshuffled, () => random.random())
 		const newWallpapers = {}
 		for (const screen of Quickshell.screens) {
+			if (shuffled.length === 0) {
+				shuffled = Arrays.shuffle(unshuffled, () => random.random());
+			}
 			newWallpapers[screen.name] = shuffled.pop()
 		}
 		if (Config.debug) {
-			console.log("Newwallpapers:", JSON.stringify(newWallpapers))
+			console.log("New wallpapers:", JSON.stringify(newWallpapers))
 		}
 		return newWallpapers
 	}
