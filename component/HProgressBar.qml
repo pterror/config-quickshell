@@ -4,8 +4,8 @@ import ".."
 Widget {
 	id: root
 	required property real fraction
-	property int animationSpeed: 50
-	property int animationDuration: -1
+	property int animationSpeed: -1
+	property int animationDuration: 500
 	property string fg: Config.colors.panel.accent
 	property int margins: Config.layout.panel.margins
 	property int innerRadius: Config.layout.panel.innerRadius
