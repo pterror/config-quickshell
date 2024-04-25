@@ -3,7 +3,7 @@ import Quickshell
 import "../io"
 import "../library"
 
-ConfigShared {
+ConfigBase {
 	id: root
 
 	property QtObject colors: QtObject {

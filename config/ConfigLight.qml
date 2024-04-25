@@ -2,7 +2,7 @@ import QtQuick
 import Quickshell
 import "../io"
 
-ConfigShared {
+ConfigBase {
 	id: root
 	wallpapers.folder: Quickshell.env("HOME") + "/.config/wallpapers/light/"
 
