@@ -1,147 +1,10 @@
-// unused. swap this file and root.qml to switch themes.
 import QtQuick
 import Quickshell
 import "../io"
 import "../library"
 
-Singleton {
+ConfigShared {
 	id: root
-	required property string name
-	property int frameRate: 60
-	property string terminal: "alacritty"
-
-	property bool debug: false
-	property QtObject debugFlags: QtObject {
-		property bool debugRectangles: root.debug && true
-	}
-
-	property QtObject activateLinux: QtObject {
-		property string name: "NixOS"
-	}
-
-	property QtObject services: QtObject {
-		property var audio: WirePlumber
-		property var network: NetworkManager
-	}
-
-	property QtObject network: QtObject {
-		property string interface_: "wlp10s0" // enp11s0, wlan0, eth0
-	}
-
-	property QtObject wallpapers: QtObject {
-		property string folder: Quickshell.env("HOME") + "/.config/wallpapers/"
-		property list<string> formats: ["*"]
-		property real seed: Math.floor((Number(Time.time) - 7.5 * _HOUR_MS - Time.time.getTimezoneOffset() * _MIN_MS) / _DAY_MS)
-	}
-
-	property font font: Qt.font({
-		family: "Unicorn Scribbles"
-	})
-
-	property QtObject shaderWallpaper: QtObject {
-		property string shader: "Night_Sky"
-		property real speed: 1.0
-		property bool mouse: true
-		property real mouseSpeedBias: 1.0
-		property string channel0: "blank.png"
-		property string channel1: "blank.png"
-		property string channel2: "blank.png"
-		property string channel3: "blank.png"
-	}
-
-	property QtObject bouncingMaskedShader: QtObject {
-		property real opacity: 0.3
-		property real speed: 1.0
-		property bool mouse: false
-		property real mouseSpeedBias: 1.0
-		property real velocityX: 256.0
-		property real velocityY: 192.0
-		property string shader: "full_spectrum_cyber_masked"
-		property string mask: "dvd_logo.svg"
-		property int maskWidth: 320
-		property int maskHeight: -1
-		property string channel0: "blank.png"
-		property string channel1: "blank.png"
-		property string channel2: "blank.png"
-		property string channel3: "blank.png"
-	}
-
-	property QtObject layout: QtObject {
-		// fallback values for arbitrary rectangles
-		property QtObject rectangle: QtObject {
-			property int radius: 4
-		}
-
-		property QtObject popup: QtObject {
-			property int gap: 8
-		}
-
-		property QtObject icon: QtObject {
-			property int size: 32
-		}
-
-		property QtObject widget: QtObject {
-			property int radius: 8
-			property int margins: 4
-			property int border: 0
-			property int fontSize: 11
-		}
-
-		property QtObject window: QtObject {
-			property int radius: 8
-			property int margins: 4
-			property int border: 0
-			property int fontSize: 11
-		}
-
-		property QtObject button: QtObject {
-			property int radius: 8
-			property int margins: 4
-			property int border: 0
-			property int fontSize: 11
-		}
-
-		property QtObject iconButton: QtObject {
-			property int size: 32
-		}
-
-		property QtObject panel: QtObject {
-			property int radius: root.layout.widget.radius * 2
-			property int margins: root.layout.widget.margins * 2
-			property int innerRadius: root.layout.panel.radius - root.layout.panel.margins
-		}
-
-		property QtObject hBar: QtObject {
-			property int radius: root.layout.widget.radius
-			property int margins: root.layout.widget.margins
-			property int border: root.layout.widget.border
-			// NOTE: Currently unused
-			property int fontSize: root.layout.widget.fontSize
-			property int height: 32
-		}
-
-		property QtObject barItem: QtObject {
-			property int radius: 4
-			property int margins: root.layout.button.margins
-		}
-
-		property QtObject selection: QtObject {
-			property int radius: root.layout.widget.radius
-			property int border: root.layout.widget.border
-		}
-
-		property QtObject mediaPlayer: QtObject {
-			property int imageSize: 256
-			property int controlsGap: 16
-			property int controlGap: 8
-		}
-
-		property QtObject audioVisualizer: QtObject {
-			property int gap: 4
-		}
-	}
-
-	property real iconOpacity: 0xa0 / 0xff
 
 	property QtObject colors: QtObject {
 		property string backgroundBlend: "#00000000"
@@ -229,8 +92,4 @@ Singleton {
 			property string barsBg: "#30ffeef8"
 		}
 	}
-
-	property real _MIN_MS: 60000
-	property real _HOUR_MS: 3600000
-	property real _DAY_MS: 86400000
 }

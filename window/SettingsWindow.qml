@@ -39,8 +39,7 @@ FloatingWindow {
 						inner: settingsTabInner
 						onClicked: {
 							root.tab = modelData
-							console.log("...", metadata.tabInfos, metadata)
-							settingsTab.item.modelData = metadata.tabInfos[root.tab]
+							settingsTab.item.modelData = metadata.tabInfos[root.tab = modelData]
 						}
 
 						Text2 {

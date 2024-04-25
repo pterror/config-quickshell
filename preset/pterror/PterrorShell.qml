@@ -139,6 +139,18 @@ ShellRoot {
 		}
 	}
 
+	PanelWindow {
+		screen: Quickshell.screens[0]
+		WlrLayershell.layer: WlrLayer.Bottom
+		color: "transparent"
+		width: crewmate.implicitWidth
+		height: crewmate.implicitHeight
+		anchors { top: true; left: true }
+		margins.top: 64
+		margins.left: 128
+		InteractiveCrewmate { id: crewmate; color: "red" }
+	}
+
 	// PanelWindow {
 	// 	screen: Quickshell.screens[1]
 	// 	WlrLayershell.layer: WlrLayer.Background

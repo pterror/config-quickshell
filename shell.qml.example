@@ -1,4 +1,6 @@
 //@ pragma Env QML_XHR_ALLOW_FILE_READ = 1
 import "./preset/pterror"
 
-PterrorShell {}
+PterrorShell {
+	Component.onCompleted: Config.baseUrl = Qt.resolvedUrl(".")
+}
