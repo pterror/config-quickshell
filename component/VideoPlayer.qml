@@ -18,7 +18,7 @@ VideoOutput {
 		audioOutput: AudioOutput {}
 		loops: MediaPlayer.Infinite
 		autoPlay: true
-		onErrorOccurred: (error, errorString) => { root.error(error, errorString); }
+		onErrorOccurred: (error, errorString) => { root.error(error, errorString) }
 		onPlaybackStateChanged: root.playbackStateChanged()
 		onPlayingChanged: root.playingChanged()
 	}

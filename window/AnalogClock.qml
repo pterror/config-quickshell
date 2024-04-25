@@ -17,6 +17,7 @@ PanelWindow {
 	color: "transparent"
 	width: content.implicitWidth
 	height: content.implicitHeight
+	WlrLayershell.namespace: "shell:analog_clock"
 	Component.onCompleted: {
 		if (this.WlrLayershell) this.WlrLayershell.layer = WlrLayer.Bottom
 	}

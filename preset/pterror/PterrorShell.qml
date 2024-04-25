@@ -44,15 +44,15 @@ ShellRoot {
 		anchors.right: true
 	}
 
-	// OutwardsRadialAudioVisualizerBars {
-	// 	screen: Quickshell.screens[0]
-	// 	fillColor: Config.colors.audioVisualizer.barsBg
-	// 	bars: 40
-	// 	anchors.top: true
-	// 	anchors.bottom: true
-	// 	anchors.left: true
-	// 	anchors.right: true
-	// }
+	InwardsRadialAudioVisualizerBars {
+		screen: Quickshell.screens[0]
+		fillColor: Config.colors.audioVisualizer.barsBg
+		bars: 40
+		anchors.top: true
+		anchors.bottom: true
+		anchors.left: true
+		anchors.right: true
+	}
 
 	AnalogClock {
 		screen: Quickshell.screens[0]
@@ -140,15 +140,29 @@ ShellRoot {
 	}
 
 	PanelWindow {
+		id: sussy
 		screen: Quickshell.screens[0]
 		WlrLayershell.layer: WlrLayer.Bottom
+		WlrLayershell.namespace: "shell:widget"
 		color: "transparent"
 		width: crewmate.implicitWidth
 		height: crewmate.implicitHeight
-		anchors { top: true; left: true }
-		margins.top: 64
-		margins.left: 128
-		InteractiveCrewmate { id: crewmate; color: "red" }
+		anchors { top: true; bottom: true; left: true; right: true }
+		mask: Region { item: crewmate }
+		InteractiveCrewmate {
+			id: crewmate; color: "red"
+			property int startX: 0
+			property int startY: 0
+			onPressed: event => { startX = event.x; startY = event.y }
+			anchors.left: parent.left
+			anchors.leftMargin: 128
+			anchors.top: parent.top
+			anchors.topMargin: 64
+			onPositionChanged: event => {
+				crewmate.anchors.leftMargin += event.x - startX
+				crewmate.anchors.topMargin += event.y - startY
+			}
+		}
 	}
 
 	// PanelWindow {

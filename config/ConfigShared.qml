@@ -15,9 +15,9 @@ Singleton {
 		return /^file:|^[/]/.test(path) ? path : baseUrl == "" ? "" : baseUrl + prefix + path
 	}
 
-	function imageUrl(path) { return url(path, "image/"); }
-	function soundUrl(path) { return url(path, "sound/"); }
-	function videoUrl(path) { return url(path, "video/"); }
+	function imageUrl(path) { return url(path, "image/") }
+	function soundUrl(path) { return url(path, "sound/") }
+	function videoUrl(path) { return url(path, "video/") }
 
 	property bool debug: false
 	property QtObject debugFlags: QtObject {

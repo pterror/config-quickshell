@@ -6,7 +6,7 @@ PanelWindow {
 	property int persistDuration: 1000
 	property int hideHandle: 0
 	default property alias content: container.children
-	WlrLayershell.namespace: "shell:popup"
+	WlrLayershell.namespace: "shell:osd"
 
 	Rectangle {
 		id: container

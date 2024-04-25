@@ -8,7 +8,7 @@ import ".."
 
 PanelWindow {
 	id: root
-	color: "#40000000"
+	color: "transparent"
 	WlrLayershell.namespace: "shell:audio_visualizer"
 	exclusiveZone: 0
 	Component.onCompleted: {
