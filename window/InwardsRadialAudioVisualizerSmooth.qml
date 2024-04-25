@@ -53,7 +53,7 @@ PanelWindow {
 				if (index !== 0) return
 				const height = newValue * root.scale
 				shape.startX = root.width / 2
-				shape.startY = root.height / 2 - (root.innerRadius + height)
+				shape.startY = root.height / 2 - (root.outerRadius - height)
 			}
 		}
 
@@ -82,21 +82,15 @@ PanelWindow {
 						function onValue(index, newValue) {
 							if (index !== modelData % cava.count) return
 							const height = newValue * root.scale
-							curve.x = root.width / 2 + (root.innerRadius + height) * xMultiplier
-							curve.y = root.height / 2 + (root.innerRadius + height) * yMultiplier
+							curve.x = root.width / 2 + (root.outerRadius - height) * xMultiplier
+							curve.y = root.height / 2 + (root.outerRadius - height) * yMultiplier
 						}
 					}
 				}
 			}
 		}
 
-		Item {
-			PathLine {
-				id: finalLine
-				x: root.width / 2
-				y: root.height / 2 - root.circleRadius
-			}
-		}
+		PathLine { id: finalLine; x: root.width / 2; y: root.height / 2 - root.circleRadius }
 
 		Repeater {
 			id: outerCircle
@@ -112,13 +106,7 @@ PanelWindow {
 			}
 		}
 
-		Item {
-			PathLine {
-				id: finalLine2
-					x: shape.startX
-					y: shape.startY
-			}
-		}
+		PathLine { id: finalLine2; x: shape.startX; y: shape.startY }
 	}
 
 	Component.onCompleted: {
