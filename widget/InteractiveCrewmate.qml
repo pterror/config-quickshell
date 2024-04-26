@@ -1,4 +1,5 @@
 import Quickshell
+import Quickshell.Wayland
 import QtQuick
 import QtMultimedia
 import "../component"
@@ -28,6 +29,9 @@ Crewmate {
 
 	MediaPlayer { id: audio; source: Config.soundUrl(sound); audioOutput: AudioOutput {} }
 
+	scale: mouseArea.pressed ? 0.9 : 1.0
+	Behavior on scale { SmoothedAnimation { velocity: 2 } }
+
 	MouseArea {
 		id: mouseArea
 		anchors.fill: parent
@@ -47,29 +51,32 @@ Crewmate {
 			audio.play()
 			clickCount += 1
 			if (clickCount === maxClickCount) {
-				videoLoader.loading = true
-				videoVisible = true
+				videoLock.locked = true
 			}
 		}
 	}
 
-	LazyLoader {
-		id: videoLoader
-		PanelWindow {
-			visible: videoVisible
-			anchors { top: true; bottom: true; left: true; right: true }
-			exclusionMode: ExclusionMode.Ignore
-			color: "transparent"
-			VideoPlayer {
+	WlSessionLock {
+		id: videoLock
+
+		WlSessionLockSurface {
+			id: lockSurface
+			color: "black"
+
+			Video {
 				id: videoPlayer
+				anchors.fill: parent
 				loops: 1
 				source: Config.videoUrl(video)
-				onPlayingChanged: { if (!playing) { videoVisible = false } }
+				fillMode: VideoOutput.PreserveAspectFit
+				onStopped: videoLock.locked = false
 
 				Connections {
-					target: root
-					function onVideoVisibleChanged() {
-						if (videoVisible) { play() }
+					target: videoLock
+
+					function onSecureChanged() {
+						videoPlayer.muted = lockSurface.screen != Quickshell.screens[0]
+						videoPlayer.play()
 					}
 				}
 			}

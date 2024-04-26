@@ -10,11 +10,7 @@ Singleton {
 	property int frameRate: 60
 	property string terminal: "alacritty"
 
-	function url(path, prefix = "") {
-		// this MUST be `==` as a `url`` is not a `string``
-		return /^file:|^[/]/.test(path) ? path : baseUrl == "" ? "" : baseUrl + prefix + path
-	}
-
+	function url(path, prefix = "") { return Qt.resolvedUrl("../" + prefix + path) }
 	function iconUrl(path) { return url(path, "icon/") }
 	function imageUrl(path) { return url(path, "image/") }
 	function soundUrl(path) { return url(path, "sound/") }
