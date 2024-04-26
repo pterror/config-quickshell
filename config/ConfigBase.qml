@@ -10,11 +10,22 @@ Singleton {
 	property int frameRate: 60
 	property string terminal: "alacritty"
 
+	property QtObject screens: QtObject {
+		property ShellScreen primary: Quickshell.screens[0]
+	}
+
 	function url(path, prefix = "") { return Qt.resolvedUrl("../" + prefix + path) }
 	function iconUrl(path) { return url(path, "icon/") }
 	function imageUrl(path) { return url(path, "image/") }
 	function soundUrl(path) { return url(path, "sound/") }
 	function videoUrl(path) { return url(path, "video/") }
+
+	function getScreen(name) {
+		return Quickshell.screens.find(screen => screen.name === name) ??
+			Quickshell.screens.find(screen => screen.name.startsWith(name)) ??
+			Quickshell.screens.find(screen => screen.name.includes(name)) ??
+			Quickshell.screens[0]
+	}
 
 	property bool debug: false
 	property QtObject debugFlags: QtObject {

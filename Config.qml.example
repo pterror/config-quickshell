@@ -1,8 +1,13 @@
 // Copy to `Config.qml`
 pragma Singleton
 
+import QtQuick
 import "./config"
 
 ConfigDark {
-  name: "your name"
+	name: "your name"
+	// check e.g. `hyprctl monitors`
+	Component.onCompleted: {
+		screens.primary = Qt.binding(() => getScreen("HDMI-A-1"))
+	}
 }

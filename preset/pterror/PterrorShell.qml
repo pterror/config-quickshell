@@ -13,21 +13,21 @@ import "../.."
 ShellRoot {
 	WallpaperRandomizer { id: wallpaperRandomizer }
 
-	PterrorStatBar { screen: Quickshell.screens[0] }
-	PterrorMediaBar { screen: Quickshell.screens[0] }
-	Greeter { screen: Quickshell.screens[0] }
-	// ActivateLinux { screen: Quickshell.screens[0] }
-	// SettingsWindow { screen: Quickshell.screens[0] }
+	PterrorStatBar { screen: Config.screens.primary }
+	PterrorMediaBar { screen: Config.screens.primary }
+	Greeter { screen: Config.screens.primary }
+	// ActivateLinux { screen: Config.screens.primary }
+	// SettingsWindow { screen: Config.screens.primary }
 
 	CPUInfoGrid {
-		screen: Quickshell.screens[0]
+		screen: Config.screens.primary
 		anchors.right: true
 		height: 480
 		width: 48
 	}
 
 	HAudioVisualizerBars {
-		screen: Quickshell.screens[0]
+		screen: Config.screens.primary
 		fillColor: Config.colors.audioVisualizer.barsBg
 		bars: 48
 		anchors.top: true
@@ -36,7 +36,7 @@ ShellRoot {
 	}
 
 	HAudioVisualizerBars {
-		screen: Quickshell.screens[0]
+		screen: Config.screens.primary
 		fillColor: Config.colors.audioVisualizer.barsBg
 		bars: 48
 		anchors.bottom: true
@@ -45,7 +45,7 @@ ShellRoot {
 	}
 
 	// InwardsRadialAudioVisualizerBars {
-	// 	screen: Quickshell.screens[0]
+	// 	screen: Config.screens.primary
 	// 	fillColor: Config.colors.audioVisualizer.barsBg
 	// 	bars: 40
 	// 	anchors.top: true
@@ -55,13 +55,13 @@ ShellRoot {
 	// }
 
 	AnalogClock {
-		screen: Quickshell.screens[0]
+		screen: Config.screens.primary
 		anchors.left: true; anchors.top: true
 		margins.left: 32; margins.top: (screen.height - Config.layout.hBar.height - height) / 2
 	}
 
 	ScrollSpinner {
-		screen: Quickshell.screens[0]
+		screen: Config.screens.primary
 		anchors.right: true; anchors.top: true
 		margins.right: 64; margins.top: (screen.height - Config.layout.hBar.height - height) / 2
 	}
@@ -139,35 +139,35 @@ ShellRoot {
 		}
 	}
 
-	PanelWindow {
-		id: sussy
-		screen: Quickshell.screens[0]
-		WlrLayershell.layer: WlrLayer.Bottom
-		WlrLayershell.namespace: "shell:widget"
-		color: "transparent"
-		width: crewmate.implicitWidth
-		height: crewmate.implicitHeight
-		anchors { top: true; bottom: true; left: true; right: true }
-		mask: Region { item: crewmate }
-		InteractiveCrewmate {
-			id: crewmate; color: "transparent"
-			opacity: 0.4
-			property int startX: 0
-			property int startY: 0
-			onPressed: event => { startX = event.x; startY = event.y }
-			anchors.left: parent.left
-			anchors.leftMargin: 128
-			anchors.top: parent.top
-			anchors.topMargin: 64
-			onPositionChanged: event => {
-				crewmate.anchors.leftMargin += event.x - startX
-				crewmate.anchors.topMargin += event.y - startY
-			}
-		}
-	}
+	// PanelWindow {
+	// 	id: sussy
+	// 	screen: Config.screens.primary
+	// 	WlrLayershell.layer: WlrLayer.Bottom
+	// 	WlrLayershell.namespace: "shell:widget"
+	// 	color: "transparent"
+	// 	width: crewmate.implicitWidth
+	// 	height: crewmate.implicitHeight
+	// 	anchors { top: true; bottom: true; left: true; right: true }
+	// 	mask: Region { item: crewmate }
+	// 	InteractiveCrewmate {
+	// 		id: crewmate; color: "transparent"
+	// 		opacity: 0.4
+	// 		property int startX: 0
+	// 		property int startY: 0
+	// 		onPressed: event => { startX = event.x; startY = event.y }
+	// 		anchors.left: parent.left
+	// 		anchors.leftMargin: 128
+	// 		anchors.top: parent.top
+	// 		anchors.topMargin: 64
+	// 		onPositionChanged: event => {
+	// 			crewmate.anchors.leftMargin += event.x - startX
+	// 			crewmate.anchors.topMargin += event.y - startY
+	// 		}
+	// 	}
+	// }
 
 	// PanelWindow {
-	// 	screen: Quickshell.screens[1]
+	// 	screen: Config.screens.primary
 	// 	WlrLayershell.layer: WlrLayer.Background
 	// 	anchors { top: true; bottom: true; left: true; right: true }
 	// 	color: "transparent"
