@@ -18,10 +18,14 @@ Scope {
 	property int count: root.config.general.bars || 0
 	signal value(int index, int value)
 
+	onConfigChanged: {
+		process.running = false
+		process.running = true
+	}
+
 	Process {
 		property int index: 0
 		id: process
-		running: true
 		stdinEnabled: true
 		// onRunningChanged: running = true
 		command: ["cava", "-p", "/dev/stdin"]

@@ -15,6 +15,9 @@ Crewmate {
 	property int clickCount: 0
 	property int maxClickCount: 8
 	property bool videoVisible: false
+	property bool movable: true
+	property int startX: 0
+	property int startY: 0
 	property alias hoverEnabled: mouseArea.hoverEnabled
 	signal canceled()
 	signal clicked(MouseEvent mouse)
@@ -26,6 +29,14 @@ Crewmate {
 	signal pressed(MouseEvent mouse)
 	signal released(MouseEvent mouse)
 	signal wheel(WheelEvent wheel)
+
+	onPressed: event => { startX = event.x; startY = event.y }
+	onPositionChanged: event => {
+		if (movable) {
+			crewmate.anchors.leftMargin += event.x - startX
+			crewmate.anchors.topMargin += event.y - startY
+		}
+	}
 
 	MediaPlayer { id: audio; source: Config.soundUrl(sound); audioOutput: AudioOutput {} }
 

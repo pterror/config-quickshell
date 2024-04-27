@@ -15,7 +15,11 @@ PanelWindow {
 		if (this.WlrLayershell) this.WlrLayershell.layer = WlrLayer.Bottom
 	}
 	property var childAlignment: anchors.bottom ? Qt.AlignBottom : Qt.AlignTop
+	property int spacing: 4
 	property int bars: 32
+	property int barWidth: -1
+	property int effectiveWidth: anchors.left && anchors.right ? screen.width : width
+	property int effectiveBars: bars === -1 ? Math.floor((effectiveWidth + spacing) / (barWidth + spacing)) : bars
 	property int noiseReduction: 70
 	property string channels: "mono" // or stereo
 	property string monoOption: "average" // or left or right
@@ -23,12 +27,15 @@ PanelWindow {
 	property string strokeColor: "transparent"
 	property int strokeWidth: 0
 	property int barRadius: Config.layout.rectangle.radius
+	property bool modulateOpacity: false
+	property real minOpacity: 0.4
+	property real maxOpacity: 1.0
 	height: 320
 	
 	Cava {
 		id: cava
 		config: ({
-			general: { bars: bars },
+			general: { bars: effectiveBars },
 			smoothing: { noise_reduction: noiseReduction },
 			output: {
 				method: "raw",
@@ -42,8 +49,9 @@ PanelWindow {
 	RowLayout2 {
 		id: content
 		anchors.fill: parent
-		property real scale: height / 128.0
-		property real childSize: (width + Config.layout.audioVisualizer.gap) / bars - Config.layout.audioVisualizer.gap
+		spacing: root.spacing
+		property real scale: height / 128
+		property real childSize: barWidth !== -1 ? barWidth : (width + Config.layout.audioVisualizer.gap) / bars - Config.layout.audioVisualizer.gap
 
 		Repeater {
 			model: cava.count
@@ -64,6 +72,9 @@ PanelWindow {
 					function onValue(index, newValue) {
 						if (index !== modelData) return
 						value = newValue
+						if (modulateOpacity) {
+							opacity = (value / 128) * (maxOpacity - minOpacity) + minOpacity
+						}
 					}
 				}
 			}

@@ -30,28 +30,24 @@ ShellRoot {
 		screen: Config.screens.primary
 		fillColor: Config.colors.audioVisualizer.barsBg
 		bars: 48
-		anchors.top: true
-		anchors.left: true
-		anchors.right: true
+		anchors.top: true; anchors.left: true; anchors.right: true
+		modulateOpacity: true
 	}
 
 	HAudioVisualizerBars {
 		screen: Config.screens.primary
 		fillColor: Config.colors.audioVisualizer.barsBg
 		bars: 48
-		anchors.bottom: true
-		anchors.left: true
-		anchors.right: true
+		anchors.bottom: true; anchors.left: true; anchors.right: true
+		modulateOpacity: true
 	}
 
 	// InwardsRadialAudioVisualizerBars {
 	// 	screen: Config.screens.primary
 	// 	fillColor: Config.colors.audioVisualizer.barsBg
 	// 	bars: 40
-	// 	anchors.top: true
-	// 	anchors.bottom: true
-	// 	anchors.left: true
-	// 	anchors.right: true
+	// 	anchors.top: true; anchors.bottom: true; anchors.left: true; anchors.right: true
+	// 	modulateOpacity: true
 	// }
 
 	AnalogClock {
@@ -152,17 +148,10 @@ ShellRoot {
 	// 	InteractiveCrewmate {
 	// 		id: crewmate; color: "transparent"
 	// 		opacity: 0.4
-	// 		property int startX: 0
-	// 		property int startY: 0
-	// 		onPressed: event => { startX = event.x; startY = event.y }
 	// 		anchors.left: parent.left
 	// 		anchors.leftMargin: 128
 	// 		anchors.top: parent.top
 	// 		anchors.topMargin: 64
-	// 		onPositionChanged: event => {
-	// 			crewmate.anchors.leftMargin += event.x - startX
-	// 			crewmate.anchors.topMargin += event.y - startY
-	// 		}
 	// 	}
 	// }
 

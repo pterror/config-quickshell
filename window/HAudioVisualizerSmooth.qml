@@ -42,7 +42,7 @@ PanelWindow {
 	Shape {
 		id: shape
 		anchors.fill: parent
-		property real scale: height / 128.0
+		property real scale: height / 128
 		property real spacing: width / (bars - 1)
 
 		ShapePath {

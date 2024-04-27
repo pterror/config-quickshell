@@ -24,9 +24,12 @@ PanelWindow {
 	property int outerRadius: 480
 	property int innerRadius: 240
 	property int barRadius: Config.layout.rectangle.radius
-	property real scale: (outerRadius - innerRadius) / 128.0
+	property real scale: (outerRadius - innerRadius) / 128
 	property real barWidth: (innerRadius * 2 * Math.PI) / bars - 4
 	property real degreesPerBar: 360 / bars
+	property bool modulateOpacity: false
+	property real minOpacity: 0.4
+	property real maxOpacity: 1.0
 	width: outerRadius * 2
 	height: outerRadius * 2
 	
@@ -70,6 +73,9 @@ PanelWindow {
 				function onValue(index, newValue) {
 					if (index !== modelData) return
 					value = newValue
+					if (modulateOpacity) {
+						opacity = (value / 128) * (maxOpacity - minOpacity) + minOpacity
+					}
 				}
 			}
 		}

@@ -23,7 +23,7 @@ PanelWindow {
 	property int outerRadius: 464
 	property int innerRadius: 240
 	property int circleRadius: outerRadius + 16
-	property real scale: (outerRadius - innerRadius) / 128.0
+	property real scale: (outerRadius - innerRadius) / 128
 	width: outerRadius * 2
 	height: outerRadius * 2
 

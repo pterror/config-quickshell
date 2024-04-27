@@ -25,8 +25,8 @@ PanelWindow {
 	property int centerRadius: (outerRadius + innerRadius) / 2
 	property int centerOuterRadius: centerRadius + 8
 	property int centerInnerRadius: centerRadius - 8
-	property real outerScale: (outerRadius - centerOuterRadius) / 128.0
-	property real innerScale: (innerRadius - centerInnerRadius) / 128.0
+	property real outerScale: (outerRadius - centerOuterRadius) / 128
+	property real innerScale: (innerRadius - centerInnerRadius) / 128
 	width: outerRadius * 2
 	height: outerRadius * 2
 
