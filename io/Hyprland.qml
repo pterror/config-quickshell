@@ -44,7 +44,7 @@ Singleton {
 	Socket {
 		connected: true
 		onConnectedChanged: connected = true
-		path: `/tmp/hypr/${Quickshell.env("HYPRLAND_INSTANCE_SIGNATURE")}/.socket2.sock`
+		path: Quickshell.env("XDG_RUNTIME_DIR") + "/hypr/" + Quickshell.env("HYPRLAND_INSTANCE_SIGNATURE") + "/.socket2.sock"
 
 		parser: SplitParser {
 			splitMarker: ""
@@ -190,7 +190,7 @@ Singleton {
 				queuedCtlResponse = ""
 			}
 		}
-		path: `/tmp/hypr/${Quickshell.env("HYPRLAND_INSTANCE_SIGNATURE")}/.socket.sock`
+		path: Quickshell.env("XDG_RUNTIME_DIR") + "/hypr/" + Quickshell.env("HYPRLAND_INSTANCE_SIGNATURE") + "/.socket.sock"
 		parser: SplitParser {
 			splitMarker: ""
 			onRead: data => {
