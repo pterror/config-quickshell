@@ -87,16 +87,11 @@ ShellRoot {
 	Connections {
 		target: Shell
 		function onWorkspacesOverviewChanged() {
-			workspacesOverview.visible = Shell.workspacesOverview
-			if (!workspacesOverview.visible) return
+			if (!Shell.workspacesOverview) return
 			if (workspacesOverview.screen.name !== Hyprland.activeScreen.name) {
 				workspacesOverview.screen = Hyprland.activeScreen
 			}
 		}
-	}
-
-	PersistentProperties {
-		onLoaded: workspacesOverview.visible = Shell.workspacesOverview
 	}
 
 	Variants {

@@ -10,6 +10,7 @@ import ".."
 
 PanelWindow {
 	id: root
+	visible: !Hyprland.isOverlaid && Shell.workspacesOverview
 	color: "transparent"
 	WlrLayershell.namespace: "shell:workspaces"
 	property var workspacesData: []

@@ -9,7 +9,16 @@ import "../library/Promise.mjs" as Promise
 Singleton {
 	property string submap: ""
 	property string activeMonitor: ""
+	property var overlayAddress: undefined
+	property bool isOverlaid: overlayAddress !== undefined
 	property var activeScreen: Quickshell.screens[0]
+	property var bounds: Quickshell.screens.reduce((p, c) => {
+		const x = Math.min(p.x, c.x)
+		const y = Math.min(p.y, c.y)
+		const r = Math.max(p.x + p.width, c.x + c.width)
+		const b = Math.max(p.y + p.height, c.y + c.height)
+		return { x, y, width: r - x, height: b - y }
+	}, { x: 0, y: 0, width: 0, height: 0 })
 	property QtObject activeWindow: QtObject {
 		property string address: "0"
 		property string title: ""
@@ -84,12 +93,29 @@ Singleton {
 							info.initialClass = klass
 							info.initialTitle = title
 							windows[address] = info
+							exec("j", "activewindow").then(json => {
+								const data = JSON.parse(json)
+								const [x, y] = data.at
+								const [width, height] = data.size
+								if (
+									x === bounds.x &&
+									y === bounds.y &&
+									width === bounds.width &&
+									height === bounds.height
+								) {
+									console.log(":0", overlayAddress, address)
+									overlayAddress = address
+								}
+							})
 							break
 						}
 						case "closewindow": {
 							const [address] = args
 							delete windows[address]
 							windowClosed(address)
+							if (address === overlayAddress) {
+								overlayAddress = undefined
+							}
 							break
 						}
 						case "windowtitle": {

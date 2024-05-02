@@ -9,6 +9,7 @@ import "../.."
 
 PanelWindow {
 	id: root
+	visible: !Hyprland.isOverlaid
 	anchors { left: true; right: true; bottom: true }
 	height: Config.layout.hBar.height
 	color: "transparent"
