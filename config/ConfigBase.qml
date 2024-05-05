@@ -8,7 +8,8 @@ Singleton {
 	required property string name
 	required property url baseUrl
 	property int frameRate: 60
-	property string terminal: "alacritty"
+	property string terminal: Quickshell.env("TERM") ?? "gnome-terminal"
+	property string shell: Quickshell.env("SHELL") ?? "bash"
 
 	property QtObject screens: QtObject {
 		property ShellScreen primary: Quickshell.screens[0]
