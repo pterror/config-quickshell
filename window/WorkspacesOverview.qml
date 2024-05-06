@@ -30,7 +30,7 @@ PanelWindow {
 
 	Rectangle {
 		id: content
-		color: Config.colors.panel.bg
+		color: Config.colors.workspacesOverview.bg
 		radius: Config.layout.panel.radius
 		implicitWidth: grid.implicitWidth + Config.layout.panel.margins * 2
 		implicitHeight: grid.implicitHeight + Config.layout.panel.margins * 2

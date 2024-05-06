@@ -34,9 +34,9 @@ ConfigBase {
 
 		property QtObject widget: QtObject {
 			property string fg: "#a0ffffff"
-			property string bg: "#40e0ffff"
+			property string bg: "#20e0ffff"
 			property string accent: root.colors.accent.fg
-			property string hoverBg: "#60e0ffff"
+			property string hoverBg: "#30e0ffff"
 			property string outline: "#00ffffff"
 		}
 
@@ -80,6 +80,14 @@ ConfigBase {
 			property string bg: "#66001017"
 			property string outline: "#ee33ccff"
 			property string outlineInvalid: "#aa595959"
+		}
+
+		property QtObject workspacesOverview: QtObject {
+			property color fg: root.colors.panel.fg
+			property color bg: "transparent" // root.colors.panel.bg
+			property color accent: root.colors.panel.accent
+			property color hoverBg: root.colors.panel.hoverBg
+			property color outline: root.colors.panel.outline
 		}
 
 		property QtObject workspaceIndicator: QtObject {

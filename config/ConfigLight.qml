@@ -82,6 +82,14 @@ ConfigBase {
 			property string outlineInvalid: "#aa595959"
 		}
 
+		property QtObject workspacesOverview: QtObject {
+			property color fg: root.colors.panel.fg
+			property color bg: "transparent" // root.colors.panel.bg
+			property color accent: root.colors.panel.accent
+			property color hoverBg: root.colors.panel.hoverBg
+			property color outline: root.colors.panel.outline
+		}
+
 		property QtObject workspaceIndicator: QtObject {
 			property string focused: root.colors.accent.fg
 			property string visible: "#800f0f0f"
