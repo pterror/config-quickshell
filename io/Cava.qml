@@ -5,18 +5,21 @@ import ".."
 
 Scope {
 	id: root
+	property int count: 32
+	property int noiseReduction: 70
+	property string channels: "mono" // or stereo
+	property string monoOption: "average" // or left or right
 	property var config: ({
-		general: { bars: 32 },
-		smoothing: { noise_reduction: 60 },
+		general: { bars: count },
+		smoothing: { noise_reduction: noiseReduction },
 		output: {
 			method: "raw",
 			bit_format: 8,
-			channels: "mono",
-			mono_option: "right",
+			channels: channels,
+			mono_option: monoOption,
 		}
 	})
-	property int count: root.config.general.bars || 0
-	signal value(int index, int value)
+	signal value(int index, real value) // 0 <= value <= 1
 
 	onConfigChanged: {
 		process.running = false
@@ -27,7 +30,6 @@ Scope {
 		property int index: 0
 		id: process
 		stdinEnabled: true
-		// onRunningChanged: running = true
 		command: ["cava", "-p", "/dev/stdin"]
 		onExited: { stdinEnabled = true; index = 0 }
 		onStarted: {
@@ -52,7 +54,7 @@ Scope {
 					process.index = 0
 				}
 				for (let i = 0; i < data.length; i += 1) {
-					root.value(i + process.index, Math.min(data.charCodeAt(i), 128))
+					root.value(i + process.index, Math.min(data.charCodeAt(i), 128) / 128)
 				}
 				process.index += data.length
 			}

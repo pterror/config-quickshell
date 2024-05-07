@@ -36,7 +36,9 @@ PanelWindow {
 
 	Connections {
 		target: Config.workspacesOverview
-		onVisibleChanged: grab.active = Config.workspacesOverview.visible
+		function onVisibleChanged() {
+			grab.active = Config.workspacesOverview.visible
+		}
 	}
 
 	HyprlandFocusGrab {

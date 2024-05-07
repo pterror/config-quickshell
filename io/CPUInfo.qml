@@ -17,6 +17,10 @@ Singleton {
 	property int cpuCount: cpuInfos.length
 	signal cpuFractionSec(int cpu, real fraction)
 
+	// api for compatibility with `Cava``
+	property int count: cpuCount
+	signal value(int index, real value) // 0 <= value <= 1
+
 	Timer {
 		interval: root.interval; running: true; repeat: true; triggeredOnStart: true
 		onTriggered: {
@@ -41,7 +45,9 @@ Singleton {
 						info.idle = newIdle
 						info.total = newTotal
 						cpuInfos[id] = info
-						root.cpuFractionSec(i, 1 - info.idleSec / info.totalSec)
+						const fraction = 1 - info.idleSec / info.totalSec
+						root.cpuFractionSec(i, fraction)
+						root.value(i, fraction)
 						i += 1
 					}
 				})

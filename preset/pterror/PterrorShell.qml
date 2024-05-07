@@ -24,36 +24,33 @@ ShellRoot {
 	// ActivateLinux { screen: Config.screens.primary }
 	// SettingsWindow { screen: Config.screens.primary }
 
-	CPUInfoGrid {
-		screen: Config.screens.primary
-		anchors.right: true
-		height: 480
-		width: 48
-	}
+	Cava { id: cava; count: 48 }
 
-	HAudioVisualizerBars {
+	HVisualizerBars {
 		screen: Config.screens.primary
 		fillColor: Config.colors.audioVisualizer.barsBg
-		bars: 48
+		input: cava
 		anchors.top: true; anchors.left: true; anchors.right: true
 		modulateOpacity: true
 	}
 
-	HAudioVisualizerBars {
+	HVisualizerBars {
 		screen: Config.screens.primary
 		fillColor: Config.colors.audioVisualizer.barsBg
-		bars: 48
+		input: cava
 		anchors.bottom: true; anchors.left: true; anchors.right: true
 		modulateOpacity: true
 	}
 
-	// InwardsRadialAudioVisualizerBars {
-	// 	screen: Config.screens.primary
-	// 	fillColor: Config.colors.audioVisualizer.barsBg
-	// 	bars: 40
-	// 	anchors.top: true; anchors.bottom: true; anchors.left: true; anchors.right: true
-	// 	modulateOpacity: true
-	// }
+	OutwardsRadialVisualizerBars {
+		screen: Config.screens.primary
+		fillColor: Config.colors.audioVisualizer.barsBg
+		input: CPUInfo
+		anchors.top: true; anchors.bottom: true; anchors.left: true; anchors.right: true
+		modulateOpacity: true
+	}
+
+	// CPUInfoGrid { screen: Config.screens.primary; anchors.right: true; height: 480; width: 48 }
 
 	AnalogClock {
 		screen: Config.screens.primary
@@ -64,7 +61,7 @@ ShellRoot {
 	ScrollSpinner {
 		screen: Config.screens.primary
 		anchors.right: true; anchors.top: true
-		margins.right: 64; margins.top: (screen.height - Config.layout.hBar.height - height) / 2
+		margins.right: 32; margins.top: (screen.height - Config.layout.hBar.height - height) / 2
 	}
 
 	LazyLoader {
