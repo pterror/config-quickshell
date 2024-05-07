@@ -71,6 +71,14 @@ Singleton {
 		property string channel3: imageUrl("blank.png")
 	}
 
+	property QtObject workspacesOverview: QtObject {
+		property bool visible: false
+	}
+
+	property QtObject wLogout: QtObject {
+		property bool visible: false
+	}
+
 	property QtObject bouncingMaskedShader: QtObject {
 		property real opacity: 0.3
 		property real speed: 1.0

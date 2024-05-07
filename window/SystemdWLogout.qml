@@ -4,42 +4,42 @@ import "../widget"
 
 ShellRoot {
 	WLogout {
-		LogoutButton {
+		WLogoutButton {
 			command: "loginctl lock-screen"
 			keybind: Qt.Key_K
 			text: "Lock"
 			icon: "lock"
 		}
 
-		LogoutButton {
+		WLogoutButton {
 			command: "loginctl terminate-user $USER"
 			keybind: Qt.Key_E
 			text: "Logout"
 			icon: "logout"
 		}
 
-		LogoutButton {
+		WLogoutButton {
 			command: "systemctl suspend"
 			keybind: Qt.Key_U
 			text: "Suspend"
 			icon: "suspend"
 		}
 
-		LogoutButton {
+		WLogoutButton {
 			command: "systemctl hibernate"
 			keybind: Qt.Key_H
 			text: "Hibernate"
 			icon: "hibernate"
 		}
 
-		LogoutButton {
+		WLogoutButton {
 			command: "systemctl poweroff"
 			keybind: Qt.Key_K
 			text: "Shutdown"
 			icon: "shutdown"
 		}
 
-		LogoutButton {
+		WLogoutButton {
 			command: "systemctl reboot"
 			keybind: Qt.Key_R
 			text: "Reboot"

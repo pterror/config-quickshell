@@ -11,7 +11,12 @@ import "../../library"
 import "../.."
 
 ShellRoot {
+	// reference `Shortcuts` so that it is loaded
+	Component.onCompleted: [Shortcuts]
+
 	WallpaperRandomizer { id: wallpaperRandomizer }
+	WorkspacesOverview {}
+	SystemdWLogout {}
 
 	PterrorStatBar { screen: Config.screens.primary }
 	PterrorMediaBar { screen: Config.screens.primary }
@@ -82,18 +87,6 @@ ShellRoot {
 		}
 	}
 
-	WorkspacesOverview { id: workspacesOverview }
-
-	Connections {
-		target: Shell
-		function onWorkspacesOverviewChanged() {
-			if (!Shell.workspacesOverview) return
-			if (workspacesOverview.screen.name !== Hyprland.activeScreen.name) {
-				workspacesOverview.screen = Hyprland.activeScreen
-			}
-		}
-	}
-
 	Variants {
 		model: Quickshell.screens
 
@@ -125,10 +118,10 @@ ShellRoot {
 
 				// ShaderView {}
 
-				WindowSpawnerSelectionArea {
-					app: `${Config.terminal} -e ${Config.shell}`
-					// app: `${Config.terminal} -e ${Config.shell} -C 'pipes.sh -RBCK -s 15 -p 3 -r 0 -f 100 | lolcat -F 0.02'`
-				}
+				// WindowSpawnerSelectionArea {
+				// 	app: `${Config.terminal} -e ${Config.shell}`
+				// 	// app: `${Config.terminal} -e ${Config.shell} -C 'pipes.sh -RBCK -s 15 -p 3 -r 0 -f 100 | lolcat -F 0.02'`
+				// }
 			}
 		}
 	}

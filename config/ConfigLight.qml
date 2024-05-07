@@ -99,5 +99,11 @@ ConfigBase {
 		property QtObject audioVisualizer: QtObject {
 			property string barsBg: "#300f0e0f"
 		}
+
+		property QtObject wLogout: QtObject {
+			property color bg: "#e60c0c0c"
+			property color buttonBg: "#1e1e1e"
+			property color buttonHoverBg: "#3700b3"
+		}
 	}
 }

@@ -4,6 +4,8 @@ import Quickshell.Wayland
 import QtQuick
 import QtQuick.Layouts
 import "../component"
+import "../widget"
+import "../io"
 import ".."
 
 Variants {
@@ -11,19 +13,17 @@ Variants {
 	property color backgroundColor: "#e60c0c0c"
 	property color buttonColor: "#1e1e1e"
 	property color buttonHoverColor: "#3700b3"
-	default property list<LogoutButton> buttons
+	default property list<WLogoutButton> buttons
 
 	model: Quickshell.screens
 	PanelWindow {
-		id: w
-
 		property var modelData
 		screen: modelData
-
+		// TODO: `Config.wLogout.visible` should not control all subclasses of wlogout
+		visible: !Hyprland.isOverlaid && Config.wLogout.visible
 		exclusionMode: ExclusionMode.Ignore
 		WlrLayershell.layer: WlrLayer.Overlay
 		WlrLayershell.keyboardFocus: WlrKeyboardFocus.Exclusive
-
 		color: "transparent"
 
 		contentItem {
@@ -67,7 +67,7 @@ Variants {
 					Repeater {
 						model: buttons
 						delegate: Rectangle {
-							required property LogoutButton modelData
+							required property WLogoutButton modelData
 							Layout.fillWidth: true
 							Layout.fillHeight: true
 

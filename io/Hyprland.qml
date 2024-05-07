@@ -77,9 +77,6 @@ Singleton {
 						}
 						case "submap": {
 							[submap] = args
-							if (submap === "quickshell:workspaces_overview:toggle") {
-								Shell.workspacesOverview = !Shell.workspacesOverview
-							}
 							break
 						}
 						case "openwindow": {
@@ -103,7 +100,6 @@ Singleton {
 									width === bounds.width &&
 									height === bounds.height
 								) {
-									console.log(":0", overlayAddress, address)
 									overlayAddress = address
 								}
 							})

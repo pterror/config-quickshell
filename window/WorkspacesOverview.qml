@@ -11,7 +11,8 @@ import ".."
 
 PanelWindow {
 	id: root
-	visible: !Hyprland.isOverlaid && Shell.workspacesOverview
+	screen: Hyprland.activeScreen
+	visible: !Hyprland.isOverlaid && Config.workspacesOverview.visible
 	color: "transparent"
 	WlrLayershell.namespace: "shell:workspaces"
 	property var workspacesData: []
@@ -24,18 +25,17 @@ PanelWindow {
 	width: content.implicitWidth
 	height: content.implicitHeight
 	onVisibleChanged: {
-		if (visible) {
-			grab.active = true
-			reload()
-		}
+		if (!visible) return
+		grab.active = true
+		reload()
 	}
 
-	// Required because `onVisibleChanged` does not fire on reload.
+	// `onVisibleChanged` does not fire on reload
 	PersistentProperties { onLoaded: reload() }
 
 	HyprlandFocusGrab {
 		id: grab; windows: [root]
-		onActiveChanged: if (!active) Shell.workspacesOverview = false
+		onActiveChanged: if (!active) Config.workspacesOverview.visible = false
 	}
 
 	Rectangle {

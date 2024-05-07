@@ -1,7 +1,7 @@
 import QtQuick
 import Quickshell.Io
 
-QtObject {
+Item {
 	id: root
 	required property string command
 	required property string text
