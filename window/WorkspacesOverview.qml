@@ -1,6 +1,7 @@
 import Quickshell
 import Quickshell.Io
 import Quickshell.Wayland
+import Quickshell.Hyprland
 import QtQuick
 import QtQuick.Layouts
 import "../io"
@@ -22,11 +23,20 @@ PanelWindow {
 	property int spacing: 8
 	width: content.implicitWidth
 	height: content.implicitHeight
+	onVisibleChanged: {
+		if (visible) {
+			grab.active = true
+			reload()
+		}
+	}
 
 	// Required because `onVisibleChanged` does not fire on reload.
 	PersistentProperties { onLoaded: reload() }
 
-	onVisibleChanged: reload()
+	HyprlandFocusGrab {
+		id: grab; windows: [root]
+		onActiveChanged: if (!active) Shell.workspacesOverview = false
+	}
 
 	Rectangle {
 		id: content

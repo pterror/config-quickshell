@@ -1,8 +1,9 @@
 import Quickshell
+import "../component"
 import "../widget"
 import ".."
 
-PopupWindow {
+PopupWindow2 {
 	id: root
 	property string widgetColor: Config.colors.panel.bg
 	property int radius: Config.layout.panel.radius
