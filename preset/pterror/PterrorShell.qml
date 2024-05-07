@@ -28,7 +28,6 @@ ShellRoot {
 
 	HVisualizerBars {
 		screen: Config.screens.primary
-		fillColor: Config.colors.audioVisualizer.barsBg
 		input: cava
 		anchors.top: true; anchors.left: true; anchors.right: true
 		modulateOpacity: true
@@ -36,18 +35,17 @@ ShellRoot {
 
 	HVisualizerBars {
 		screen: Config.screens.primary
-		fillColor: Config.colors.audioVisualizer.barsBg
 		input: cava
 		anchors.bottom: true; anchors.left: true; anchors.right: true
-		modulateOpacity: true
+		modulateOpacity: true; animationDuration: 1000; animationVelocity: 0.0001
 	}
 
-	OutwardsRadialVisualizerBars {
+	InwardsRadialVisualizerBars {
 		screen: Config.screens.primary
-		fillColor: Config.colors.audioVisualizer.barsBg
 		input: CPUInfo
+		innerRadius: 120; outerRadius: 220
 		anchors.top: true; anchors.bottom: true; anchors.left: true; anchors.right: true
-		modulateOpacity: true
+		modulateOpacity: true; animationDuration: 1000; animationVelocity: 0.0001
 	}
 
 	// CPUInfoGrid { screen: Config.screens.primary; anchors.right: true; height: 480; width: 48 }

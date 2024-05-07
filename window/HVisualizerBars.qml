@@ -24,7 +24,7 @@ VisualizerBase {
 		id: content
 		anchors.fill: parent
 		spacing: root.spacing
-		property real childSize: barWidth !== -1 ? barWidth : (width + Config.layout.audioVisualizer.gap) / input.count - Config.layout.audioVisualizer.gap
+		property real childSize: barWidth !== -1 ? barWidth : (width + Config.layout.visualizer.gap) / input.count - Config.layout.visualizer.gap
 
 		Repeater {
 			model: input.count
@@ -39,6 +39,13 @@ VisualizerBase {
 				implicitHeight: value * content.height
 				implicitWidth: content.childSize
 				radius: root.barRadius
+
+				Behavior on implicitHeight {
+					SmoothedAnimation { duration: root.animationDuration; velocity: root.animationVelocity }
+				}
+				Behavior on opacity {
+					SmoothedAnimation { duration: root.animationDuration; velocity: root.animationVelocity }
+				}
 
 				Connections {
 					target: input

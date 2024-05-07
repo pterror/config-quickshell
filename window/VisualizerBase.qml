@@ -14,8 +14,10 @@ PanelWindow {
 	exclusiveZone: 0
 	Component.onCompleted: if (this.WlrLayershell) this.WlrLayershell.layer = WlrLayer.Bottom
 	property bool right: anchors.right
-	property string fillColor: Config.colors.rectangle.bg
+	property string fillColor: Config.colors.visualizer.barsBg
 	property string strokeColor: "transparent"
 	property int strokeWidth: 0
+	property real animationDuration: 0
+	property real animationVelocity: 1
 	property var input: Cava {}
 }

@@ -166,7 +166,7 @@ Singleton {
 			property int controlGap: 8
 		}
 
-		property QtObject audioVisualizer: QtObject {
+		property QtObject visualizer: QtObject {
 			property int gap: 4
 		}
 	}
@@ -263,7 +263,7 @@ Singleton {
 			property color empty: "#20ffffff"
 		}
 
-		property QtObject audioVisualizer: QtObject {
+		property QtObject visualizer: QtObject {
 			property color barsBg: "#30ffeef8"
 		}
 

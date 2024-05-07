@@ -97,7 +97,7 @@
 			"controlsGap": 16,
 			"controlGap": 8
 		},
-		"audioVisualizer": {
+		"visualizer": {
 			"gap": 4
 		},
 		"accent": {

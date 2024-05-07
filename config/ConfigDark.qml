@@ -96,7 +96,7 @@ ConfigBase {
 			property string empty: "#20ffffff"
 		}
 
-		property QtObject audioVisualizer: QtObject {
+		property QtObject visualizer: QtObject {
 			property string barsBg: "#30ffeef8"
 		}
 
