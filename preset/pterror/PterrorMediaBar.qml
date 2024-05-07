@@ -9,6 +9,7 @@ import "../.."
 
 PanelWindow {
 	id: root
+	property list<var> extraGrabWindows: []
 	visible: !Hyprland.isOverlaid
 	anchors { left: true; right: true; bottom: true }
 	height: Config.layout.hBar.height
@@ -61,10 +62,13 @@ PanelWindow {
 							text: MPRIS.title + " - " + MPRIS.artist
 							MediaControls {
 								id: mediaControls
-								relativeX: root.width / 2 - width / 2
+								extraGrabWindows: [root].concat(root.extraGrabWindows)
+								relativeX: mediaText.mapToItem(rootRect, mediaText.implicitWidth / 2, 0).x - width / 2
+								// relativeY: !visible ? height : -height - Config.layout.popup.gap
 								relativeY: -height - Config.layout.popup.gap
 								parentWindow: root
 								visible: false
+								// Behavior on relativeY { SmoothedAnimation { velocity: -1; duration: 200 } }
 							}
 						}
 					}
@@ -105,13 +109,11 @@ PanelWindow {
 							text: Config.services.audio.volume + "%"
 							VolumeControls {
 								id: volumeControls
+								extraGrabWindows: [root].concat(root.extraGrabWindows)
+								relativeX: volumeItem.mapToItem(rootRect, volumeItem.implicitWidth / 2, 0).x - width / 2
 								relativeY: -height - Config.layout.popup.gap
 								parentWindow: root
 								visible: false
-								onVisibleChanged: {
-									if (!visible) return
-									relativeX = volumeItem.mapToItem(rootRect, volumeItem.width / 2, 0).x - width / 2
-								}
 							}
 						}
 

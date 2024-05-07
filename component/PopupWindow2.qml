@@ -3,10 +3,11 @@ import Quickshell.Hyprland
 
 PopupWindow {
 	id: root
-	onVisibleChanged: if (visible) grab.active = true
+	property list<var> extraGrabWindows: []
+	onVisibleChanged: grab.active = visible
 
 	HyprlandFocusGrab {
-		id: grab; windows: [root]
-		onActiveChanged: if (!active) root.visible = false
+		id: grab; windows: [root].concat(extraGrabWindows)
+		onActiveChanged: root.visible = active
 	}
 }

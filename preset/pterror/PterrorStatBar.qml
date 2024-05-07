@@ -44,7 +44,7 @@ PanelWindow {
 				HSpace {}
 				HoverItem {
 					inner: workspacesStatus
-					onClicked: Shell.workspacesOverview = !Shell.workspacesOverview
+					onClicked: Config.workspacesOverview.visible = !Config.workspacesOverview.visible
 					WorkspacesStatus { id: workspacesStatus }
 				}
 			}

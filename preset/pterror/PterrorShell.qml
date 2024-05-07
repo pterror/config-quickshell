@@ -15,11 +15,11 @@ ShellRoot {
 	Component.onCompleted: [Shortcuts]
 
 	WallpaperRandomizer { id: wallpaperRandomizer }
-	WorkspacesOverview {}
+	WorkspacesOverview { extraGrabWindows: [statBar, mediaBar] }
 	SystemdWLogout {}
 
-	PterrorStatBar { screen: Config.screens.primary }
-	PterrorMediaBar { screen: Config.screens.primary }
+	PterrorStatBar { id: statBar; screen: Config.screens.primary }
+	PterrorMediaBar { id: mediaBar; screen: Config.screens.primary; extraGrabWindows: [statBar] }
 	Greeter { screen: Config.screens.primary }
 	// ActivateLinux { screen: Config.screens.primary }
 	// SettingsWindow { screen: Config.screens.primary }
