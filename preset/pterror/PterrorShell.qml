@@ -85,7 +85,6 @@ ShellRoot {
 	PterrorMediaBar { id: mediaBar; screen: Config.screens.primary; extraGrabWindows: [statBar] }
 	Greeter { screen: Config.screens.primary }
 	// ActivateLinux { screen: Config.screens.primary }
-	// SettingsWindow { screen: Config.screens.primary }
 
 	Cava { id: cava; count: 48 }
 
