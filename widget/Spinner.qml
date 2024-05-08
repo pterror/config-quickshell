@@ -1,5 +1,6 @@
 import QtQuick
 import QtMultimedia
+import "../component"
 import ".."
 
 Rectangle {
@@ -10,56 +11,27 @@ Rectangle {
 	property int tickHeight: 24
 	property int tickWidth: 6
 	property int tickRadius: 2
-	property real angle: 0
-	property var mouseAngle: null
-	property bool mouseReleased: false
-	property real velocity: 0
-	property real newVelocity: 0
+	property real angle: animation.value
+	property real oldAngle: 0
 	property real degreesPerTick: 360 / ticks
-	property real momentum: -1
-	property real momentumUp: momentum !== -1 ? momentum : 0
-	property real momentumDown: momentum !== -1 ? momentum : 0.2
-	property int frameRate: Config.frameRate
-	property real momentumUpFrame: Math.pow(momentumUp, 1 / frameRate)
-	property real momentumDownFrame: Math.pow(momentumDown, 1 / frameRate)
-	property real epsilon: 0.01
+	property var animation: MomentumAnimation {
+		processAngle: x => (x + 360) % 360
+	}
 	implicitWidth: radius * 2
 	implicitHeight: radius * 2
 	color: "transparent"
 
-	FrameAnimation {
-		running: true
-		onTriggered: {
-			if (mouseAngle != null) {
-				velocity = mouseReleased ? mouseAngle - angle : 0
-				newVelocity = 0
-				if (Math.floor(mouseAngle / degreesPerTick) !== Math.floor(angle / degreesPerTick)) {
-					playClick()
-				}
-				angle = mouseAngle
-				mouseAngle = null
-				mouseReleased = false
-				return
-			}
-			if (velocity === 0 && newVelocity === 0) return
-			if (Math.abs(newVelocity) < epsilon) newVelocity = 0
-			if (Math.abs(velocity) < epsilon) velocity = 0
-			if (velocity === 0 && newVelocity === 0) return
-			velocity = Math.abs(newVelocity) > Math.abs(velocity)
-				? velocity * momentumUpFrame + newVelocity * (1 - momentumUpFrame)
-				: velocity * momentumDownFrame + newVelocity * (1 - momentumDownFrame)
-			newVelocity = 0
-			const newAngle = angle + velocity
-			if (Math.floor(newAngle / degreesPerTick) !== Math.floor(angle / degreesPerTick)) {
-				playClick()
-			}
-			// modulo 100 revolutions because overflow breaks SmoothedAnimation
-			angle = (newAngle + 360) % 360
+	function spin(angleDelta) { animation.impulse(angleDelta) }
+
+	onAngleChanged: {
+		if (Math.floor(angle / degreesPerTick) !== Math.floor(oldAngle / degreesPerTick)) {
+			playClick()
 		}
+		oldAngle = angle
 	}
 
 	function playClick() {
-		if (muted) { return }
+		if (muted) return
 		if (!click.playing) {
 			click.loops = 1
 			click.play()
@@ -106,18 +78,24 @@ Rectangle {
 
 	MouseArea {
 		anchors.fill: parent
-		onPressed: updateAngle()
-		onReleased: mouseReleased = true
+		property real startAngle: 0
+		property real endAngle: 0
+		onPressed: { updateAngle(true); animation.velocity = 0 }
+		onReleased: {
+			if (endAngle - startAngle > 180) startAngle += 360
+			else if (startAngle - endAngle > 180) startAngle -= 360
+			animation.impulse(endAngle - startAngle)
+		}
 		onPositionChanged: updateAngle()
+
+		FrameAnimation { running: true; onTriggered: parent.startAngle = parent.endAngle }
 
 		function updateAngle(initial) {
 			const x = mouseX - radius
 			const y = mouseY - radius
-			mouseAngle = Math.atan2(-y, x) * 180 / Math.PI - 90
+			endAngle = Math.atan2(-y, x) * 180 / Math.PI - 90
+			if (initial) startAngle = endAngle
+			animation.value = endAngle
 		}
-	}
-
-	function spin(angleDelta) {
-		newVelocity += angleDelta
 	}
 }

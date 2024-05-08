@@ -17,7 +17,7 @@ PanelWindow {
 
 	WheelHandler {
 		acceptedDevices: PointerDevice.Mouse | PointerDevice.TouchPad
-		onWheel: (event) => {
+		onWheel: event => {
 			content.spin((event.angleDelta.x + event.angleDelta.y) / 4)
 		}
 	}
