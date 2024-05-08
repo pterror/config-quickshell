@@ -13,6 +13,7 @@ VisualizerBase {
 	property int innerRadius: 256
 	property int circleRadius: innerRadius - 16
 	property real scale: outerRadius - innerRadius
+	property real rotationOffset: 0
 	width: outerRadius * 2
 	height: outerRadius * 2
 	input: Cava { channels: "stereo" }
@@ -23,7 +24,7 @@ VisualizerBase {
 			path.pathElements = [
 				...Array.from({ length: visualizerCurve.model }, (_, i) => visualizerCurve.itemAt(i).resources[0]),
 				finalLine,
-				...Array.from({ length: outerCircle.model }, (_, i) => outerCircle.itemAt(i).resources[0]),
+				...Array.from({ length: circle.model }, (_, i) => circle.itemAt(i).resources[0]),
 				finalLine2,
 			]
 		}
@@ -33,12 +34,8 @@ VisualizerBase {
 		id: shape
 		anchors.fill: parent
 		property real spacing: width / (input.count - 1)
-		property real startHeight: 0
-		property real startX: root.width / 2
-		property real startY: root.height / 2 - (root.innerRadius + startHeight)
-		Behavior on startHeight {
-			SmoothedAnimation { duration: root.animationDuration; velocity: root.animationVelocity }
-		}
+		property real startX: 0
+		property real startY: 0
 
 		ShapePath {
 			id: path
@@ -59,17 +56,17 @@ VisualizerBase {
 				PathCurve {
 					id: curve
 					property real height: 0
-					property real xMultiplier: Math.cos(((modelData % input.count) / input.count - 0.25) * 2 * Math.PI)
-					property real yMultiplier: Math.sin(((modelData % input.count) / input.count - 0.25) * 2 * Math.PI)
+					property real xMultiplier: Math.cos(((modelData % input.count) / input.count - 0.25 - rotationOffset / 360) * 2 * Math.PI)
+					property real yMultiplier: Math.sin(((modelData % input.count) / input.count - 0.25 - rotationOffset / 360) * 2 * Math.PI)
 					x: root.width / 2 + (root.innerRadius + height) * xMultiplier
 					y: root.height / 2 + (root.innerRadius + height) * yMultiplier
+					Component.onCompleted: {
+						if (modelData === 0) { shape.startX = Qt.binding(() => x); shape.startY = Qt.binding(() => y) }
+					}
 					property Connections inputConnections: Connections {
 						target: input
 						function onValue(index, newValue) {
-							if (index !== modelData % input.count) return
-							const height = newValue * root.scale
-							curve.height = height
-							if (index === 0) shape.startHeight = height
+							if (index === modelData % input.count) curve.height = newValue * root.scale
 						}
 					}
 					Behavior on height {
@@ -88,15 +85,15 @@ VisualizerBase {
 		}
 
 		Repeater {
-			id: innerCircle
+			id: circle
 			model: 13
 
 			Item {
 				required property int modelData
 
 				PathCurve {
-					x: root.width / 2 + root.circleRadius * Math.cos((modelData / (innerCircle.model - 1) - 0.25) * 2 * Math.PI)
-					y: root.height / 2 + root.circleRadius * Math.sin((modelData / (innerCircle.model - 1) - 0.25) * 2 * Math.PI)
+					x: root.width / 2 + root.circleRadius * Math.cos((modelData / (circle.model - 1) - 0.25) * 2 * Math.PI)
+					y: root.height / 2 + root.circleRadius * Math.sin((modelData / (circle.model - 1) - 0.25) * 2 * Math.PI)
 				}
 			}
 		}

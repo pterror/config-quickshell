@@ -16,6 +16,7 @@ VisualizerBase {
 	property int centerInnerRadius: centerRadius - 8
 	property real outerScale: outerRadius - centerOuterRadius
 	property real innerScale: innerRadius - centerInnerRadius
+	property real rotationOffset: 0
 	width: outerRadius * 2
 	height: outerRadius * 2
 	input: Cava { channels: "stereo" }
@@ -39,6 +40,7 @@ VisualizerBase {
 		property real startValue: 0
 		property real startX: root.width / 2
 		property real startY: root.height / 2 - (root.centerOuterRadius + startValue * root.outerScale)
+		property real innerX: root.width / 2
 		property real innerY: root.height / 2 - (root.centerInnerRadius + startValue * root.innerScale)
 		Behavior on startValue {
 			SmoothedAnimation { duration: root.animationDuration; velocity: root.animationVelocity }
@@ -54,7 +56,7 @@ VisualizerBase {
 		}
 
 		Item {
-			PathLine { id: finalLine; x: shape.startX; y: shape.innerY }
+			PathLine { id: finalLine; x: shape.innerX; y: shape.innerY }
 			PathLine { id: finalLine2; x: shape.startX; y: shape.startY }
 		}
 
@@ -65,8 +67,8 @@ VisualizerBase {
 			Item {
 				required property int modelData
 				property real value: 0
-				property real xMultiplier: Math.cos(((modelData % input.count) / input.count - 0.25) * 2 * Math.PI)
-				property real yMultiplier: Math.sin(((modelData % input.count) / input.count - 0.25) * 2 * Math.PI)
+				property real xMultiplier: Math.cos(((modelData % input.count) / input.count - 0.25 - rotationOffset / 360) * 2 * Math.PI)
+				property real yMultiplier: Math.sin(((modelData % input.count) / input.count - 0.25 - rotationOffset / 360) * 2 * Math.PI)
 				Behavior on value {
 					SmoothedAnimation { duration: root.animationDuration; velocity: root.animationVelocity }
 				}
@@ -79,17 +81,24 @@ VisualizerBase {
 				}
 
 				PathCurve {
-					id: curve2
+					id: innerCurve
 					property var height: value * root.innerScale
 					x: root.width / 2 + (root.centerInnerRadius + height) * xMultiplier
 					y: root.height / 2 + (root.centerInnerRadius + height) * yMultiplier
+				}
+
+				Component.onCompleted: {
+					if (modelData !== 0) return
+					shape.startX = Qt.binding(() => curve.x)
+					shape.startY = Qt.binding(() => curve.y)
+					shape.innerX = Qt.binding(() => innerCurve.x)
+					shape.innerY = Qt.binding(() => innerCurve.y)
 				}
 
 				Connections {
 					target: input
 					function onValue(index, newValue) {
 						if (index !== modelData % input.count) return
-						if (index === 0) shape.startValue = newValue
 						value = newValue
 					}
 				}
