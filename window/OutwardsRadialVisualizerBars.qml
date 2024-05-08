@@ -17,6 +17,7 @@ VisualizerBase {
 	property bool modulateOpacity: false
 	property real minOpacity: 0.4
 	property real maxOpacity: 1.0
+	property real rotationOffset: 0
 	width: outerRadius * 2
 	height: outerRadius * 2
 	input: Cava { channels: "stereo"; count: 40 }
@@ -33,8 +34,8 @@ VisualizerBase {
 			implicitHeight: value * root.scale
 			implicitWidth: barWidth
 			radius: root.barRadius
-			property real xMultiplier: Math.cos((modelData / input.count - 0.25) * 2 * Math.PI)
-			property real yMultiplier: Math.sin((modelData / input.count - 0.25) * 2 * Math.PI)
+			property real xMultiplier: Math.cos((modelData / input.count - 0.25 - rotationOffset / 360) * 2 * Math.PI)
+			property real yMultiplier: Math.sin((modelData / input.count - 0.25 - rotationOffset / 360) * 2 * Math.PI)
 			x: root.width / 2 + (root.innerRadius + implicitHeight) * xMultiplier - barWidth / 2
 			y: root.height / 2 + (root.innerRadius + implicitHeight) * yMultiplier
 
@@ -47,7 +48,7 @@ VisualizerBase {
 
 			transform: Rotation {
 				origin.x: barWidth / 2; origin.y: 0; axis { x: 0; y: 0; z: 1 }
-				angle: 360 * modelData / input.count
+				angle: 360 * modelData / input.count - rotationOffset
 			}
 
 			Connections {

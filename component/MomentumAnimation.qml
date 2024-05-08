@@ -13,7 +13,7 @@ FrameAnimation {
 	property real momentumUpFrame: Math.pow(momentumUp, 1 / frameRate)
 	property real momentumDownFrame: Math.pow(momentumDown, 1 / frameRate)
 	property real epsilon: 0.01
-	property var processAngle: x => x
+	property var processValue: x => x
 
 	function impulse(value) { newVelocity += value }
 
@@ -25,6 +25,6 @@ FrameAnimation {
 			? velocity * momentumUpFrame + newVelocity * (1 - momentumUpFrame)
 			: velocity * momentumDownFrame + newVelocity * (1 - momentumDownFrame)
 		newVelocity = 0
-		value = processAngle(value + velocity)
+		value = processValue(value + velocity)
 	}
 }

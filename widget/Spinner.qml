@@ -14,9 +14,7 @@ Rectangle {
 	property real angle: animation.value
 	property real oldAngle: 0
 	property real degreesPerTick: 360 / ticks
-	property var animation: MomentumAnimation {
-		processAngle: x => (x + 360) % 360
-	}
+	property var animation: MomentumAnimation { processValue: x => (x + 360) % 360 }
 	implicitWidth: radius * 2
 	implicitHeight: radius * 2
 	color: "transparent"

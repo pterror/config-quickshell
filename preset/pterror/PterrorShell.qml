@@ -18,14 +18,6 @@ ShellRoot {
 	WorkspacesOverview { extraGrabWindows: [statBar, mediaBar] }
 	SystemdWLogout {}
 
-	PterrorStatBar { id: statBar; screen: Config.screens.primary }
-	PterrorMediaBar { id: mediaBar; screen: Config.screens.primary; extraGrabWindows: [statBar] }
-	Greeter { screen: Config.screens.primary }
-	// ActivateLinux { screen: Config.screens.primary }
-	// SettingsWindow { screen: Config.screens.primary }
-
-	Cava { id: cava; count: 48 }
-
 	HVisualizerBars {
 		screen: Config.screens.primary
 		input: cava
@@ -46,7 +38,55 @@ ShellRoot {
 		innerRadius: 120; outerRadius: 220
 		anchors.top: true; anchors.bottom: true; anchors.left: true; anchors.right: true
 		modulateOpacity: true; animationDuration: 1000; animationVelocity: 0.0001
+		rotationOffset: cpuVizAnim.value
+
+		MomentumAnimation { id: cpuVizAnim; processValue: x => (x + 360) % 360 }
+
+		WheelHandler {
+			acceptedDevices: PointerDevice.Mouse | PointerDevice.TouchPad
+			onWheel: event => {
+				cpuVizAnim.impulse((event.angleDelta.x + event.angleDelta.y) / 4)
+			}
+		}
+
+		MouseArea {
+			id: cpuVizMouseArea
+			anchors.fill: parent
+			property real startAngle: 0
+			property real prevAngle: 0
+			property real endAngle: 0
+			onPressed: { updateAngle(true); cpuVizAnim.velocity = 0 }
+			onReleased: {
+				if (endAngle - startAngle > 180) startAngle += 360
+				else if (startAngle - endAngle > 180) startAngle -= 360
+				cpuVizAnim.impulse(endAngle - startAngle)
+			}
+			onPositionChanged: updateAngle()
+
+			FrameAnimation { running: true; onTriggered: cpuVizMouseArea.startAngle = cpuVizMouseArea.endAngle }
+
+			function updateAngle(initial) {
+				const x = mouseX - parent.width / 2
+				const y = mouseY - parent.height / 2
+				endAngle = Math.atan2(-y, x) * 180 / Math.PI - 90
+				if (initial) {
+					startAngle = endAngle
+					prevAngle = endAngle
+				} else {
+					cpuVizAnim.value += endAngle - prevAngle
+					prevAngle = endAngle
+				}
+			}
+		}
 	}
+
+	PterrorStatBar { id: statBar; screen: Config.screens.primary }
+	PterrorMediaBar { id: mediaBar; screen: Config.screens.primary; extraGrabWindows: [statBar] }
+	Greeter { screen: Config.screens.primary }
+	// ActivateLinux { screen: Config.screens.primary }
+	// SettingsWindow { screen: Config.screens.primary }
+
+	Cava { id: cava; count: 48 }
 
 	// CPUInfoGrid { screen: Config.screens.primary; anchors.right: true; height: 480; width: 48 }
 
