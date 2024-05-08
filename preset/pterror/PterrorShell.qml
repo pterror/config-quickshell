@@ -29,16 +29,17 @@ ShellRoot {
 		screen: Config.screens.primary
 		input: cava
 		anchors.bottom: true; anchors.left: true; anchors.right: true
-		modulateOpacity: true; animationDuration: 1000; animationVelocity: 0.0001
+		modulateOpacity: true
 	}
 
-	InwardsRadialVisualizerBars {
+	InwardsRadialVisualizerSmooth {
 		screen: Config.screens.primary
 		input: CPUInfo
 		innerRadius: 120; outerRadius: 220
 		anchors.top: true; anchors.bottom: true; anchors.left: true; anchors.right: true
-		modulateOpacity: true; animationDuration: 1000; animationVelocity: 0.0001
-		rotationOffset: cpuVizAnim.value
+		// modulateOpacity: true;
+		animationDuration: 1000; animationVelocity: 0.0001
+		// rotationOffset: cpuVizAnim.value
 
 		MomentumAnimation { id: cpuVizAnim; processValue: x => (x + 360) % 360 }
 

@@ -17,20 +17,27 @@ VisualizerBase {
 	height: outerRadius * 2
 	input: Cava { channels: "stereo" }
 
+	Connections {
+		target: input
+		function onCountChanged() {
+			path.pathElements = [
+				...Array.from({ length: visualizerCurve.model }, (_, i) => visualizerCurve.itemAt(i).resources[0]),
+				finalLine,
+				...Array.from({ length: outerCircle.model }, (_, i) => outerCircle.itemAt(i).resources[0]),
+				finalLine2,
+			]
+		}
+	}
+
 	Shape {
 		id: shape
 		anchors.fill: parent
 		property real spacing: width / (input.count - 1)
-		property real startX: 0
-		property real startY: 0
-		property Connections inputConnections: Connections {
-			target: input
-			function onValue(index, newValue) {
-				if (index !== 0) return
-				const height = newValue * root.scale
-				shape.startX = root.width / 2
-				shape.startY = root.height / 2 - (root.innerRadius + height)
-			}
+		property real startHeight: 0
+		property real startX: root.width / 2
+		property real startY: root.height / 2 - (root.innerRadius + startHeight)
+		Behavior on startHeight {
+			SmoothedAnimation { duration: root.animationDuration; velocity: root.animationVelocity }
 		}
 
 		ShapePath {
@@ -51,16 +58,22 @@ VisualizerBase {
 
 				PathCurve {
 					id: curve
+					property real height: 0
+					property real xMultiplier: Math.cos(((modelData % input.count) / input.count - 0.25) * 2 * Math.PI)
+					property real yMultiplier: Math.sin(((modelData % input.count) / input.count - 0.25) * 2 * Math.PI)
+					x: root.width / 2 + (root.innerRadius + height) * xMultiplier
+					y: root.height / 2 + (root.innerRadius + height) * yMultiplier
 					property Connections inputConnections: Connections {
 						target: input
-						property real xMultiplier: Math.cos(((modelData % input.count) / input.count - 0.25) * 2 * Math.PI)
-						property real yMultiplier: Math.sin(((modelData % input.count) / input.count - 0.25) * 2 * Math.PI)
 						function onValue(index, newValue) {
 							if (index !== modelData % input.count) return
 							const height = newValue * root.scale
-							curve.x = root.width / 2 + (root.innerRadius + height) * xMultiplier
-							curve.y = root.height / 2 + (root.innerRadius + height) * yMultiplier
+							curve.height = height
+							if (index === 0) shape.startHeight = height
 						}
+					}
+					Behavior on height {
+						SmoothedAnimation { duration: root.animationDuration; velocity: root.animationVelocity }
 					}
 				}
 			}
@@ -95,17 +108,5 @@ VisualizerBase {
 					y: shape.startY
 			}
 		}
-	}
-
-	Component.onCompleted: {
-		if (this.WlrLayershell) this.WlrLayershell.layer = WlrLayer.Bottom
-		for (let i = 0; i < visualizerCurve.model; i += 1) {
-			path.pathElements.push(visualizerCurve.itemAt(i).resources[0])
-		}
-		path.pathElements.push(finalLine)
-		for (let i = 0; i < innerCircle.model; i += 1) {
-			path.pathElements.push(innerCircle.itemAt(i).resources[0])
-		}
-		path.pathElements.push(finalLine2)
 	}
 }

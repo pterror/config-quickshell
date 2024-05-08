@@ -13,6 +13,16 @@ VisualizerBase {
 	property int bars: 32
 	height: 320
 
+	Connections {
+		target: input
+		function onCountChanged() {
+			path.pathElements = [
+				...Array.from({ length: curves.model }, (_, i) => curves.itemAt(i).resources[0]),
+				finalLine,
+			]
+		}
+	}
+
 	Shape {
 		id: shape
 		anchors.fill: parent
@@ -27,11 +37,11 @@ VisualizerBase {
 		}
 
 		Repeater {
+			id: curves
 			model: input.count
 
 			Item {
 				required property int modelData
-				Component.onCompleted: path.pathElements.push(curve)
 
 				PathCurve {
 					id: curve
@@ -44,17 +54,15 @@ VisualizerBase {
 							curve.y = root.bottom ? root.height - height : height
 						}
 					}
+					Behavior on y {
+						SmoothedAnimation { duration: root.animationDuration; velocity: root.animationVelocity }
+					}
 				}
 			}
 		}
 
 		Item {
-			PathLine {
-				id: finalLine
-				Component.onCompleted: path.pathElements.push(finalLine)
-				x: root.width
-				y: root.bottom ? root.height : 0
-			}
+			PathLine { id: finalLine; x: root.width; y: root.bottom ? root.height : 0 }
 		}
 	}
 }

@@ -20,33 +20,28 @@ VisualizerBase {
 	height: outerRadius * 2
 	input: Cava { channels: "stereo" }
 
-	Component.onCompleted: {
-		for (let i = 0; i < visualizerCurves.model; i += 1) {
-			path.pathElements.push(visualizerCurves.itemAt(i).resources[0])
+	Connections {
+		target: input
+		function onCountChanged() {
+			path.pathElements = [
+				...Array.from({ length: visualizerCurves.model }, (_, i) => visualizerCurves.itemAt(i).resources[0]),
+				finalLine,
+				...Array.from({ length: visualizerCurves.model }, (_, i) => visualizerCurves.itemAt(i).resources[1]),
+				finalLine2,
+			]
 		}
-		path.pathElements.push(finalLine)
-		for (let i = 0; i < visualizerCurves.model; i += 1) {
-			path.pathElements.push(visualizerCurves.itemAt(i).resources[1])
-		}
-		path.pathElements.push(finalLine2)
 	}
 
 	Shape {
 		id: shape
 		anchors.fill: parent
 		property real spacing: width / (input.count - 1)
-		property real startX: 0
-		property real startY: 0
-		property real innerY: 0
-
-		Connections {
-			target: input
-			function onValue(index, newValue) {
-				if (index !== 0) return
-				shape.startX = root.width / 2
-				shape.startY = root.height / 2 - (root.centerOuterRadius + newValue * root.outerScale)
-				shape.innerY = root.height / 2 - (root.centerInnerRadius + newValue * root.innerScale)
-			}
+		property real startValue: 0
+		property real startX: root.width / 2
+		property real startY: root.height / 2 - (root.centerOuterRadius + startValue * root.outerScale)
+		property real innerY: root.height / 2 - (root.centerInnerRadius + startValue * root.innerScale)
+		Behavior on startValue {
+			SmoothedAnimation { duration: root.animationDuration; velocity: root.animationVelocity }
 		}
 
 		ShapePath {
@@ -69,22 +64,33 @@ VisualizerBase {
 
 			Item {
 				required property int modelData
+				property real value: 0
+				property real xMultiplier: Math.cos(((modelData % input.count) / input.count - 0.25) * 2 * Math.PI)
+				property real yMultiplier: Math.sin(((modelData % input.count) / input.count - 0.25) * 2 * Math.PI)
+				Behavior on value {
+					SmoothedAnimation { duration: root.animationDuration; velocity: root.animationVelocity }
+				}
 
-				PathCurve { id: curve }
-				PathCurve { id: curve2 }
+				PathCurve {
+					id: curve
+					property var height: value * root.outerScale
+					x: root.width / 2 + (root.centerOuterRadius + height) * xMultiplier
+					y: root.height / 2 + (root.centerOuterRadius + height) * yMultiplier
+				}
+
+				PathCurve {
+					id: curve2
+					property var height: value * root.innerScale
+					x: root.width / 2 + (root.centerInnerRadius + height) * xMultiplier
+					y: root.height / 2 + (root.centerInnerRadius + height) * yMultiplier
+				}
 
 				Connections {
 					target: input
-					property real xMultiplier: Math.cos(((modelData % input.count) / input.count - 0.25) * 2 * Math.PI)
-					property real yMultiplier: Math.sin(((modelData % input.count) / input.count - 0.25) * 2 * Math.PI)
 					function onValue(index, newValue) {
 						if (index !== modelData % input.count) return
-						const outerHeight = newValue * root.outerScale
-						curve.x = root.width / 2 + (root.centerOuterRadius + outerHeight) * xMultiplier
-						curve.y = root.height / 2 + (root.centerOuterRadius + outerHeight) * yMultiplier
-						const innerHeight = newValue * root.innerScale
-						curve2.x = root.width / 2 + (root.centerInnerRadius + innerHeight) * xMultiplier
-						curve2.y = root.height / 2 + (root.centerInnerRadius + innerHeight) * yMultiplier
+						if (index === 0) shape.startValue = newValue
+						value = newValue
 					}
 				}
 			}

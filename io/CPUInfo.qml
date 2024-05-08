@@ -17,7 +17,7 @@ Singleton {
 	property int cpuCount: cpuInfos.length
 	signal cpuFractionSec(int cpu, real fraction)
 
-	// api for compatibility with `Cava``
+	// api for compatibility with `Cava`
 	property int count: cpuCount
 	signal value(int index, real value) // 0 <= value <= 1
 
