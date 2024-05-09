@@ -18,7 +18,10 @@ FrameAnimation {
 	function impulse(value) { newVelocity += value }
 
 	onTriggered: {
-		if (velocity === 0 && newVelocity === 0) return
+		if (velocity === 0 && newVelocity === 0) {
+			value = processValue(value)
+			return
+		}
 		if (Math.abs(newVelocity) < epsilon) newVelocity = 0
 		if (Math.abs(velocity) < epsilon) velocity = 0
 		velocity = Math.abs(newVelocity) > Math.abs(velocity)

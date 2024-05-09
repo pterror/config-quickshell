@@ -41,7 +41,13 @@ ShellRoot {
 		animationDuration: 1000; animationVelocity: 0.0001
 		rotationOffset: cpuVizAnim.value
 
-		MomentumAnimation { id: cpuVizAnim; processValue: x => (x + 360) % 360 }
+		MomentumAnimation {
+			property int t: 0
+			property int curveLength: 60
+			property real speedFromCpuUsage: (1 - CPUInfo.idleSec / CPUInfo.totalSec) / 0.1
+			property list<real> curve: Array.from({ length: curveLength }, (_, i) => -1 -.5 * Math.sin(i * 2 * Math.PI / curveLength))
+			id: cpuVizAnim; processValue: x => (x + 360 + curve[t = (t + 1) % curveLength] - speedFromCpuUsage) % 360
+		}
 
 		WheelHandler {
 			acceptedDevices: PointerDevice.Mouse | PointerDevice.TouchPad
