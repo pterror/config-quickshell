@@ -33,6 +33,7 @@ ShellRoot {
 	}
 
 	InwardsRadialVisualizerBars {
+		id: cpuViz
 		screen: Config.screens.primary
 		input: CPUInfo
 		innerRadius: 120; outerRadius: 220
@@ -49,16 +50,12 @@ ShellRoot {
 			id: cpuVizAnim; processValue: x => (x + 360 + curve[t = (t + 1) % curveLength] - speedFromCpuUsage) % 360
 		}
 
-		WheelHandler {
-			acceptedDevices: PointerDevice.Mouse | PointerDevice.TouchPad
-			onWheel: event => {
-				cpuVizAnim.impulse((event.angleDelta.x + event.angleDelta.y) / 4)
-			}
-		}
-
 		MouseArea {
 			id: cpuVizMouseArea
-			anchors.fill: parent
+			x: cpuViz.width / 2 - cpuViz.outerRadius
+			y: cpuViz.height / 2 - cpuViz.outerRadius
+			width: cpuViz.outerRadius * 2
+			height: cpuViz.outerRadius * 2
 			property real startAngle: 0
 			property real prevAngle: 0
 			property real endAngle: 0
@@ -73,8 +70,8 @@ ShellRoot {
 			FrameAnimation { running: true; onTriggered: cpuVizMouseArea.startAngle = cpuVizMouseArea.endAngle }
 
 			function updateAngle(initial) {
-				const x = mouseX - parent.width / 2
-				const y = mouseY - parent.height / 2
+				const x = mouseX - cpuViz.outerRadius
+				const y = mouseY - cpuViz.outerRadius
 				endAngle = Math.atan2(-y, x) * 180 / Math.PI - 90
 				if (initial) {
 					startAngle = endAngle
@@ -82,6 +79,13 @@ ShellRoot {
 				} else {
 					cpuVizAnim.value += endAngle - prevAngle
 					prevAngle = endAngle
+				}
+			}
+
+			WheelHandler {
+				acceptedDevices: PointerDevice.Mouse | PointerDevice.TouchPad
+				onWheel: event => {
+					cpuVizAnim.impulse((event.angleDelta.x + event.angleDelta.y) / 4)
 				}
 			}
 		}
