@@ -79,6 +79,10 @@ Singleton {
 		property bool visible: false
 	}
 
+	property QtObject crankableImage: QtObject {
+		property real opacity: 0.25
+	}
+
 	property QtObject bouncingMaskedShader: QtObject {
 		property real opacity: 0.3
 		property real speed: 1.0

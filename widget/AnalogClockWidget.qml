@@ -129,8 +129,7 @@ Rectangle {
 		x: root.radius + innerRadius * Math.cos((-root.hourAngle - 90) * Math.PI / 180)
 		y: root.radius + innerRadius * Math.sin((-root.hourAngle - 90) * Math.PI / 180)
 		transform: Rotation {
-			origin.x: root.tickWidth / 2; origin.y: 0
-			axis { x: 0; y: 0; z: 1 }
+			origin.x: root.tickWidth / 2; origin.y: 0; axis { x: 0; y: 0; z: 1 }
 			angle: -root.hourAngle
 		}
 		MouseArea {
@@ -173,8 +172,7 @@ Rectangle {
 		x: root.radius + innerRadius * Math.cos((-root.minuteAngle - 90) * Math.PI / 180)
 		y: root.radius + innerRadius * Math.sin((-root.minuteAngle - 90) * Math.PI / 180)
 		transform: Rotation {
-			origin.x: root.tickWidth / 2; origin.y: 0
-			axis { x: 0; y: 0; z: 1 }
+			origin.x: root.tickWidth / 2; origin.y: 0; axis { x: 0; y: 0; z: 1 }
 			angle: -root.minuteAngle
 		}
 		MouseArea {
@@ -216,8 +214,7 @@ Rectangle {
 		x: root.radius + root.radius * Math.cos((-root.secondAngle - 90) * Math.PI / 180)
 		y: root.radius + root.radius * Math.sin((-root.secondAngle - 90) * Math.PI / 180)
 		transform: Rotation {
-			origin.x: root.tickWidth / 2; origin.y: 0
-			axis { x: 0; y: 0; z: 1 }
+			origin.x: root.tickWidth / 2; origin.y: 0; axis { x: 0; y: 0; z: 1 }
 			angle: -root.secondAngle
 		}
 		MouseArea {
@@ -262,8 +259,7 @@ Rectangle {
 			x: root.radius + root.radius * Math.cos(modelData * 2 * Math.PI / 12)
 			y: root.radius + root.radius * Math.sin(modelData * 2 * Math.PI / 12)
 			transform: Rotation {
-				origin.x: root.tickWidth / 2; origin.y: 0
-				axis { x: 0; y: 0; z: 1 }
+				origin.x: root.tickWidth / 2; origin.y: 0; axis { x: 0; y: 0; z: 1 }
 				angle: 90 + 360 * modelData / 12
 			}
 		}

@@ -7,11 +7,11 @@ import ".."
 
 Crewmate {
 	id: root
-	property list<string> sounds: [
+	property list<var> sounds: [
 		"report_body.mp3", "sus.mp3", "vent_in.mp3", "vent_out.mp3", "imposter_stab.mp3"
 	]
-	property string sound: ""
-	property string video: "stop_posting_about_among_us.mp4"
+	property var sound: ""
+	property var video: "stop_posting_about_among_us.mp4"
 	property int clickCount: 0
 	property int maxClickCount: 8
 	property bool videoVisible: false

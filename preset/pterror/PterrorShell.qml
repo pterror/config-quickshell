@@ -144,16 +144,16 @@ ShellRoot {
 				WlrLayershell.layer: WlrLayer.Background
 				anchors { top: true; bottom: true; left: true; right: true }
 
-				Image {
-					anchors.fill: parent
-					fillMode: Image.PreserveAspectCrop
-					source: wallpaperRandomizer.wallpapers[modelData.name] ?? "../../image/dark_pixel.png"
-					asynchronous: false
+				// Wallpaper { source: wallpaperRandomizer.wallpapers[modelData.name] ?? Config.imageUrl("dark_pixel.png") }
+
+				CrankableImage {
+					screen: modelData
+					source: wallpaperRandomizer.wallpapers[modelData.name] ?? Config.imageUrl("dark_pixel.png")
 				}
 
 				// VideoPlayer {
 				// 	anchors.fill: parent
-				// 	source: wallpaperRandomizer.wallpapers[modelData.name] ?? "../image/dark_pixel.png"
+				// 	source: wallpaperRandomizer.wallpapers[modelData.name] ?? Config.imageUrl("dark_pixel.png")
 				// }
 
 				Rectangle {
