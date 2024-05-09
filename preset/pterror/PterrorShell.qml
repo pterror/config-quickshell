@@ -144,12 +144,12 @@ ShellRoot {
 				WlrLayershell.layer: WlrLayer.Background
 				anchors { top: true; bottom: true; left: true; right: true }
 
-				// Wallpaper { source: wallpaperRandomizer.wallpapers[modelData.name] ?? Config.imageUrl("dark_pixel.png") }
+				Wallpaper { source: wallpaperRandomizer.wallpapers[modelData.name] ?? Config.imageUrl("dark_pixel.png") }
 
-				CrankableImage {
-					screen: modelData
-					source: wallpaperRandomizer.wallpapers[modelData.name] ?? Config.imageUrl("dark_pixel.png")
-				}
+				// CrankableImage {
+				// 	screen: modelData
+				// 	source: wallpaperRandomizer.wallpapers[modelData.name] ?? Config.imageUrl("dark_pixel.png")
+				// }
 
 				// VideoPlayer {
 				// 	anchors.fill: parent
