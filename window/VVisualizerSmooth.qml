@@ -24,6 +24,7 @@ VisualizerBase {
 
 	Shape {
 		id: shape
+		opacity: root.opacity
 		anchors.fill: parent
 		property real spacing: height / (input.count - 1)
 

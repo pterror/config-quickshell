@@ -19,5 +19,6 @@ PanelWindow {
 	property int strokeWidth: 0
 	property real animationDuration: 0
 	property real animationVelocity: 1
+	property real opacity: 1
 	property var input: Cava {}
 }

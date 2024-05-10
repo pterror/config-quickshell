@@ -28,6 +28,8 @@ VisualizerBase {
 		Rectangle {
 			required property int modelData
 			property real value: 0
+			property real opacityBase: 1
+			opacity: opacityBase * root.opacity
 			color: root.fillColor
 			border.color: root.strokeColor
 			border.width: root.strokeWidth
@@ -42,7 +44,7 @@ VisualizerBase {
 			Behavior on implicitHeight {
 				SmoothedAnimation { duration: root.animationDuration; velocity: root.animationVelocity }
 			}
-			Behavior on opacity {
+			Behavior on opacityBase {
 				SmoothedAnimation { duration: root.animationDuration; velocity: root.animationVelocity }
 			}
 
@@ -57,7 +59,7 @@ VisualizerBase {
 					if (index !== modelData) return
 					value = newValue
 					if (modulateOpacity) {
-						opacity = value * (maxOpacity - minOpacity) + minOpacity
+						opacityBase = value * (maxOpacity - minOpacity) + minOpacity
 					}
 				}
 			}

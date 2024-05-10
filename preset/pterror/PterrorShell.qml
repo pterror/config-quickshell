@@ -38,7 +38,7 @@ ShellRoot {
 		input: CPUInfo
 		innerRadius: 120; outerRadius: 220
 		anchors.top: true; anchors.bottom: true; anchors.left: true; anchors.right: true
-		// modulateOpacity: true;
+		// modulateOpacity: true; minOpacity: 0.7
 		animationDuration: 1000; animationVelocity: 0.0001
 		rotationOffset: cpuVizAnim.value
 
@@ -46,8 +46,13 @@ ShellRoot {
 			property int t: 0
 			property int curveLength: 60
 			property real speedFromCpuUsage: (1 - CPUInfo.idleSec / CPUInfo.totalSec) / 0.1
+			property list<real> opacityCurve: Array.from({ length: curveLength }, (_, i) => 0.8 + 0.2 * Math.sin(i * 2 * Math.PI / curveLength))
 			property list<real> curve: Array.from({ length: curveLength }, (_, i) => -1 -.5 * Math.sin(i * 2 * Math.PI / curveLength))
-			id: cpuVizAnim; processValue: x => (x + 360 + curve[t = (t + 1) % curveLength] - speedFromCpuUsage) % 360
+			id: cpuVizAnim; processValue: x => {
+				t = (t + 1) % curveLength
+				cpuViz.opacity = opacityCurve[t]
+				return (x + 360 + curve[t] - speedFromCpuUsage) % 360
+			}
 		}
 
 		MouseArea {

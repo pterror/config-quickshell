@@ -35,6 +35,7 @@ VisualizerBase {
 
 	Shape {
 		id: shape
+		opacity: root.opacity
 		anchors.fill: parent
 		property real spacing: width / (input.count - 1)
 		property real startValue: 0
