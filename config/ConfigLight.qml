@@ -48,6 +48,12 @@ ConfigBase {
 			property string outline: root.colors.widget.outline
 		}
 
+		property QtObject tooltip: QtObject {
+			property color fg: root.colors.button.fg
+			property color bg: root.colors.button.bg
+			property color outline: root.colors.button.outline
+		}
+
 		property QtObject window: QtObject {
 			property string fg: root.colors.widget.fg
 			property string bg: "#20080f0f"

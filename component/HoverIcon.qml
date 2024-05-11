@@ -2,29 +2,32 @@ import QtQuick
 import QtQuick.Controls
 import ".."
 
-Rectangle {
+Button {
 	id: root
 	required property string source
-	readonly property int size: Config.layout.iconButton.size + Config.layout.button.margins * 2
-	signal clicked()
-	radius: Config.layout.button.radius
+	property int size: Config.layout.iconButton.size
+	property int maxSize: size
+	readonly property bool hovered_: mouseArea.containsMouse
+	property var toolTip: undefined
+	property MouseArea mouseArea: mouseAreaEl
+	flat: true
+	display: AbstractButton.IconOnly
 	width: size
 	height: size
-	color: mouseArea.containsMouse ? Config.colors.button.hoverBg : Config.colors.button.bg
-
-	Image {
-		readonly property int size: Config.layout.iconButton.size
-		anchors.fill: parent
+	icon.width: maxSize
+	icon.height: maxSize
+	icon.source: source
+	ToolTip.delay: Config.tooltip.delay
+	ToolTip.timeout: Config.tooltip.timeout
+	ToolTip.visible: toolTip !== undefined && mouseArea.containsMouse
+	ToolTip.text: toolTip ?? ""
+	background: Rectangle {
 		anchors.margins: Config.layout.button.margins
-		source: root.source
-		width: size
-		height: size
-		opacity: Config.iconOpacity
-		sourceSize: Qt.size(width, height)
+		radius: Config.layout.button.radius
+		color: mouseArea.containsMouse ? Config.colors.button.hoverBg : Config.colors.button.bg
 	}
-
 	MouseArea {
-		id: mouseArea
+		id: mouseAreaEl
 		anchors.fill: parent
 		hoverEnabled: true
 		cursorShape: Qt.PointingHandCursor

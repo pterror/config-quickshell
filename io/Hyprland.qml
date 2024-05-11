@@ -154,6 +154,7 @@ Singleton {
 							monitorFocused(monitor, workspace)
 							for (const key in workspaceInfos) {
 								const info = workspaceInfos[key]
+								if (!info) break
 								info.focused = info.name === workspace
 								setWorkspaceInfo(info)
 							}

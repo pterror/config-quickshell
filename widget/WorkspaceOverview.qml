@@ -25,7 +25,7 @@ Widget {
 		cursorShape: Qt.PointingHandCursor
 		onClicked: {
 			Hyprland.focusWorkspace(workspaceId)
-			Shell.workspacesOverview = false
+			Config.workspacesOverview.visible = false
 		}
 	}
 
@@ -60,7 +60,7 @@ Widget {
 				cursorShape: Qt.PointingHandCursor
 				onClicked: {
 					Hyprland.focusWindow("address:" + modelData.address)
-					Shell.workspacesOverview = false
+					Config.workspacesOverview.visible = false
 				}
 			}
 		}

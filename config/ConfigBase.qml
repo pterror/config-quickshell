@@ -1,4 +1,5 @@
 import QtQuick
+import QtQuick.Controls
 import Quickshell
 import "../io"
 import "../library"
@@ -31,6 +32,22 @@ Singleton {
 	property bool debug: false
 	property QtObject debugFlags: QtObject {
 		property bool debugRectangles: root.debug && true
+	}
+
+	property QtObject tooltip: QtObject {
+		property int delay: 1000
+		property int timeout: 5000
+	}
+
+	Item {
+		ToolTip.toolTip.contentItem: Text {
+			color: root.colors.tooltip.fg
+			text: ToolTip.toolTip.text
+		}
+		ToolTip.toolTip.background: Rectangle {
+			color: root.colors.tooltip.bg
+			border.color: root.colors.tooltip.outline
+		}
 	}
 
 	property QtObject activateLinux: QtObject {
@@ -217,6 +234,12 @@ Singleton {
 			property color accent: root.colors.accent.fg
 			property color hoverBg: root.colors.widget.hoverBg
 			property color outline: root.colors.widget.outline
+		}
+
+		property QtObject tooltip: QtObject {
+			property color fg: root.colors.button.fg
+			property color bg: root.colors.button.bg
+			property color outline: root.colors.button.outline
 		}
 
 		property QtObject window: QtObject {
