@@ -21,7 +21,7 @@ Item {
 		ApplicationDatabase.applications.length
 	)
 	property real angle: 360 / count
-	property real mouseAngle: 0
+	property var mouseAngle: undefined
 
 	Process {
 		id: process; manageLifetime: false
@@ -38,6 +38,7 @@ Item {
 			const y = mouseY - radius
 			mouseAngle = (450 - Math.atan2(-y, x) * 180 / Math.PI) % 360
 		}
+		onExited: mouseAngle = undefined
 	}
 
 	Repeater {
@@ -47,13 +48,13 @@ Item {
 			required property var modelData
 			property var appInfo: ApplicationDatabase.applications[modelData]
 			property real proximity: {
-				const mousePos = mouseAngle / 360 * root.count
+				const mousePos = (mouseAngle ?? 0) / 360 * root.count
 				return Math.min(Math.abs(mousePos - modelData), Math.abs(mousePos - root.count - modelData))
 			}
 			property real scale: scaleByProximity(proximity)
 			source: "image://icon/" + appInfo.icon
 			size: {
-				if (iconMaxSize === iconSize) return iconSize
+				if (iconMaxSize === iconSize || mouseAngle === undefined) return iconSize
 				const ratio = scaleByProximity(proximity)
 				return iconMaxSize * ratio + iconSize * (1 - ratio)
 			}

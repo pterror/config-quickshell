@@ -29,6 +29,11 @@ PanelWindow {
 			RowLayout2 {
 				Layout.fillHeight: true
 				width: 400
+				Text2 {
+					function n(n) { return String(n).padStart(2, "0") }
+					text: " " + n(Time.hour) + ":" + n(Time.minute) + ":" + n(Time.second) + " " + n(Time.time.getDate()) + "/" + n(Time.time.getMonth() + 1)
+				}
+				HSpace {}
 			}
 			RowLayout2 {
 				Layout.fillHeight: true

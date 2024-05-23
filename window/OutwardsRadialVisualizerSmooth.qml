@@ -16,7 +16,7 @@ VisualizerBase {
 	property real rotationOffset: 0
 	width: outerRadius * 2
 	height: outerRadius * 2
-	input: Cava { channels: "stereo" }
+	inputDelegate: Cava { channels: "stereo" }
 
 	Connections {
 		target: input

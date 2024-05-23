@@ -18,7 +18,7 @@ VisualizerBase {
 	property real minOpacity: 0.4
 	property real maxOpacity: 1.0
 	height: 320
-	input: Cava { count: 48 }
+	inputDelegate: Cava { count: 48 }
 
 	RowLayout2 {
 		id: content

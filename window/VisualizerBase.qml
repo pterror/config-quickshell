@@ -20,5 +20,7 @@ PanelWindow {
 	property real animationDuration: 0
 	property real animationVelocity: 1
 	property real opacity: 1
-	property var input: Cava {}
+	property Component inputDelegate: Cava {}
+	property var fallbackInput: Loader { active: fallbackInput === input; sourceComponent: inputDelegate }
+	property var input: fallbackInput
 }

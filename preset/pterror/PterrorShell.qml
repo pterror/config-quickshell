@@ -96,14 +96,14 @@ ShellRoot {
 		}
 	}
 
-	PanelWindow {
-		screen: Config.screens.primary
-		color: "transparent"
-		WlrLayershell.layer: WlrLayer.Bottom
-		width: radialLauncher.implicitWidth || 1
-		height: radialLauncher.implicitHeight || 1
-		RadialLauncher { id: radialLauncher }
-	}
+	// PanelWindow {
+	// 	screen: Config.screens.primary
+	// 	color: "transparent"
+	// 	WlrLayershell.layer: WlrLayer.Bottom
+	// 	width: radialLauncher.implicitWidth || 1
+	// 	height: radialLauncher.implicitHeight || 1
+	// 	RadialLauncher { id: radialLauncher }
+	// }
 
 	PterrorStatBar { id: statBar; screen: Config.screens.primary }
 	PterrorMediaBar { id: mediaBar; screen: Config.screens.primary; extraGrabWindows: [statBar] }
