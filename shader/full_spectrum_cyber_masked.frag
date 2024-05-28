@@ -22,6 +22,8 @@ layout(std140, binding = 0) uniform buf {
     float iY;
     int iW;
     int iH;
+    int iScreenW;
+    int iScreenH;
 };
 
 int hexid;
@@ -150,7 +152,7 @@ vec3 march(vec3 from, vec3 dir) {
 
 void main() {
     vec2 fragCoord = vec2(qt_TexCoord0.x * iResolution.x + iX, (1.0 - qt_TexCoord0.y) * iResolution.y + iY);
-    vec2 uv = fragCoord/iResolution.xy-.5;
+    vec2 uv = fragCoord/vec2(iScreenW, iScreenH)-.5;
     uv.x*=iResolution.x/iResolution.y;
     float t=iTime*2.;
     vec3 from=path(t);

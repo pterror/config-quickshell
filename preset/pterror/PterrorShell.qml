@@ -224,8 +224,12 @@ ShellRoot {
 			cursorShape: Qt.PointingHandCursor
 			onPressed: event => { startX = event.x; startY = event.y }
 			onPositionChanged: event => {
-				bouncingMaskedShader.x += event.x - startX
-				bouncingMaskedShader.y += event.y - startY
+				const dx = event.x - startX
+				const dy = event.y - startY
+				bouncingMaskedShader.x += dx
+				bouncingMaskedShader.y += dy
+				bouncingMaskedShader.impulse(Math.hypot(dy, dx) * 10)
+				bouncingMaskedShader.angle = Math.atan2(dy, dx) * 180 / Math.PI
 			}
 		}
 	}

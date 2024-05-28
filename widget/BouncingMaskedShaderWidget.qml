@@ -26,6 +26,7 @@
 import QtQuick
 import QtQuick.Controls
 import QtQuick.Effects
+import "../component"
 import ".."
 
 Rectangle {
@@ -34,10 +35,25 @@ Rectangle {
 	property var config: Config.bouncingMaskedShader
 	property bool playing: true
 	property bool moving: true
+	property real angle: Math.atan2(
+		Config.bouncingMaskedShader.velocityY,
+		Config.bouncingMaskedShader.velocityX
+	) * 180 / Math.PI
+	property real baseVelocity: Math.hypot(
+		Config.bouncingMaskedShader.velocityX,
+		Config.bouncingMaskedShader.velocityY
+	)
+	property real velocityMultiplierX: Math.cos(angle * Math.PI / 180)
+	property real velocityMultiplierY: Math.sin(angle * Math.PI / 180)
+	property real velocity: baseVelocity + extraVelocityAnimation.velocity
 	x: 32
 	y: 64
 	width: mask.width
 	height: mask.height
+
+	MomentumAnimation { id: extraVelocityAnimation }
+
+	function impulse(value) { extraVelocityAnimation.impulse(value) }
 
 	ShaderEffect {
 		id: shader
@@ -56,8 +72,10 @@ Rectangle {
 		property real iY: root.parent.height - root.y - iH
 		property int iW: root.width
 		property int iH: root.height
-		property real iVelocityX: Config.bouncingMaskedShader.velocityX * iTimeDelta
-		property real iVelocityY: Config.bouncingMaskedShader.velocityY * iTimeDelta
+		property int iScreenW: root.parent.width || 1920
+		property int iScreenH: root.parent.height || 1080
+		property real iVelocityX: root.velocity * root.velocityMultiplierX * iTimeDelta
+		property real iVelocityY: root.velocity * root.velocityMultiplierY * iTimeDelta
 		property vector4d iDate
 		property Image iChannel0: Image {
 			source: Config.bouncingMaskedShader.channel0
@@ -97,13 +115,13 @@ Rectangle {
 					const nextX = root.x + shader.iVelocityX
 					const maxX = (root.parent.width || 1920) - shader.iW
 					if (nextX < 0 || nextX > maxX) {
-						shader.iVelocityX *= -1
+						root.angle = 180 - root.angle
 					}
 					root.x = Math.max(0, Math.min(maxX, nextX))
 					const nextY = root.y + shader.iVelocityY
 					const maxY = (root.parent.height || 1080) - shader.iH
 					if (nextY < 0 || nextY > maxY) {
-						shader.iVelocityY *= -1
+						root.angle *= -1
 					}
 					root.y = Math.max(0, Math.min(maxY, nextY))
 				}
