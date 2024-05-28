@@ -208,9 +208,25 @@ ShellRoot {
 
 	PanelWindow {
 		screen: Config.screens.primary
-		WlrLayershell.layer: WlrLayer.Background
+		WlrLayershell.layer: WlrLayer.Bottom
 		anchors { top: true; bottom: true; left: true; right: true }
 		color: "transparent"
-		BouncingMaskedShaderWidget {}
+		mask: Region { item: bouncingMaskedShader }
+		BouncingMaskedShaderWidget {
+			id: bouncingMaskedShader
+			moving: !bouncingMaskedShaderMouseArea.containsPress
+		}
+		MouseArea {
+			id: bouncingMaskedShaderMouseArea
+			property int startX: 0
+			property int startY: 0
+			anchors.fill: bouncingMaskedShader
+			cursorShape: Qt.PointingHandCursor
+			onPressed: event => { startX = event.x; startY = event.y }
+			onPositionChanged: event => {
+				bouncingMaskedShader.x += event.x - startX
+				bouncingMaskedShader.y += event.y - startY
+			}
+		}
 	}
 }

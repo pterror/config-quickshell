@@ -15,7 +15,7 @@ Crewmate {
 	property int clickCount: 0
 	property int maxClickCount: 8
 	property bool videoVisible: false
-	property bool movable: true
+	property bool moveable: true
 	property int startX: 0
 	property int startY: 0
 	property alias hoverEnabled: mouseArea.hoverEnabled
@@ -32,7 +32,7 @@ Crewmate {
 
 	onPressed: event => { startX = event.x; startY = event.y }
 	onPositionChanged: event => {
-		if (movable) {
+		if (moveable) {
 			crewmate.anchors.leftMargin += event.x - startX
 			crewmate.anchors.topMargin += event.y - startY
 		}

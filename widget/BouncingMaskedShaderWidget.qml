@@ -30,9 +30,14 @@ import ".."
 
 Rectangle {
 	id: root
-	anchors.fill: parent
 	color: "transparent"
 	property var config: Config.bouncingMaskedShader
+	property bool playing: true
+	property bool moving: true
+	x: 32
+	y: 64
+	width: mask.width
+	height: mask.height
 
 	ShaderEffect {
 		id: shader
@@ -47,11 +52,10 @@ Rectangle {
 		property real iTimeDelta: 1 / iFrameRate
 		property real iSampleRate: 1
 		property int iFrame: 0
-		property real iX: 32
-		// counting uprwads from bottom, not downwards from top
-		property real iY: 64
-		property int iW: mask.width
-		property int iH: mask.height
+		property real iX: root.x
+		property real iY: root.parent.height - root.y - iH
+		property int iW: root.width
+		property int iH: root.height
 		property real iVelocityX: Config.bouncingMaskedShader.velocityX * iTimeDelta
 		property real iVelocityY: Config.bouncingMaskedShader.velocityY * iTimeDelta
 		property vector4d iDate
@@ -83,20 +87,26 @@ Rectangle {
 		Timer {
 			interval: 1000 / shader.iFrameRate; running: true; repeat: true; triggeredOnStart: true
 			onTriggered: {
-				shader.iTime += shader.iTimeDelta * Config.bouncingMaskedShader.speed
-				shader.iChannelTime = [shader.iTime, shader.iTime, shader.iTime, shader.iTime]
-				shader.iFrame += 1
-				shader.iDate = Qt.vector4d(0., 0., 0., Number(new Date()) / 1000 % 86400)
-				const nextX = shader.iX + shader.iVelocityX
-				if (nextX < 0 || nextX + shader.iW > (root.width || 1920)) {
-					shader.iVelocityX *= -1
+				if (playing) {
+					shader.iTime += shader.iTimeDelta * Config.bouncingMaskedShader.speed
+					shader.iChannelTime = [shader.iTime, shader.iTime, shader.iTime, shader.iTime]
+					shader.iFrame += 1
+					shader.iDate = Qt.vector4d(0., 0., 0., Number(new Date()) / 1000 % 86400)
 				}
-				shader.iX += shader.iVelocityX
-				const nextY = shader.iY + shader.iVelocityY
-				if (nextY < 0 || nextY + shader.iH > (root.height || 1080)) {
-					shader.iVelocityY *= -1
+				if (moving) {
+					const nextX = root.x + shader.iVelocityX
+					const maxX = (root.parent.width || 1920) - shader.iW
+					if (nextX < 0 || nextX > maxX) {
+						shader.iVelocityX *= -1
+					}
+					root.x = Math.max(0, Math.min(maxX, nextX))
+					const nextY = root.y + shader.iVelocityY
+					const maxY = (root.parent.height || 1080) - shader.iH
+					if (nextY < 0 || nextY > maxY) {
+						shader.iVelocityY *= -1
+					}
+					root.y = Math.max(0, Math.min(maxY, nextY))
 				}
-				shader.iY += shader.iVelocityY
 			}
 		}
 	}
@@ -124,9 +134,7 @@ Rectangle {
 		maskEnabled: true
 		maskSource: mask
 		anchors.left: parent.left
-		anchors.leftMargin: shader.iX
 		anchors.top: parent.top
-		anchors.topMargin: shader.iY
 		width: mask.width
 		height: mask.height
 		opacity: Config.bouncingMaskedShader.opacity
