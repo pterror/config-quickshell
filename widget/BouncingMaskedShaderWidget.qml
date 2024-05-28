@@ -56,19 +56,19 @@ Rectangle {
 		property real iVelocityY: Config.bouncingMaskedShader.velocityY * iTimeDelta
 		property vector4d iDate
 		property Image iChannel0: Image {
-			source: "../image/" + Config.bouncingMaskedShader.channel0
+			source: Config.bouncingMaskedShader.channel0
 			visible: false
 		}
 		property Image iChannel1: Image {
-			source: "../image/" + Config.bouncingMaskedShader.channel1
+			source: Config.bouncingMaskedShader.channel1
 			visible: false
 		}
 		property Image iChannel2: Image {
-			source: "../image/" + Config.bouncingMaskedShader.channel2
+			source: Config.bouncingMaskedShader.channel2
 			visible: false
 		}
 		property Image iChannel3: Image {
-			source: "../image/" + Config.bouncingMaskedShader.channel3
+			source: Config.bouncingMaskedShader.channel3
 			visible: false
 		}
 		property list<vector3d> iChannelResolution: [
@@ -104,7 +104,7 @@ Rectangle {
 	Image {
 		id: mask
 		layer.enabled: true
-		source: "../image/" + Config.bouncingMaskedShader.mask
+		source: Config.bouncingMaskedShader.mask
 		property real maskAspectRatio: (implicitWidth / implicitHeight) || 0.01
 		width: Config.bouncingMaskedShader.maskWidth != -1 ?
 			Config.bouncingMaskedShader.maskWidth :

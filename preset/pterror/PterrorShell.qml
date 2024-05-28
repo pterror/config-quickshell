@@ -185,31 +185,32 @@ ShellRoot {
 		}
 	}
 
-	// PanelWindow {
-	// 	id: sussy
-	// 	screen: Config.screens.primary
-	// 	WlrLayershell.layer: WlrLayer.Bottom
-	// 	WlrLayershell.namespace: "shell:widget"
-	// 	color: "transparent"
-	// 	width: crewmate.implicitWidth
-	// 	height: crewmate.implicitHeight
-	// 	anchors { top: true; bottom: true; left: true; right: true }
-	// 	mask: Region { item: crewmate }
-	// 	InteractiveCrewmate {
-	// 		id: crewmate; color: "transparent"
-	// 		opacity: 0.4
-	// 		anchors.left: parent.left
-	// 		anchors.leftMargin: 128
-	// 		anchors.top: parent.top
-	// 		anchors.topMargin: 64
-	// 	}
-	// }
+	PanelWindow {
+		id: sussy
+		screen: Config.screens.primary
+		WlrLayershell.layer: WlrLayer.Bottom
+		WlrLayershell.namespace: "shell:widget"
+		color: "transparent"
+		width: crewmate.implicitWidth
+		height: crewmate.implicitHeight
+		anchors { top: true; bottom: true; left: true; right: true }
+		mask: Region { item: crewmate }
+		InteractiveCrewmate {
+			id: crewmate; color: "transparent"
+			maxClickCount: 2
+			opacity: 0.4
+			anchors.left: parent.left
+			anchors.leftMargin: 128
+			anchors.top: parent.top
+			anchors.topMargin: 64
+		}
+	}
 
-	// PanelWindow {
-	// 	screen: Config.screens.primary
-	// 	WlrLayershell.layer: WlrLayer.Background
-	// 	anchors { top: true; bottom: true; left: true; right: true }
-	// 	color: "transparent"
-	// 	BouncingMaskedShaderWidget {}
-	// }
+	PanelWindow {
+		screen: Config.screens.primary
+		WlrLayershell.layer: WlrLayer.Background
+		anchors { top: true; bottom: true; left: true; right: true }
+		color: "transparent"
+		BouncingMaskedShaderWidget {}
+	}
 }
