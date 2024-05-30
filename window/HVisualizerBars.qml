@@ -31,7 +31,7 @@ VisualizerBase {
 
 			Rectangle {
 				required property int modelData
-				property real value: 0
+				property real value: input.values[modelData]
 				property real opacityBase: 1
 				opacity: opacityBase * root.opacity
 				Layout.alignment: root.childAlignment
@@ -41,6 +41,7 @@ VisualizerBase {
 				implicitHeight: value * content.height
 				implicitWidth: content.childSize
 				radius: root.barRadius
+				Component.onCompleted: updateModulateOpacity()
 
 				Behavior on implicitHeight {
 					SmoothedAnimation { duration: root.animationDuration; velocity: root.animationVelocity }
@@ -49,16 +50,15 @@ VisualizerBase {
 					SmoothedAnimation { duration: root.animationDuration; velocity: root.animationVelocity }
 				}
 
-				Connections {
-					target: input
-					function onValue(index, newValue) {
-						if (index !== modelData) return
-						value = newValue
-						if (modulateOpacity) {
-							opacityBase = value * (maxOpacity - minOpacity) + minOpacity
-						}
+				function updateModulateOpacity() {
+					if (root.modulateOpacity) {
+						opacityBase = Qt.binding(() => input.values[modelData] * (maxOpacity - minOpacity) + minOpacity)
+					} else {
+						opacityBase = 1
 					}
 				}
+
+				Connections { target: root; function onModulateOpacityChanged() { updateModulateOpacity() } }
 			}
 		}
 	}

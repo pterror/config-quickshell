@@ -18,17 +18,16 @@ VisualizerBase {
 	height: outerRadius * 2
 	inputDelegate: Cava { channels: "stereo" }
 
-	Connections {
-		target: input
-		function onCountChanged() {
-			path.pathElements = [
-				...Array.from({ length: visualizerCurve.model }, (_, i) => visualizerCurve.itemAt(i).resources[0]),
-				finalLine,
-				...Array.from({ length: circle.model }, (_, i) => circle.itemAt(i).resources[0]),
-				finalLine2,
-			]
-		}
+	function redrawPath() {
+		path.pathElements = [
+			...Array.from({ length: visualizerCurve.model }, (_, i) => visualizerCurve.itemAt(i).resources[0]),
+			finalLine,
+			...Array.from({ length: circle.model }, (_, i) => circle.itemAt(i).resources[0]),
+			finalLine2,
+		]
 	}
+
+	Connections { target: input; function onCountChanged() { redrawPath() } }
 
 	Shape {
 		id: shape
@@ -56,19 +55,13 @@ VisualizerBase {
 
 				PathCurve {
 					id: curve
-					property real height: 0
+					property real height: input.values[modelData % input.count] * root.scale
 					property real xMultiplier: Math.cos(((modelData % input.count) / input.count - 0.25 - rotationOffset / 360) * 2 * Math.PI)
 					property real yMultiplier: Math.sin(((modelData % input.count) / input.count - 0.25 - rotationOffset / 360) * 2 * Math.PI)
 					x: root.width / 2 + (root.innerRadius + height) * xMultiplier
 					y: root.height / 2 + (root.innerRadius + height) * yMultiplier
 					Component.onCompleted: {
 						if (modelData === 0) { shape.startX = Qt.binding(() => x); shape.startY = Qt.binding(() => y) }
-					}
-					property Connections inputConnections: Connections {
-						target: input
-						function onValue(index, newValue) {
-							if (index === modelData % input.count) curve.height = newValue * root.scale
-						}
 					}
 					Behavior on height {
 						SmoothedAnimation { duration: root.animationDuration; velocity: root.animationVelocity }

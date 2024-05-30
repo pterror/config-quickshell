@@ -11,15 +11,18 @@ VisualizerBase {
 	id: root
 	property bool right: anchors.right
 	width: 480
+	Component.onCompleted: redrawPath()
+
+	function redrawPath() {
+		path.pathElements = [
+			...Array.from({ length: curves.model }, (_, i) => curves.itemAt(i).resources[0]),
+			finalLine,
+		]
+	}
 
 	Connections {
 		target: input
-		function onCountChanged() {
-			path.pathElements = [
-				...Array.from({ length: curves.model }, (_, i) => curves.itemAt(i).resources[0]),
-				finalLine,
-			]
-		}
+		function onCountChanged() { redrawPath() }
 	}
 
 	Shape {
@@ -44,16 +47,11 @@ VisualizerBase {
 				required property int modelData
 
 				PathCurve {
-					id: curve
-					y: shape.spacing * modelData
-					property Connections inputConnections: Connections {
-						target: input
-						function onValue(index, newValue) {
-							if (index !== modelData) return
-							const width = newValue * shape.width
-							curve.x = root.right ? root.width - width : width
-						}
+					x: {
+						const width = input.values[modelData] * shape.width
+						return root.right ? root.width - width : width
 					}
+					y: shape.spacing * modelData
 					Behavior on x {
 						SmoothedAnimation { duration: root.animationDuration; velocity: root.animationVelocity }
 					}

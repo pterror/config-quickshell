@@ -27,7 +27,7 @@ VisualizerBase {
 
 		Rectangle {
 			required property int modelData
-			property real value: 0
+			property real value: input.values[modelData]
 			property real opacityBase: 1
 			opacity: opacityBase * root.opacity
 			color: root.fillColor
@@ -38,6 +38,11 @@ VisualizerBase {
 			radius: root.barRadius
 			x: root.width / 2 + root.outerRadius * Math.cos((modelData / input.count - 0.25 - rotationOffset / 360) * 2 * Math.PI) - barWidth / 2
 			y: root.height / 2 + root.outerRadius * Math.sin((modelData / input.count - 0.25 - rotationOffset / 360) * 2 * Math.PI)
+			transform: Rotation {
+				origin.x: barWidth / 2; origin.y: 0; axis { x: 0; y: 0; z: 1 }
+				angle: 360 * modelData / input.count - rotationOffset
+			}
+			Component.onCompleted: updateModulateOpacity()
 
 			Behavior on implicitHeight {
 				SmoothedAnimation { duration: root.animationDuration; velocity: root.animationVelocity }
@@ -46,21 +51,15 @@ VisualizerBase {
 				SmoothedAnimation { duration: root.animationDuration; velocity: root.animationVelocity }
 			}
 
-			transform: Rotation {
-				origin.x: barWidth / 2; origin.y: 0; axis { x: 0; y: 0; z: 1 }
-				angle: 360 * modelData / input.count - rotationOffset
-			}
-
-			Connections {
-				target: input
-				function onValue(index, newValue) {
-					if (index !== modelData) return
-					value = newValue
-					if (modulateOpacity) {
-						opacityBase = value * (maxOpacity - minOpacity) + minOpacity
-					}
+			function updateModulateOpacity() {
+				if (root.modulateOpacity) {
+					opacityBase = Qt.binding(() => input.values[modelData] * (maxOpacity - minOpacity) + minOpacity)
+				} else {
+					opacityBase = 1
 				}
 			}
+
+			Connections { target: root; function onModulateOpacityChanged() { updateModulateOpacity() } }
 		}
 	}
 }

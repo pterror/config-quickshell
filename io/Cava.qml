@@ -19,7 +19,7 @@ Scope {
 			mono_option: monoOption,
 		}
 	})
-	signal value(int index, real value) // 0 <= value <= 1
+	property list<real> values: Array(count).fill(0) // 0 <= value <= 1
 
 	onConfigChanged: {
 		process.running = false
@@ -50,13 +50,15 @@ Scope {
 		stdout: SplitParser {
 			splitMarker: ""
 			onRead: data => {
+				const newValues = [...values] // duplicate and set once to avoid spamming signals
 				if (process.index + data.length > config.general.bars) {
 					process.index = 0
 				}
 				for (let i = 0; i < data.length; i += 1) {
-					root.value(i + process.index, Math.min(data.charCodeAt(i), 128) / 128)
+					newValues[i + process.index] = Math.min(data.charCodeAt(i), 128) / 128
 				}
 				process.index += data.length
+				values = newValues
 			}
 		}
 	}

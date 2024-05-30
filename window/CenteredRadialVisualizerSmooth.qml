@@ -21,17 +21,16 @@ VisualizerBase {
 	height: outerRadius * 2
 	inputDelegate: Cava { channels: "stereo" }
 
-	Connections {
-		target: input
-		function onCountChanged() {
+	function redrawPath() {
 			path.pathElements = [
 				...Array.from({ length: visualizerCurves.model }, (_, i) => visualizerCurves.itemAt(i).resources[0]),
 				finalLine,
 				...Array.from({ length: visualizerCurves.model }, (_, i) => visualizerCurves.itemAt(i).resources[1]),
 				finalLine2,
 			]
-		}
 	}
+
+	Connections { target: input; function onCountChanged() { redrawPath() } }
 
 	Shape {
 		id: shape
@@ -67,7 +66,7 @@ VisualizerBase {
 
 			Item {
 				required property int modelData
-				property real value: 0
+				property real value: input.values[modelData % input.count]
 				property real xMultiplier: Math.cos(((modelData % input.count) / input.count - 0.25 - rotationOffset / 360) * 2 * Math.PI)
 				property real yMultiplier: Math.sin(((modelData % input.count) / input.count - 0.25 - rotationOffset / 360) * 2 * Math.PI)
 				Behavior on value {
@@ -94,14 +93,6 @@ VisualizerBase {
 					shape.startY = Qt.binding(() => curve.y)
 					shape.innerX = Qt.binding(() => innerCurve.x)
 					shape.innerY = Qt.binding(() => innerCurve.y)
-				}
-
-				Connections {
-					target: input
-					function onValue(index, newValue) {
-						if (index !== modelData % input.count) return
-						value = newValue
-					}
 				}
 			}
 		}

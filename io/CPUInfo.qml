@@ -18,8 +18,8 @@ Singleton {
 	signal cpuFractionSec(int cpu, real fraction)
 
 	// api for compatibility with `Cava`
+	property list<real> values: Array(cpuCount).fill(0) // 0 <= value <= 1
 	property int count: cpuCount
-	signal value(int index, real value) // 0 <= value <= 1
 
 	Timer {
 		interval: root.interval; running: true; repeat: true; triggeredOnStart: true
@@ -35,21 +35,26 @@ Singleton {
 					idle = newIdle
 					total = newTotal
 					let i = 0
+					// duplicate and set once to avoid spamming signals
+					const newCpuInfos = [...cpuInfos]
+					const newValues = [...values]
 					for (const line of text.match(/cpu(\d+).+/g)) {
 						const [id, user, nice, system, newIdle, iowait, irq, softirq, steal, guest, guestNice] = line.match(/\d+/g).map(Number)
 						const newTotal = user + nice + system + newIdle + iowait + irq + softirq + steal + guest + guestNice
-						while (cpuInfos.length < id) cpuInfos.push({ total: 1, idle: 1, totalSec: 1, idleSec: 1 })
+						while (newCpuInfos.length < id) newCpuInfos.push({ total: 1, idle: 1, totalSec: 1, idleSec: 1 })
 						const info = cpuInfos[id] ?? { total: 1, idle: 1, totalSec: 1, idleSec: 1 }
 						info.idleSec = newIdle - info.idle
 						info.totalSec = newTotal - info.total
 						info.idle = newIdle
 						info.total = newTotal
-						cpuInfos[id] = info
-						const fraction = 1 - info.idleSec / info.totalSec
+						newCpuInfos[id] = info
+						const fraction = 1 - info.idleSec / (info.totalSec || 1)
 						root.cpuFractionSec(i, fraction)
-						root.value(i, fraction)
+						newValues[i] = fraction
 						i += 1
 					}
+					cpuInfos = newCpuInfos
+					root.values = newValues
 				})
 		}
 	}
