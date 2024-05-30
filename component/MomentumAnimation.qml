@@ -10,8 +10,8 @@ FrameAnimation {
 	property real momentumUp: momentum !== -1 ? momentum : 0
 	property real momentumDown: momentum !== -1 ? momentum : 0.2
 	property int frameRate: Config.frameRate
-	property real momentumUpFrame: Math.pow(momentumUp, 1 / frameRate)
-	property real momentumDownFrame: Math.pow(momentumDown, 1 / frameRate)
+	property real momentumUpFrame: Math.pow(momentumUp, frameTime)
+	property real momentumDownFrame: Math.pow(momentumDown, frameTime)
 	property real epsilon: 0.01
 	property var processValue: x => x
 
@@ -19,7 +19,7 @@ FrameAnimation {
 
 	onTriggered: {
 		if (velocity === 0 && newVelocity === 0) {
-			value = processValue(value)
+			value = processValue(value, frameTime)
 			return
 		}
 		if (Math.abs(newVelocity) < epsilon) newVelocity = 0
@@ -28,6 +28,6 @@ FrameAnimation {
 			? velocity * momentumUpFrame + newVelocity * (1 - momentumUpFrame)
 			: velocity * momentumDownFrame + newVelocity * (1 - momentumDownFrame)
 		newVelocity = 0
-		value = processValue(value + velocity)
+		value = processValue(value + velocity, frameTime)
 	}
 }

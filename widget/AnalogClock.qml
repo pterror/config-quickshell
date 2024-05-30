@@ -17,7 +17,6 @@ Rectangle {
 	property real secondAngle: actualSecondAngle
 	property real minuteAngle: actualMinuteAngle
 	property real hourAngle: actualHourAngle
-	property int frameRate: Config.frameRate
 	property real minAmplitude: 0.1
 	property real dragDuration: 4 // in seconds
 	property bool setTimeDelta: true
@@ -25,17 +24,17 @@ Rectangle {
 	property real hourDragAmplitude: 0
 	property real hourDragAngle: 0
 	property real hourDragStartTime: 0
-	property real hourDragDecayFrame: 0
+	property real hourDragDecaySec: 0
 	property bool minuteDragged: false
 	property real minuteDragAmplitude: 0
 	property real minuteDragAngle: 0
 	property real minuteDragStartTime: 0
-	property real minuteDragDecayFrame: 0
+	property real minuteDragDecaySec: 0
 	property bool secondDragged: false
 	property real secondDragAmplitude: 0
 	property real secondDragAngle: 0
 	property real secondDragStartTime: 0
-	property real secondDragDecayFrame: 0
+	property real secondDragDecaySec: 0
 	implicitWidth: radius * 2
 	implicitHeight: radius * 2
 	color: "transparent"
@@ -50,7 +49,7 @@ Rectangle {
 		onTriggered: {
 			actualSecondAngle = -(Number(new Date()) / 1000 % 60 * (360 / 60))
 			if (hourDragged) {
-				hourDragAmplitude *= hourDragDecayFrame
+				hourDragAmplitude *= Math.pow(hourDragDecaySec, frameTime)
 				const deltaTime = (new Date() - hourDragStartTime) / 1000
 				const delta = hourDragAmplitude * Math.cos(deltaTime * 2 * Math.PI)
 				hourAngle = actualHourAngle + delta
@@ -60,7 +59,7 @@ Rectangle {
 				}
 			}
 			if (minuteDragged) {
-				minuteDragAmplitude *= minuteDragDecayFrame
+				minuteDragAmplitude *= Math.pow(minuteDragDecaySec, frameTime)
 				const deltaTime = (new Date() - minuteDragStartTime) / 1000
 				const delta = minuteDragAmplitude * Math.cos(deltaTime * 2 * Math.PI)
 				minuteAngle = actualMinuteAngle + delta
@@ -70,7 +69,7 @@ Rectangle {
 				}
 			}
 			if (secondDragged) {
-				secondDragAmplitude *= secondDragDecayFrame
+				secondDragAmplitude *= Math.pow(secondDragDecaySec, frameTime)
 				const deltaTime = (new Date() - secondDragStartTime) / 1000
 				const delta = secondDragAmplitude * Math.cos(deltaTime * 2 * Math.PI)
 				secondAngle = actualSecondAngle + delta
@@ -147,8 +146,8 @@ Rectangle {
 		hourDragged = true
 		hourDragStartTime = Number(new Date())
 		hourDragAmplitude = hourAngle - actualHourAngle
-		hourDragDecayFrame =
-			Math.pow(Math.abs(minAmplitude / hourDragAmplitude), 1 / frameRate / dragDuration) || 0
+		hourDragDecaySec =
+			Math.pow(Math.abs(minAmplitude / hourDragAmplitude), 1 / dragDuration) || 0
 	}
 
 	function updateHourDrag(coord) {
@@ -190,8 +189,8 @@ Rectangle {
 		minuteDragged = true
 		minuteDragStartTime = Number(new Date())
 		minuteDragAmplitude = minuteAngle - actualMinuteAngle
-		minuteDragDecayFrame =
-			Math.pow(Math.abs(minAmplitude / minuteDragAmplitude), 1 / frameRate / dragDuration)
+		minuteDragDecaySec =
+			Math.pow(Math.abs(minAmplitude / minuteDragAmplitude), 1 / dragDuration)
 	}
 
 	function updateMinuteDrag(coord) {
@@ -232,8 +231,8 @@ Rectangle {
 		secondDragged = true
 		secondDragStartTime = Number(new Date())
 		secondDragAmplitude = secondAngle - actualSecondAngle
-		secondDragDecayFrame =
-			Math.pow(Math.abs(minAmplitude / secondDragAmplitude), 1 / frameRate / dragDuration) || 0
+		secondDragDecaySec =
+			Math.pow(Math.abs(minAmplitude / secondDragAmplitude), 1 / dragDuration) || 0
 	}
 
 	function updateSecondDrag(coord) {

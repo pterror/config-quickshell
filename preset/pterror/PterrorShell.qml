@@ -114,15 +114,17 @@ ShellRoot {
 
 			MomentumAnimation {
 				id: cpuVizAnim
-				property int t: 0
-				property int curveLength: 60
+				property real t: 0
+				property int curveLength: Config.frameRate * 1
 				property real speedFromCpuUsage: (1 - CPUInfo.idleSec / CPUInfo.totalSec) / 0.1
 				property list<real> opacityCurve: Array.from({ length: curveLength }, (_, i) => 0.8 + 0.2 * Math.sin(i * 2 * Math.PI / curveLength))
 				property list<real> curve: Array.from({ length: curveLength }, (_, i) => -1 -.5 * Math.sin(i * 2 * Math.PI / curveLength))
-				processValue: x => {
-					t = (t + 1) % curveLength
-					// cpuViz.opacity = opacityCurve[t]
-					return (x + 360 + curve[t] - speedFromCpuUsage) % 360
+				processValue: (x, frameTime) => {
+					const frameDelta = frameTime * Config.frameRate
+					t = (t + frameDelta) % curveLength
+					const frac = t % 1
+					cpuViz.opacity = opacityCurve[Math.floor(t)] * frac + opacityCurve[Math.ceil(t) % curveLength] * (1 - frac)
+					return (x + 360 + (curve[Math.floor(t)] * frac + curve[Math.ceil(t) % curveLength] * (1 - frac)) - speedFromCpuUsage * frameDelta) % 360
 				}
 			}
 
