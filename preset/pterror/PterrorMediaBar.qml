@@ -2,6 +2,7 @@ import QtQuick
 import QtQuick.Layouts
 import Quickshell
 import Quickshell.Wayland
+import Quickshell.Services.Mpris
 import "../../io"
 import "../../component"
 import "../../window"
@@ -59,16 +60,14 @@ PanelWindow {
 
 						Text2 {
 							id: mediaText
-							text: MPRIS.title + " - " + MPRIS.artist
+							text: (Config.mpris.currentPlayer?.metadata["xesam:title"] ?? "") + " - " + (Config.mpris.currentPlayer?.metadata["xesam:artist"].join(", ") ?? "")
 							MediaControls {
 								id: mediaControls
 								extraGrabWindows: [root].concat(root.extraGrabWindows)
 								relativeX: mediaText.mapToItem(rootRect, mediaText.implicitWidth / 2, 0).x - width / 2
-								// relativeY: !visible ? height : -height - Config.layout.popup.gap
 								relativeY: -height - Config.layout.popup.gap
 								parentWindow: root
 								visible: false
-								// Behavior on relativeY { SmoothedAnimation { velocity: -1; duration: 200 } }
 							}
 						}
 					}
@@ -97,16 +96,16 @@ PanelWindow {
 								height: 16
 								anchors.verticalCenter: parent.verticalCenter
 								opacity: Config.iconOpacity
-								source: Config.services.audio.muted ? "../../icon/flat/speaker_muted.svg" :
-									Config.services.audio.volume < 25 ? "../../icon/flat/speaker_volume_very_low.svg" :
-									Config.services.audio.volume < 50 ? "../../icon/flat/speaker_volume_low.svg" :
-									Config.services.audio.volume < 75 ? "../../icon/flat/speaker_volume_medium.svg" :
-									"../../icon/flat/speaker_volume_high.svg"
+								source: Config.services.audio.muted ? Config.iconUrl("flat/speaker_muted.svg") :
+									Config.services.audio.volume < 0.25 ? Config.iconUrl("flat/speaker_volume_very_low.svg") :
+									Config.services.audio.volume < 0.50 ? Config.iconUrl("flat/speaker_volume_low.svg") :
+									Config.services.audio.volume < 0.75 ? Config.iconUrl("flat/speaker_volume_medium.svg") :
+									Config.iconUrl("flat/speaker_volume_high.svg")
 							}
 						}
 
 						Text2 {
-							text: Config.services.audio.volume + "%"
+							text: Math.round(Config.services.audio.volume * 100) + "%"
 							VolumeControls {
 								id: volumeControls
 								extraGrabWindows: [root].concat(root.extraGrabWindows)
@@ -129,11 +128,11 @@ PanelWindow {
 								height: 16
 								anchors.verticalCenter: parent.verticalCenter
 								opacity: Config.iconOpacity
-								source: Config.services.audio.micMuted ? "../../icon/flat/microphone_muted.svg" : "../../icon/flat/microphone.svg"
+								source: Config.services.audio.micMuted ? Config.iconUrl("flat/microphone_muted.svg") : Config.iconUrl("flat/microphone.svg")
 							}
 						}
 
-						Text2 { id: micVolumeText; text: Config.services.audio.micVolume + "%" }
+						Text2 { id: micVolumeText; text: Math.round(Config.services.audio.micVolume * 100) + "%" }
 					}
 				}
 				RowLayout2 {
@@ -148,10 +147,10 @@ PanelWindow {
 							height: 16
 							anchors.verticalCenter: parent.verticalCenter
 							opacity: Config.iconOpacity
-							source: !Config.services.network.connected ? "../../icon/flat/wifi_disconnected.svg" :
-								Config.services.network.strength < 33 ? "../../icon/flat/wifi_low.svg" :
-								Config.services.network.strength < 67 ? "../../icon/flat/wifi_medium.svg" :
-								"../../icon/flat/wifi_high.svg"
+							source: !Config.services.network.connected ? Config.iconUrl("flat/wifi_disconnected.svg") :
+								Config.services.network.strength < 33 ? Config.iconUrl("flat/wifi_low.svg") :
+								Config.services.network.strength < 67 ? Config.iconUrl("flat/wifi_medium.svg") :
+								Config.iconUrl("flat/wifi_high.svg")
 					}
 					}
 					Text2 { text: Config.services.network.network }

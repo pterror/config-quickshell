@@ -1,8 +1,8 @@
 import QtQuick
 import QtQuick.Layouts
 import QtQuick.Controls
+import Quickshell.Services.Mpris
 import "../component"
-import "../io"
 import ".."
 
 ColumnLayout2 {
@@ -13,7 +13,7 @@ ColumnLayout2 {
 
 	RoundedImage {
 		size: Config.layout.mediaPlayer.imageSize
-		source: MPRIS.image
+		source: Config.mpris.currentPlayer?.metadata["mpris:artUrl"] ?? Config.imageUrl("blank.png")
 		radius: Config.layout.panel.innerRadius
 	}
 
@@ -22,16 +22,20 @@ ColumnLayout2 {
 		autoSize: true
 		spacing: Config.layout.mediaPlayer.controlGap
 		HoverIcon {
-			source: "../icon/flat/media_previous.svg"
-			onClicked: MPRIS.previous()
+			source: Config.iconUrl("flat/media_previous.svg")
+			onClicked: Config.mpris.currentPlayer?.previous()
 		}
 		HoverIcon {
-			source: MPRIS.playing ? "../icon/flat/media_pause.svg" : "../icon/flat/media_play.svg"
-			onClicked: MPRIS.playing ? MPRIS.pause() : MPRIS.play()
+			property bool playing: Config.mpris.currentPlayer?.playbackState === MprisPlaybackState.Playing
+			source: playing ? Config.iconUrl("flat/media_pause.svg") : Config.iconUrl("flat/media_play.svg")
+		onPressed: {
+			if (!Config.mpris.currentPlayer) return
+			Config.mpris.currentPlayer.playbackState = playing ? MprisPlaybackState.Paused : MprisPlaybackState.Playing
+		}
 		}
 		HoverIcon {
-			source: "../icon/flat/media_next.svg"
-			onClicked: MPRIS.next()
+			source: Config.iconUrl("flat/media_next.svg")
+			onClicked: Config.mpris.currentPlayer?.next()
 		}
 	}
 }

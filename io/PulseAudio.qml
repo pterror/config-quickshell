@@ -75,39 +75,29 @@ Singleton {
 		stdout: SplitParser { splitMarker: ""; onRead: data => micMuted = data == "Mute: yes\n" }
 	}
 
-	Process {
-		id: setVolumeProcess
-		command: ["pactl", "set-sink-volume", "@DEFAULT_SINK@", volumeChange + "%"]
+	Process { id: setVolumeProcess; command: ["pactl", "set-sink-volume", "@DEFAULT_SINK@", volumeChange + "%"] }
+
+	function setVolume(volume: real) { volumeChange = String(volume); setVolumeProcess.running = true }
+	function changeVolume(change: real) {
+		volumeChange = change > 0 ? "+" + change : "-" + (-change)
+		setVolumeProcess.running = true
 	}
 
-	function increaseVolume(n) { volumeChange = "+" + n; setVolumeProcess.running = true }
-	function decreaseVolume(n) { volumeChange = "-" + n; setVolumeProcess.running = true }
-	function setVolume(n) { volumeChange = String(n); setVolumeProcess.running = true }
+	Process { id: setMicVolumeProcess; command: ["pactl", "set-source-volume", "@DEFAULT_SOURCE@", micVolumeChange + "%"] }
 
-	Process {
-		id: setMicVolumeProcess
-		command: ["pactl", "set-source-volume", "@DEFAULT_SOURCE@", micVolumeChange + "%"]
+	function setMicVolume(volume: real) { micVolumeChange = String(volume); setMicVolumeProcess.running = true }
+	function changeMicVolume(change: real) {
+		micVolumeChange = change > 0 ? "+" + change : "-" + (-change)
+		setMicVolumeProcess.running = true
 	}
 
-	function increaseMicVolume(n) { micVolumeChange = "+" + n; setMicVolumeProcess.running = true }
-	function decreaseMicVolume(n) { micVolumeChange = "-" + n; setMicVolumeProcess.running = true }
-	function setMicVolume(n) { micVolumeChange = String(n); setMicVolumeProcess.running = true }
-
-	Process {
-		id: setMuteProcess
-		command: ["pactl", "set-sink-mute", "@DEFAULT_SINK@", muteChange]
-	}
+	Process { id: setMuteProcess; command: ["pactl", "set-sink-mute", "@DEFAULT_SINK@", muteChange] }
 
 	function toggleMute() { muteChange = "toggle"; setMuteProcess.running = true }
-	function mute() { muteChange = "1"; setMuteProcess.running = true }
-	function unmute() { muteChange = "0"; setMuteProcess.running = true }
+	function setMuted(muted: bool) { muteChange = muted ? "1" : "0"; setMuteProcess.running = true }
 
-	Process {
-		id: setMicMuteProcess
-		command: ["pactl", "set-source-mute", "@DEFAULT_SOURCE@", micMuteChange]
-	}
+	Process { id: setMicMuteProcess; command: ["pactl", "set-source-mute", "@DEFAULT_SOURCE@", micMuteChange] }
 
 	function toggleMicMute() { micMuteChange = "toggle"; setMicMuteProcess.running = true }
-	function micMute() { micMuteChange = "1"; setMicMuteProcess.running = true }
-	function micUnmute() { micMuteChange = "0"; setMicMuteProcess.running = true }
+	function setMicMuted(muted: bool) { micMuteChange = muted ? "1" : "0"; setMicMuteProcess.running = true }
 }

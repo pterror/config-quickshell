@@ -25,8 +25,8 @@ ShellRoot {
 		id: volumeOsdLoader
 		loading: Config.services.audio.initialized
 		VProgressBarWindow {
-			fraction: Config.services.audio.volume * 0.01
-			onInput: fraction => Config.services.audio.setVolume(fraction * 100)
+			fraction: Config.services.audio.volume
+			onInput: fraction => Config.services.audio.setVolume(fraction)
 		}
 	}
 

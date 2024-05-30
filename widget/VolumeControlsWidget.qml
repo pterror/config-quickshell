@@ -15,18 +15,18 @@ RowLayout2 {
 	ColumnLayout2 {
 		autoSize: true
 		VProgressBar {
-			fraction: Config.services.audio.volume * 0.01
+			fraction: Config.services.audio.volume
 			width: 48
 			height: 224
-			onInput: fraction => Config.services.audio.setVolume(fraction * 100)
+			onInput: fraction => Config.services.audio.setVolume(fraction)
 		}
 		HoverIcon {
 			Layout.alignment: Qt.AlignHCenter
-			source: Config.services.audio.muted ? "../icon/flat/speaker_muted.svg" :
-				Config.services.audio.volume < 25 ? "../icon/flat/speaker_volume_very_low.svg" :
-				Config.services.audio.volume < 50 ? "../icon/flat/speaker_volume_low.svg" :
-				Config.services.audio.volume < 75 ? "../icon/flat/speaker_volume_medium.svg" :
-				"../icon/flat/speaker_volume_high.svg"
+			source: Config.services.audio.muted ? Config.iconUrl("flat/speaker_muted.svg") :
+				Config.services.audio.volume < 0.25 ? Config.iconUrl("flat/speaker_volume_very_low.svg") :
+				Config.services.audio.volume < 0.50 ? Config.iconUrl("flat/speaker_volume_low.svg") :
+				Config.services.audio.volume < 0.75 ? Config.iconUrl("flat/speaker_volume_medium.svg") :
+				Config.iconUrl("flat/speaker_volume_high.svg")
 			onClicked: Config.services.audio.toggleMute()
 		}
 	}
@@ -34,14 +34,14 @@ RowLayout2 {
 	ColumnLayout2 {
 		autoSize: true
 		VProgressBar {
-			fraction: Config.services.audio.micVolume * 0.01
+			fraction: Config.services.audio.micVolume
 			width: 48
 			height: 224
-			onInput: fraction => Config.services.audio.setMicVolume(fraction * 100)
+			onInput: fraction => Config.services.audio.setMicVolume(fraction)
 		}
 		HoverIcon {
 			Layout.alignment: Qt.AlignHCenter
-			source: Config.services.audio.micMuted ? "../icon/flat/microphone_muted.svg" : "../icon/flat/microphone.svg"
+			source: Config.services.audio.micMuted ? Config.iconUrl("flat/microphone_muted.svg") : Config.iconUrl("flat/microphone.svg")
 			onClicked: Config.services.audio.toggleMicMute()
 		}
 	}

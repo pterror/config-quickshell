@@ -1,6 +1,8 @@
 import QtQuick
 import QtQuick.Controls
 import Quickshell
+import Quickshell.Services.Mpris
+import Quickshell.Services.Pipewire
 import "../io"
 import "../library"
 
@@ -34,6 +36,19 @@ Singleton {
 		property bool debugRectangles: root.debug && true
 	}
 
+	property QtObject mpris: QtObject {
+		property MprisPlayer currentPlayer: Mpris.players.values[0] ?? null
+	}
+
+	Variants {
+		model: Mpris.players.values
+		Connections {
+			property MprisPlayer modelData
+			target: modelData
+			function onTrackChanged() { root.mpris.currentPlayer = modelData }
+		}
+	}
+
 	property QtObject tooltip: QtObject {
 		property int delay: 1000
 		property int timeout: 5000
@@ -55,8 +70,52 @@ Singleton {
 	}
 
 	property QtObject services: QtObject {
-		property var audio: WirePlumber
+		property var audio: QtObject {
+			property bool initialized: volume === volume && micVolume === micVolume // check for NaNs
+			property real volume: Pipewire.defaultAudioSink?.audio?.volume ?? 0
+			property real micVolume: Pipewire.defaultAudioSource?.audio?.volume ?? 0
+			property bool muted: Pipewire.defaultAudioSink?.audio?.muted ?? false
+			property bool micMuted: Pipewire.defaultAudioSource?.audio?.muted ?? false
+
+			function setVolume(volume: real) {
+				if (!Pipewire.defaultAudioSink?.audio) return
+				Pipewire.defaultAudioSink.audio.volume = volume
+			}
+
+			function changeVolume(change: real) {
+				if (!Pipewire.defaultAudioSink?.audio) return
+				Pipewire.defaultAudioSink.audio.volume += change
+			}
+
+			function setMicVolume(volume: real) {
+				if (!Pipewire.defaultAudioSource?.audio) return
+				Pipewire.defaultAudioSource.audio.volume = volume
+			}
+
+			function changeMicVolume(change: real) {
+				if (!Pipewire.defaultAudioSource?.audio) return
+				Pipewire.defaultAudioSource.audio.volume += change
+			}
+
+			function setMuted(muted: bool) {
+				if (!Pipewire.defaultAudioSink?.audio) return
+				Pipewire.defaultAudioSink.audio.muted = muted
+			}
+
+			function toggleMute() { setMuted(!muted) }
+
+			function setMicMuted(muted: bool) {
+				if (!Pipewire.defaultAudioSource?.audio) return
+				Pipewire.defaultAudioSource.audio.muted = muted
+			}
+
+			function toggleMicMute() { setMicMuted(!micMuted) }
+		}
 		property var network: NetworkManager
+	}
+
+	PwObjectTracker {
+		objects: [Pipewire.defaultAudioSink, Pipewire.defaultAudioSource]
 	}
 
 	property QtObject network: QtObject {
