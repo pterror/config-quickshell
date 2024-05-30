@@ -1,6 +1,6 @@
 import Quickshell
-import "../component"
-import "../widget"
+import "root:/component"
+import "root:/widget"
 import ".."
 
 PopupWindow2 {

@@ -1,8 +1,8 @@
 import QtQuick
 import QtQuick.Controls
 import Quickshell
-import "../io"
-import "../component"
+import "root:/io"
+import "root:/component"
 import ".."
 
 Widget {

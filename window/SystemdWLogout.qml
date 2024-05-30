@@ -1,6 +1,6 @@
 import QtQuick
 import Quickshell
-import "../widget"
+import "root:/widget"
 
 ShellRoot {
 	WLogout {

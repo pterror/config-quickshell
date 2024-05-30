@@ -1,6 +1,6 @@
 import QtQuick
-import "../component"
-import "../io"
+import "root:/component"
+import "root:/io"
 import ".."
 
 SelectionArea {

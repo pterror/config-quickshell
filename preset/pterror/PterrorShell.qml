@@ -3,12 +3,12 @@ import Quickshell.Io
 import Quickshell.Wayland
 import QtQuick
 import QtQuick.Layouts
-import "../../io"
-import "../../component"
-import "../../window"
-import "../../widget"
-import "../../library"
-import "../.."
+import "root:/io"
+import "root:/component"
+import "root:/window"
+import "root:/widget"
+import "root:/library"
+import "root:/.."
 
 ShellRoot {
 	// reference `Shortcuts` so that it is loaded

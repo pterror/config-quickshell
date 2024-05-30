@@ -1,5 +1,5 @@
 import QtQuick
-import "../library"
+import "root:/library"
 import ".."
 
 Rectangle {

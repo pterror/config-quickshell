@@ -4,9 +4,9 @@ import Quickshell.Wayland
 import Quickshell.Hyprland
 import QtQuick
 import QtQuick.Layouts
-import "../io"
-import "../component"
-import "../widget"
+import "root:/io"
+import "root:/component"
+import "root:/widget"
 import ".."
 
 PanelWindow {

@@ -3,7 +3,7 @@ import Quickshell.Io
 import Qti.ApplicationDatabase
 import QtQuick
 import QtQuick.Controls
-import "../component"
+import "root:/component"
 import ".."
 
 Item {

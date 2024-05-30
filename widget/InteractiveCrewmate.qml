@@ -2,7 +2,7 @@ import Quickshell
 import Quickshell.Wayland
 import QtQuick
 import QtMultimedia
-import "../component"
+import "root:/component"
 import ".."
 
 Crewmate {

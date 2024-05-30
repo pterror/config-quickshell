@@ -1,7 +1,7 @@
 import Quickshell
 import Quickshell.Wayland
 import QtQuick.Layouts
-import "../component"
+import "root:/component"
 import ".."
 
 Rectangle {

@@ -3,10 +3,10 @@ import QtQuick.Layouts
 import Quickshell
 import Quickshell.Wayland
 import Quickshell.Services.Mpris
-import "../../io"
-import "../../component"
-import "../../window"
-import "../.."
+import "root:/io"
+import "root:/component"
+import "root:/window"
+import "root:/.."
 
 PanelWindow {
 	id: root

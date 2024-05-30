@@ -3,9 +3,9 @@ import Quickshell.Io
 import Quickshell.Wayland
 import QtQuick
 import QtQuick.Layouts
-import "../component"
-import "../widget"
-import "../io"
+import "root:/component"
+import "root:/widget"
+import "root:/io"
 import ".."
 
 Variants {

@@ -4,7 +4,7 @@ import Quickshell
 import Quickshell.Io
 import QtQuick
 import ".."
-import "../library/Promise.mjs" as Promise
+import "root:/library/Promise.mjs" as Promise
 
 Singleton {
 	property string submap: ""

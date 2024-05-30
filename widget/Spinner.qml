@@ -1,6 +1,6 @@
 import QtQuick
 import QtMultimedia
-import "../component"
+import "root:/component"
 import ".."
 
 Rectangle {

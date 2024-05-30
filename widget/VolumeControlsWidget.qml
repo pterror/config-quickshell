@@ -1,8 +1,8 @@
 import QtQuick
 import QtQuick.Layouts
 import Quickshell
-import "../component"
-import "../io"
+import "root:/component"
+import "root:/io"
 import ".."
 
 RowLayout2 {

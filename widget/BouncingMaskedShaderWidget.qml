@@ -26,7 +26,7 @@
 import QtQuick
 import QtQuick.Controls
 import QtQuick.Effects
-import "../component"
+import "root:/component"
 import ".."
 
 Rectangle {

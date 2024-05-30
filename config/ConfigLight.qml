@@ -1,6 +1,6 @@
 import QtQuick
 import Quickshell
-import "../io"
+import "root:/io"
 
 ConfigBase {
 	id: root

@@ -5,8 +5,8 @@ import QtQuick
 import QtQuick.Layouts
 import Qt.labs.folderlistmodel
 import ".."
-import "../library/Arrays.mjs" as Arrays
-import "../library/Random.mjs" as Random
+import "root:/library/Arrays.mjs" as Arrays
+import "root:/library/Random.mjs" as Random
 
 QtObject {
 	property real seed: Config.wallpapers.seed

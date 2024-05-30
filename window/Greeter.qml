@@ -2,8 +2,8 @@ import Quickshell
 import Quickshell.Wayland
 import QtQuick
 import QtQuick.Layouts
-import "../component"
-import "../library"
+import "root:/component"
+import "root:/library"
 import ".."
 
 Rectangle {

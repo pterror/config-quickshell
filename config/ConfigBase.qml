@@ -3,8 +3,8 @@ import QtQuick.Controls
 import Quickshell
 import Quickshell.Services.Mpris
 import Quickshell.Services.Pipewire
-import "../io"
-import "../library"
+import "root:/io"
+import "root:/library"
 
 Singleton {
 	id: root
