@@ -15,25 +15,15 @@ Rectangle {
 	implicitWidth: Config.layout.mediaPlayer.imageSize * Math.min(aspectRatio, 1)
 	implicitHeight: Config.layout.mediaPlayer.imageSize / Math.max(aspectRatio, 1)
 
-	Image {
-		id: image
-		anchors.fill: parent
-		visible: false
-	}
+	Image { id: image; anchors.fill: parent; visible: false; cache: false }
 
 	Rectangle {
 		id: mask
 		layer.enabled: true
-		width: image.width
-		height: image.height
+		width: image.width; height: image.height
 		radius: Config.layout.panel.innerRadius
 		color: "black"
 	}
 
-	MultiEffect {
-		source: image
-		anchors.fill: parent
-		maskEnabled: true
-		maskSource: mask
-	}
+	MultiEffect { source: image; anchors.fill: parent; maskEnabled: true; maskSource: mask }
 }

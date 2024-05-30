@@ -48,9 +48,9 @@ Widget {
 				anchors.verticalCenter: parent.verticalCenter
 				anchors.horizontalCenter: parent.horizontalCenter
 				source: "image://icon/" + modelData.class
-				width: size
-				height: size
+				width: size; height: size
 				sourceSize: Qt.size(width, height)
+				cache: false
 			}
 
 			MouseArea {

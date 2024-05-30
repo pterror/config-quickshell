@@ -107,6 +107,8 @@ Singleton {
 		property real mouseSpeedBias: 1.0
 		property real velocityX: 256.0
 		property real velocityY: 192.0
+		// the cycle length of full_spectrum_cyber is 20
+		property real timeMod: 1000.0 // 0.0
 		property string shader: "full_spectrum_cyber_masked"
 		property string mask: imageUrl("dvd_logo.svg")
 		property int maskWidth: 320

@@ -64,19 +64,19 @@ Rectangle {
 		property vector4d iDate
 		property Image iChannel0: Image {
 			source: "../image/" + Config.bouncingMaskedShader.channel0
-			visible: false
+			visible: false; cache: false
 		}
 		property Image iChannel1: Image {
 			source: "../image/" + Config.bouncingMaskedShader.channel1
-			visible: false
+			visible: false; cache: false
 		}
 		property Image iChannel2: Image {
 			source: "../image/" + Config.bouncingMaskedShader.channel2
-			visible: false
+			visible: false; cache: false
 		}
 		property Image iChannel3: Image {
 			source: "../image/" + Config.bouncingMaskedShader.channel3
-			visible: false
+			visible: false; cache: false
 		}
 		property list<vector3d> iChannelResolution: [
 			Qt.vector3d(iChannel0.width, iChannel0.height, iChannel0.width / iChannel0.height),

@@ -6,4 +6,5 @@ Image {
 	source: Config.imageUrl("crewmate_" + color + ".png")
 	width: height * (implicitWidth / implicitHeight)
 	height: 240
+	cache: false
 }

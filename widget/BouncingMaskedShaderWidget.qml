@@ -35,6 +35,7 @@ Rectangle {
 	property var config: Config.bouncingMaskedShader
 	property bool playing: true
 	property bool moving: true
+	property real timeMod: Config.bouncingMaskedShader.timeMod
 	property real angle: Math.atan2(
 		Config.bouncingMaskedShader.velocityY,
 		Config.bouncingMaskedShader.velocityX
@@ -107,6 +108,7 @@ Rectangle {
 			onTriggered: {
 				if (playing) {
 					shader.iTime += shader.iTimeDelta * Config.bouncingMaskedShader.speed
+					if (root.timeMod) shader.iTime %= root.timeMod
 					shader.iChannelTime = [shader.iTime, shader.iTime, shader.iTime, shader.iTime]
 					shader.iFrame += 1
 					shader.iDate = Qt.vector4d(0., 0., 0., Number(new Date()) / 1000 % 86400)
@@ -131,7 +133,7 @@ Rectangle {
 
 	Image {
 		id: mask
-		layer.enabled: true
+		layer.enabled: true; cache: false
 		source: Config.bouncingMaskedShader.mask
 		property real maskAspectRatio: (implicitWidth / implicitHeight) || 0.01
 		width: Config.bouncingMaskedShader.maskWidth != -1 ?

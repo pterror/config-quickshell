@@ -86,8 +86,8 @@ Variants {
 								id: icon
 								anchors.centerIn: parent
 								source: Config.iconUrl("wlogout/" + modelData.icon + ".png")
-								width: parent.width * 0.25
-								height: parent.width * 0.25
+								width: parent.width * 0.25; height: parent.width * 0.25
+								cache: false
 							}
 
 							Text {

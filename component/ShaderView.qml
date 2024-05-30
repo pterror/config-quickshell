@@ -46,19 +46,19 @@ Rectangle {
 		property vector4d iDate
 		property Image iChannel0: Image {
 			source: "../image/" + Config.shaderWallpaper.channel0
-			visible: false
+			visible: false; cache: false
 		}
 		property Image iChannel1: Image {
 			source: "../image/" + Config.shaderWallpaper.channel1
-			visible: false
+			visible: false; cache: false
 		}
 		property Image iChannel2: Image {
 			source: "../image/" + Config.shaderWallpaper.channel2
-			visible: false
+			visible: false; cache: false
 		}
 		property Image iChannel3: Image {
 			source: "../image/" + Config.shaderWallpaper.channel3
-			visible: false
+			visible: false; cache: false
 		}
 
 		property list<vector3d> iChannelResolution: [

@@ -5,9 +5,9 @@ export class Promise {
 		/** @protected @type {"pending" | "fulfilled" | "rejected"} */
 		this.status = "pending";
 		/** @protected @type {T} */
-		this.value;
+        this.value = null;
 		/** @protected @type {E} */
-		this.reason;
+        this.reason = null;
 		/** @protected @type {((value: T) => void)[]} */
 		this.thens = [];
 		/** @protected @type {((reason: E) => void)[]} */

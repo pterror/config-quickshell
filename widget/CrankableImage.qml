@@ -17,6 +17,7 @@ Rectangle {
 
 	Image {
 		id: image
+		cache: false
 		scale: Math.hypot(parent.width, parent.height) / (Math.min(sourceSize.width, sourceSize.height) || 1) * 1.1
 		x: (parent.width - sourceSize.x * scale) / 2
 		y: (parent.height - sourceSize.y * scale) / 2
@@ -40,6 +41,7 @@ Rectangle {
 
 			Image {
 				id: crank
+				cache: false
 				source: Config.imageUrl(crankImage)
 				opacity: crankOpacity
 				transform: Rotation {
