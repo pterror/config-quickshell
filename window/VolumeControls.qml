@@ -1,7 +1,7 @@
 import Quickshell
 import "root:/component"
 import "root:/widget"
-import ".."
+import "root:/"
 
 PopupWindow2 {
 	id: root

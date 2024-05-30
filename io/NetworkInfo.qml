@@ -2,7 +2,7 @@ pragma Singleton
 
 import QtQuick
 import Quickshell
-import ".."
+import "root:/"
 import "root:/library/Units.mjs" as Units
 import "root:/library/Fetch.mjs" as Fetch
 

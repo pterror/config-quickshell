@@ -2,7 +2,7 @@ import Quickshell
 import Quickshell.Wayland
 import QtQuick.Layouts
 import "root:/component"
-import ".."
+import "root:/"
 
 Rectangle {
 	anchors.right: parent.right; anchors.bottom: parent.bottom

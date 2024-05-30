@@ -4,7 +4,7 @@ import QtQuick
 import QtQuick.Layouts
 import "root:/component"
 import "root:/io"
-import ".."
+import "root:/"
 
 PanelWindow {
 	id: root

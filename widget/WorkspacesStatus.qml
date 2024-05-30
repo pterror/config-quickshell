@@ -3,7 +3,7 @@ import QtQuick.Layouts
 import Quickshell
 import "root:/io"
 import "root:/component"
-import ".."
+import "root:/"
 
 RowLayout2 {
 	autoSize: true

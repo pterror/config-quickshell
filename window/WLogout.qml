@@ -6,7 +6,7 @@ import QtQuick.Layouts
 import "root:/component"
 import "root:/widget"
 import "root:/io"
-import ".."
+import "root:/"
 
 Variants {
 	id: root

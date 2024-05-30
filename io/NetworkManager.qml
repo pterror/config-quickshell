@@ -3,7 +3,7 @@ pragma Singleton
 import QtQuick
 import Quickshell
 import Quickshell.Io
-import ".."
+import "root:/"
 
 Singleton {
 	property bool connected: ethernetConnected || wifiConnected

@@ -26,7 +26,7 @@
 import QtQuick
 import QtQuick.Controls
 import QtQuick.Effects
-import ".."
+import "root:/"
 
 Rectangle {
 	id: root

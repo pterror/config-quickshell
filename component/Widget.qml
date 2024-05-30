@@ -1,5 +1,5 @@
 import QtQuick
-import ".."
+import "root:/"
 
 Rectangle {
 	anchors.margins: Config.layout.widget.margins

@@ -1,7 +1,7 @@
 import QtQuick
 import Quickshell
 import Quickshell.Io
-import ".."
+import "root:/"
 
 Scope {
 	id: root

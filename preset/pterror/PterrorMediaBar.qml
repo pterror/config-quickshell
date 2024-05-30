@@ -6,7 +6,7 @@ import Quickshell.Services.Mpris
 import "root:/io"
 import "root:/component"
 import "root:/window"
-import "root:/.."
+import "root:/"
 
 PanelWindow {
 	id: root
@@ -56,18 +56,23 @@ PanelWindow {
 
 					HoverItem {
 						inner: mediaText
-						onClicked: mediaControls.visible = !mediaControls.visible
+						onClicked: {
+							if (!mediaControlsLoader.active) mediaControlsLoader.loading = true
+							else mediaControlsLoader.active = false
+						}
 
 						Text2 {
 							id: mediaText
 							text: (Config.mpris.currentPlayer?.metadata["xesam:title"] ?? "") + " - " + (Config.mpris.currentPlayer?.metadata["xesam:artist"].join(", ") ?? "")
-							MediaControls {
-								id: mediaControls
-								extraGrabWindows: [root].concat(root.extraGrabWindows)
-								relativeX: mediaText.mapToItem(rootRect, mediaText.implicitWidth / 2, 0).x - width / 2
-								relativeY: -height - Config.layout.popup.gap
-								parentWindow: root
-								visible: false
+							LazyLoader {
+								id: mediaControlsLoader
+								MediaControls {
+									extraGrabWindows: [root].concat(root.extraGrabWindows)
+									relativeX: mediaText.mapToItem(rootRect, mediaText.implicitWidth / 2, 0).x - width / 2
+									relativeY: -height - Config.layout.popup.gap
+									parentWindow: root
+									visible: true
+								}
 							}
 						}
 					}
@@ -81,7 +86,10 @@ PanelWindow {
 				HoverItem {
 					inner: volumeItem
 					Layout.fillHeight: true
-					onClicked: volumeControls.visible = !volumeControls.visible
+					onClicked: {
+						if (!volumeControlsLoader.active) volumeControlsLoader.loading = true
+						else volumeControlsLoader.active = false
+					}
 
 					RowLayout2 {
 						id: volumeItem
@@ -106,13 +114,15 @@ PanelWindow {
 
 						Text2 {
 							text: Math.round(Config.services.audio.volume * 100) + "%"
-							VolumeControls {
-								id: volumeControls
-								extraGrabWindows: [root].concat(root.extraGrabWindows)
-								relativeX: volumeItem.mapToItem(rootRect, volumeItem.implicitWidth / 2, 0).x - width / 2
-								relativeY: -height - Config.layout.popup.gap
-								parentWindow: root
-								visible: false
+							LazyLoader {
+								id: volumeControlsLoader
+								VolumeControls {
+									extraGrabWindows: [root].concat(root.extraGrabWindows)
+									relativeX: volumeItem.mapToItem(rootRect, volumeItem.implicitWidth / 2, 0).x - width / 2
+									relativeY: -height - Config.layout.popup.gap
+									parentWindow: root
+									visible: true
+								}
 							}
 						}
 

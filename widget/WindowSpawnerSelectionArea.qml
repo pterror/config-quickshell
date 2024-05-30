@@ -1,7 +1,7 @@
 import QtQuick
 import "root:/component"
 import "root:/io"
-import ".."
+import "root:/"
 
 SelectionArea {
 	property string app: Config.terminal

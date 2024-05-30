@@ -3,7 +3,7 @@ import Quickshell.Wayland
 import QtQuick
 import QtQuick.Layouts
 import "root:/widget"
-import ".."
+import "root:/"
 
 Rectangle {
 	color: "transparent"

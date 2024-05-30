@@ -4,7 +4,7 @@ import Quickshell.Wayland
 import QtQuick
 import QtQuick.Layouts
 import Qt.labs.folderlistmodel
-import ".."
+import "root:/"
 import "root:/library/Arrays.mjs" as Arrays
 import "root:/library/Random.mjs" as Random
 

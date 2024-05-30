@@ -3,7 +3,7 @@ pragma Singleton
 import QtQuick
 import Quickshell
 import Quickshell.Io
-import ".."
+import "root:/"
 
 Singleton {
 	property bool initialized: volume != -1 && micVolume != -1

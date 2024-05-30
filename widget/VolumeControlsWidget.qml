@@ -3,7 +3,7 @@ import QtQuick.Layouts
 import Quickshell
 import "root:/component"
 import "root:/io"
-import ".."
+import "root:/"
 
 RowLayout2 {
 	id: content

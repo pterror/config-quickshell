@@ -3,7 +3,7 @@ import QtQuick.Controls
 import Quickshell
 import "root:/io"
 import "root:/component"
-import ".."
+import "root:/"
 
 Widget {
 	id: root

@@ -1,5 +1,5 @@
 import QtQuick
-import ".."
+import "root:/"
 
 FrameAnimation {
 	running: true

@@ -1,5 +1,5 @@
 import QtQuick
-import ".."
+import "root:/"
 
 Widget {
 	color: mouseArea.containsMouse ? Config.colors.widget.hoverBg : Config.colors.widget.bg

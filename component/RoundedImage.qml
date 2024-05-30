@@ -1,7 +1,7 @@
 import QtQuick
 import QtQuick.Layouts
 import QtQuick.Effects
-import ".."
+import "root:/"
 
 Rectangle {
 	id: root

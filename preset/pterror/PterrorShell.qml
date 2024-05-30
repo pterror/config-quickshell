@@ -8,7 +8,7 @@ import "root:/component"
 import "root:/window"
 import "root:/widget"
 import "root:/library"
-import "root:/.."
+import "root:/"
 
 ShellRoot {
 	// reference `Shortcuts` so that it is loaded

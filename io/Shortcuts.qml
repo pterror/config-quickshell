@@ -3,7 +3,7 @@ pragma Singleton
 import Quickshell
 import Quickshell.Hyprland
 import Quickshell.Services.Mpris
-import ".."
+import "root:/"
 
 Singleton {
 	GlobalShortcut {

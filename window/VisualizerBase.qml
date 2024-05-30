@@ -5,7 +5,7 @@ import Quickshell
 import Quickshell.Wayland
 import "root:/component"
 import "root:/io"
-import ".."
+import "root:/"
 
 Rectangle {
 	id: root

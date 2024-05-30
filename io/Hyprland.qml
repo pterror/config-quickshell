@@ -3,7 +3,7 @@ pragma Singleton
 import Quickshell
 import Quickshell.Io
 import QtQuick
-import ".."
+import "root:/"
 import "root:/library/Promise.mjs" as Promise
 
 Singleton {

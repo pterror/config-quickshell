@@ -1,6 +1,6 @@
 import QtQuick
 import QtQuick.Controls
-import ".."
+import "root:/"
 
 Button {
 	default property alias content: mouseArea.children

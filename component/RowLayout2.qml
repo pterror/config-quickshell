@@ -1,6 +1,6 @@
 import QtQuick
 import QtQuick.Layouts
-import ".."
+import "root:/"
 
 Rectangle {
 	property bool autoSize: false

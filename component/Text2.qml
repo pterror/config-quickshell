@@ -1,6 +1,6 @@
 import QtQuick
 import QtQuick.Layouts
-import ".."
+import "root:/"
 
 Text {
 	Layout.alignment: Qt.AlignVCenter | Qt.AlignHCenter

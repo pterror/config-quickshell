@@ -4,7 +4,7 @@ import QtQuick
 import QtQuick.Layouts
 import "root:/component"
 import "root:/library"
-import ".."
+import "root:/"
 
 Rectangle {
 	id: root

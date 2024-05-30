@@ -3,7 +3,7 @@ import QtQuick.Layouts
 import QtQuick.Controls
 import Quickshell.Services.Mpris
 import "root:/component"
-import ".."
+import "root:/"
 
 ColumnLayout2 {
 	autoSize: true

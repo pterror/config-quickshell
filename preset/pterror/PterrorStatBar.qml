@@ -6,7 +6,7 @@ import "root:/io"
 import "root:/component"
 import "root:/widget"
 import "root:/library"
-import "root:/.."
+import "root:/"
 
 PanelWindow {
 	anchors { left: true; right: true; top: true }

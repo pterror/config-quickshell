@@ -4,7 +4,7 @@ import Qti.ApplicationDatabase
 import QtQuick
 import QtQuick.Controls
 import "root:/component"
-import ".."
+import "root:/"
 
 Item {
 	id: root

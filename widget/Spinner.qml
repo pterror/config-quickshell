@@ -1,7 +1,7 @@
 import QtQuick
 import QtMultimedia
 import "root:/component"
-import ".."
+import "root:/"
 
 Rectangle {
 	id: root

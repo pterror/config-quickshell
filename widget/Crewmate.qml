@@ -1,5 +1,5 @@
 import QtQuick
-import ".."
+import "root:/"
 
 Image {
 	property string color: "transparent"
