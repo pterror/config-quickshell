@@ -5,7 +5,7 @@ import QtQuick.Layouts
 import "../widget"
 import ".."
 
-PanelWindow {
+Rectangle {
 	color: "transparent"
 	width: content.implicitWidth
 	height: content.implicitHeight

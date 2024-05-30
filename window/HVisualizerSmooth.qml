@@ -9,7 +9,7 @@ import ".."
 
 VisualizerBase {
 	id: root
-	property bool bottom: anchors.bottom
+	property bool onBottom: anchors.bottom === parent.bottom
 	property int bars: 32
 	height: 320
 	Component.onCompleted: redrawPath()
@@ -37,7 +37,7 @@ VisualizerBase {
 			fillColor: root.fillColor
 			strokeColor: root.strokeColor
 			strokeWidth: root.strokeWidth
-			startY: root.bottom ? root.height : 0
+			startY: root.onBottom ? root.height : 0
 		}
 
 		Repeater {
@@ -51,7 +51,7 @@ VisualizerBase {
 					x: shape.spacing * modelData
 					y: {
 						const height = input.values[modelData] * shape.height
-						return root.bottom ? root.height - height : height
+						return root.onBottom ? root.height - height : height
 					}
 					Behavior on y {
 						SmoothedAnimation { duration: root.animationDuration; velocity: root.animationVelocity }
@@ -60,6 +60,6 @@ VisualizerBase {
 			}
 		}
 
-		Item { PathLine { id: finalLine; x: root.width; y: root.bottom ? root.height : 0 } }
+		Item { PathLine { id: finalLine; x: root.width; y: root.onBottom ? root.height : 0 } }
 	}
 }

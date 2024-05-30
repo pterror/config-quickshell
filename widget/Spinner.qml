@@ -75,6 +75,7 @@ Rectangle {
 	SoundEffect { id: click; source: "../sound/click.wav" }
 
 	MouseArea {
+		id: mouseArea
 		anchors.fill: parent
 		property real startAngle: 0
 		property real endAngle: 0
@@ -86,7 +87,7 @@ Rectangle {
 		}
 		onPositionChanged: updateAngle()
 
-		FrameAnimation { running: true; onTriggered: parent.startAngle = parent.endAngle }
+		FrameAnimation { running: true; onTriggered: mouseArea.startAngle = mouseArea.endAngle }
 
 		function updateAngle(initial) {
 			const x = mouseX - radius

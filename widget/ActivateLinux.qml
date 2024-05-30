@@ -4,9 +4,9 @@ import QtQuick.Layouts
 import "../component"
 import ".."
 
-PanelWindow {
-	anchors { right: true; bottom: true }
-	margins { right: 50; bottom: 50 }
+Rectangle {
+	anchors.right: parent.right; anchors.bottom: parent.bottom
+	anchors.rightMargin: 50; anchors.bottomMargin: 50
 	width: content.implicitWidth
 	height: content.implicitHeight
 	color: "transparent"

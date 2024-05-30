@@ -33,8 +33,8 @@ Crewmate {
 	onPressed: event => { startX = event.x; startY = event.y }
 	onPositionChanged: event => {
 		if (moveable) {
-			crewmate.anchors.leftMargin += event.x - startX
-			crewmate.anchors.topMargin += event.y - startY
+			root.anchors.leftMargin += event.x - startX
+			root.anchors.topMargin += event.y - startY
 		}
 	}
 
@@ -61,9 +61,7 @@ Crewmate {
 			sound = sounds[Math.floor(Math.random() * sounds.length)]
 			audio.play()
 			clickCount += 1
-			if (clickCount === maxClickCount) {
-				videoLock.locked = true
-			}
+			if (clickCount === maxClickCount) videoLock.locked = true
 		}
 	}
 

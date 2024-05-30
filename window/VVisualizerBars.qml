@@ -8,10 +8,10 @@ import ".."
 
 VisualizerBase {
 	id: root
-	property var childAlignment: anchors.right ? Qt.AlignRight | Qt.AlignVCenter : Qt.AlignLeft | Qt.AlignVCenter
+	property var barsOnRight: null
+	property var childAlignment: (barsOnRight ?? anchors.right === parent.right) ? Qt.AlignRight | Qt.AlignVCenter : Qt.AlignLeft | Qt.AlignVCenter
 	property int barHeight: -1
-	property int effectiveHeight: anchors.top && anchors.bottom ? screen.height : height
-	property int effectiveBars: input.count === -1 ? Math.floor((effectiveHeight + spacing) / (barHeight + spacing)) : input.count
+	property int effectiveBars: input.count === -1 ? Math.floor((height + spacing) / (barHeight + spacing)) : input.count
 	property int barRadius: Config.layout.rectangle.radius
 	property bool modulateOpacity: false
 	property real minOpacity: 0.4
@@ -30,7 +30,7 @@ VisualizerBase {
 				required property int modelData
 				property real value: input.values[modelData]
 				property real opacityBase: 1
-				opacity: opacityBase * root.opacity
+				opacity: opacityBase
 				Layout.alignment: root.childAlignment
 				color: root.fillColor
 				border.color: root.strokeColor

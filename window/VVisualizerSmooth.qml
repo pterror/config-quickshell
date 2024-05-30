@@ -9,7 +9,7 @@ import ".."
 
 VisualizerBase {
 	id: root
-	property bool right: anchors.right
+	property bool onRight: anchors.right === parent.right
 	width: 480
 	Component.onCompleted: redrawPath()
 
@@ -36,7 +36,7 @@ VisualizerBase {
 			fillColor: root.fillColor
 			strokeColor: root.strokeColor
 			strokeWidth: root.strokeWidth
-			startX: root.right ? root.width : 0
+			startX: root.onRight ? root.width : 0
 		}
 
 		Repeater {
@@ -49,7 +49,7 @@ VisualizerBase {
 				PathCurve {
 					x: {
 						const width = input.values[modelData] * shape.width
-						return root.right ? root.width - width : width
+						return root.onRight ? root.width - width : width
 					}
 					y: shape.spacing * modelData
 					Behavior on x {
@@ -60,7 +60,7 @@ VisualizerBase {
 		}
 
 		Item {
-			PathLine { id: finalLine; x: root.right ? root.width : 0; y: root.height }
+			PathLine { id: finalLine; x: root.onRight ? root.width : 0; y: root.height }
 		}
 	}
 }

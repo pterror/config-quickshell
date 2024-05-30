@@ -8,11 +8,11 @@ import ".."
 
 VisualizerBase {
 	id: root
-	property var childAlignment: anchors.bottom ? Qt.AlignBottom : Qt.AlignTop
+	property var barsOnBottom: null
+	property var childAlignment: barsOnBottom ?? anchors.bottom === parent.bottom ? Qt.AlignBottom : Qt.AlignTop
 	property int spacing: 4
 	property int barWidth: -1
-	property int effectiveWidth: anchors.left && anchors.right ? screen.width : width
-	property int effectiveBars: input.count === -1 ? Math.floor((effectiveWidth + spacing) / (barWidth + spacing)) : input.count
+	property int effectiveBars: input.count === -1 ? Math.floor((width + spacing) / (barWidth + spacing)) : input.count
 	property int barRadius: Config.layout.rectangle.radius
 	property bool modulateOpacity: false
 	property real minOpacity: 0.4
@@ -33,7 +33,7 @@ VisualizerBase {
 				required property int modelData
 				property real value: input.values[modelData]
 				property real opacityBase: 1
-				opacity: opacityBase * root.opacity
+				opacity: opacityBase
 				Layout.alignment: root.childAlignment
 				color: root.fillColor
 				border.color: root.strokeColor

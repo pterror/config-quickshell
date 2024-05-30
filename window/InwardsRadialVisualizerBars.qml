@@ -29,7 +29,7 @@ VisualizerBase {
 			required property int modelData
 			property real value: input.values[modelData]
 			property real opacityBase: 1
-			opacity: opacityBase * root.opacity
+			opacity: opacityBase
 			color: root.fillColor
 			border.color: root.strokeColor
 			border.width: root.strokeWidth

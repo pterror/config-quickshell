@@ -10,10 +10,10 @@ import "../.."
 PanelWindow {
 	id: root
 	property list<var> extraGrabWindows: []
-	visible: !Hyprland.isOverlaid
 	anchors { left: true; right: true; bottom: true }
 	height: Config.layout.hBar.height
 	color: "transparent"
+	WlrLayershell.layer: WlrLayer.Bottom
 	WlrLayershell.namespace: "shell:bar"
 
 	Rectangle {

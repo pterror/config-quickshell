@@ -9,10 +9,10 @@ import "../../library"
 import "../.."
 
 PanelWindow {
-	visible: !Hyprland.isOverlaid
 	anchors { left: true; right: true; top: true }
 	height: Config.layout.hBar.height
 	color: "transparent"
+	WlrLayershell.layer: WlrLayer.Bottom
 	WlrLayershell.namespace: "shell:bar"
 
 	Rectangle {

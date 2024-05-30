@@ -6,14 +6,11 @@ import "../component"
 import "../library"
 import ".."
 
-PanelWindow {
+Rectangle {
 	id: root
 	color: "transparent"
 	width: content.implicitWidth
 	height: content.implicitHeight
-	Component.onCompleted: {
-		if (this.WlrLayershell) this.WlrLayershell.layer = WlrLayer.Bottom
-	}
 
 	ColumnLayout2 {
 		id: content
