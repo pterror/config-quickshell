@@ -169,9 +169,9 @@ Singleton {
 		// the cycle length of full_spectrum_cyber is 20
 		property real timeMod: 1000.0 // 0.0
 		property string shader: "full_spectrum_cyber_masked"
-		property string mask: imageUrl("dvd_logo.svg")
-		property int maskWidth: 320
-		property int maskHeight: -1
+		property string mask: imageUrl("crewmate_transparenter_cropped_negative.png")
+		property int maskWidth: -1
+		property int maskHeight: 208
 		property string channel0: imageUrl("blank.png")
 		property string channel1: imageUrl("blank.png")
 		property string channel2: imageUrl("blank.png")
