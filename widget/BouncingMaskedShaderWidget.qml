@@ -47,6 +47,9 @@ Rectangle {
 	property real velocityMultiplierX: Math.cos(angle * Math.PI / 180)
 	property real velocityMultiplierY: Math.sin(angle * Math.PI / 180)
 	property real velocity: baseVelocity + extraVelocityAnimation.velocity
+	property real velocityX: root.velocity * root.velocityMultiplierX
+	property real velocityY: root.velocity * root.velocityMultiplierY
+	property real lastFrameDate: Number(new Date())
 	x: 32
 	y: 64
 	width: mask.width
@@ -65,7 +68,7 @@ Rectangle {
 		property vector3d iResolution: Qt.vector3d(width, height, 0)
 		property real iTime: 0
 		property list<real> iChannelTime: [0., 0., 0., 0.]
-		property real iFrameRate: 60
+		property real iFrameRate: Config.frameRate
 		property real iTimeDelta: 1 / iFrameRate
 		property real iSampleRate: 1
 		property int iFrame: 0
@@ -103,24 +106,29 @@ Rectangle {
 
 		fragmentShader: "../shader/" + Config.bouncingMaskedShader.shader + ".frag.qsb"
 
-		Timer {
-			interval: 1000 / shader.iFrameRate; running: true; repeat: true; triggeredOnStart: true
+		FrameAnimation {
+			running: true
 			onTriggered: {
 				if (playing) {
-					shader.iTime += shader.iTimeDelta * Config.bouncingMaskedShader.speed
+					shader.iTime += frameTime * Config.bouncingMaskedShader.speed
 					if (root.timeMod) shader.iTime %= root.timeMod
 					shader.iChannelTime = [shader.iTime, shader.iTime, shader.iTime, shader.iTime]
+					const newFrameDate = Number(new Date())
+					const frameDelta = Math.floor(newFrameDate / shader.iTimeDelta) - Math.floor(root.lastFrameDate / shader.iTimeDelta)
+					root.lastFrameDate = newFrameDate
 					shader.iFrame += 1
 					shader.iDate = Qt.vector4d(0., 0., 0., Number(new Date()) / 1000 % 86400)
 				}
 				if (moving) {
-					const nextX = root.x + shader.iVelocityX
+					const dx = root.velocityX * frameTime
+					const nextX = root.x + dx
 					const maxX = (root.parent.width || 1920) - shader.iW
 					if (nextX < 0 || nextX > maxX) {
 						root.angle = 180 - root.angle
 					}
 					root.x = Math.max(0, Math.min(maxX, nextX))
-					const nextY = root.y + shader.iVelocityY
+					const dy = root.velocityY * frameTime
+					const nextY = root.y + dy
 					const maxY = (root.parent.height || 1080) - shader.iH
 					if (nextY < 0 || nextY > maxY) {
 						root.angle *= -1

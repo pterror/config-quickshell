@@ -198,36 +198,36 @@ ShellRoot {
 			anchors.topMargin: (parent.height - Config.layout.hBar.height - height) / 2
 		}
 
-		// InteractiveCrewmate {
-		// 	color: "transparent"
-		// 	maxClickCount: 2
-		// 	opacity: 0.4
-		// 	anchors.left: parent.left
-		// 	anchors.leftMargin: 128
-		// 	anchors.top: parent.top
-		// 	anchors.topMargin: 64
-		// }
+		InteractiveCrewmate {
+			color: "transparent"
+			maxClickCount: 2
+			opacity: 0.4
+			anchors.left: parent.left
+			anchors.leftMargin: 128
+			anchors.top: parent.top
+			anchors.topMargin: 64
+		}
 
-		// BouncingMaskedShaderWidget {
-		// 	id: bouncingMaskedShader
-		// 	moving: !bouncingMaskedShaderMouseArea.containsPress
-		// }
+		BouncingMaskedShaderWidget {
+			id: bouncingMaskedShader
+			moving: !bouncingMaskedShaderMouseArea.containsPress
+		}
 
-		// MouseArea {
-		// 	id: bouncingMaskedShaderMouseArea
-		// 	property int startX: 0
-		// 	property int startY: 0
-		// 	anchors.fill: bouncingMaskedShader
-		// 	cursorShape: Qt.PointingHandCursor
-		// 	onPressed: event => { startX = event.x; startY = event.y }
-		// 	onPositionChanged: event => {
-		// 		const dx = event.x - startX
-		// 		const dy = event.y - startY
-		// 		bouncingMaskedShader.x += dx
-		// 		bouncingMaskedShader.y += dy
-		// 		bouncingMaskedShader.impulse(Math.hypot(dy, dx) * 10)
-		// 		bouncingMaskedShader.angle = Math.atan2(dy, dx) * 180 / Math.PI
-		// 	}
-		// }
+		MouseArea {
+			id: bouncingMaskedShaderMouseArea
+			property int startX: 0
+			property int startY: 0
+			anchors.fill: bouncingMaskedShader
+			cursorShape: Qt.PointingHandCursor
+			onPressed: event => { startX = event.x; startY = event.y }
+			onPositionChanged: event => {
+				const dx = event.x - startX
+				const dy = event.y - startY
+				bouncingMaskedShader.x += dx
+				bouncingMaskedShader.y += dy
+				bouncingMaskedShader.impulse(Math.hypot(dy, dx) * 10)
+				bouncingMaskedShader.angle = Math.atan2(dy, dx) * 180 / Math.PI
+			}
+		}
 	}
 }
