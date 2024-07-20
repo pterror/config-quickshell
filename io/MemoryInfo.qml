@@ -2,7 +2,7 @@ pragma Singleton
 
 import QtQuick
 import Quickshell
-import "root:/library/Fetch.mjs" as Fetch
+import "root:/library/XHR.mjs" as XHR
 
 Singleton {
 	property real total: 1
@@ -12,12 +12,11 @@ Singleton {
 	Timer {
 		interval: 1000; running: true; repeat: true; triggeredOnStart: true
 		onTriggered: {
-			Fetch.fetch("file:///proc/meminfo")
-				.then(res => res.text())
-				.then(text => {
-					total = Number(text.match(/MemTotal: *(\d+)/)?.[1] ?? "1")
-					free = Number(text.match(/MemAvailable: *(\d+)/)?.[1] ?? "0")
-				})
+			XHR.xhr("file:///proc/meminfo", xhr => {
+				const text = xhr.responseText
+				total = Number(text.match(/MemTotal: *(\d+)/)?.[1] ?? "1")
+				free = Number(text.match(/MemAvailable: *(\d+)/)?.[1] ?? "0")
+			})
 		}
 	}
 }

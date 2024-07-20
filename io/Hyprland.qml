@@ -4,7 +4,6 @@ import Quickshell
 import Quickshell.Io
 import QtQuick
 import "root:/"
-import "root:/library/Promise.mjs" as Promise
 
 Singleton {
 	property string submap: ""
@@ -90,7 +89,7 @@ Singleton {
 							info.initialClass = klass
 							info.initialTitle = title
 							windows[address] = info
-							exec("j", "activewindow").then(json => {
+							exec("j", ["activewindow"],  json => {
 								const data = JSON.parse(json)
 								const [x, y] = data.at
 								const [width, height] = data.size
@@ -184,7 +183,6 @@ Singleton {
 							const [name] = args
 							const info = workspaceInfos[name]
 							if (!info) break
-							// info.focused = false
 							info.exists = false
 							setWorkspaceInfo(info)
 							break
@@ -195,46 +193,56 @@ Singleton {
 		}
 	}
 
-	property string queuedCtl: ""
-	property string queuedCtlResponse: ""
-	property var ctlPromise: Promise.Promise.resolve(null)
-	property var resolveCtlPromise: () => {}
-	property var rejectCtlPromise: () => {}
+	property var currentExec: null
+	property var lastExec: null
 
 	Socket {
 		id: hyprctl
 		onConnectedChanged: {
 			if (connected) {
-				write(queuedCtl)
-				flush()
+				if (currentExec) {
+					write(currentExec.cmd)
+					flush()
+				}
 			} else {
-				resolveCtlPromise(queuedCtlResponse)
-				queuedCtl = ""
-				queuedCtlResponse = ""
+				currentExec?.onSuccess?.(currentExec.ret)
+				if (currentExec) {
+					currentExec = currentExec.next
+				}
+				if (currentExec) {
+					hyprctl.connected = true
+				} else {
+					lastExec = null
+				}
 			}
 		}
 		path: Quickshell.env("XDG_RUNTIME_DIR") + "/hypr/" + Quickshell.env("HYPRLAND_INSTANCE_SIGNATURE") + "/.socket.sock"
 		parser: SplitParser {
 			splitMarker: ""
 			onRead: data => {
-				queuedCtlResponse = data
+				if (currentExec) {
+					currentExec.ret = data
+				}
 				hyprctl.connected = false
 			}
 		}
 	}
 
-	function exec(flags, ...args) {
-		const ctl = (flags ?? "") + "/" + args.join(" ")
-		return ctlPromise = ctlPromise.then(() => new Promise.Promise((resolve, reject) => {
-			queuedCtl = ctl
-			resolveCtlPromise = resolve
-			rejectCtlPromise = reject
+	function exec(flags, args, onSuccess) {
+		const cmd = (flags ?? "") + "/" + args.join(" ")
+		const exec = { cmd, onSuccess, ret: "", next: null }
+		if (lastExec) {
+			lastExec.next = exec
+			lastExec = lastExec.next
+		} else {
+			currentExec = exec
+			lastExec = exec
 			hyprctl.connected = true
-		}))
+		}
 	}
 
 	Component.onCompleted: {
-		exec("j", "activewindow").then(json => {
+		exec("j", ["activewindow"], json => {
 			const data = JSON.parse(json)
 			activeWindow.address = data.address.slice(2)
 			activeWindow.title = data.title
@@ -242,7 +250,7 @@ Singleton {
 			activeWorkspace.id = data.workspace.id
 			activeWorkspace.name = data.workspace.name
 		})
-		exec("j", "workspaces").then(json => {
+		exec("j", ["workspaces"], json => {
 			const data = JSON.parse(json)
 			for (const datum of data) {
 				const info = workspaceInfos[datum.name]
@@ -251,7 +259,7 @@ Singleton {
 				setWorkspaceInfo(info)
 			}
 		})
-		exec("j", "clients").then(json => {
+		exec("j", ["clients"], json => {
 			const data = JSON.parse(json)
 			for (const datum of data) {
 				const address = datum.address.slice(2)
@@ -264,7 +272,7 @@ Singleton {
 				windows[datum.address] = info
 			}
 		})
-		exec("j", "activeworkspace").then(json => {
+		exec("j", ["activeworkspace"], json => {
 			const data = JSON.parse(json)
 			const info = workspaceInfos[data.name]
 			if (!info) return
@@ -279,14 +287,14 @@ Singleton {
 	}
 
 	function focusWindow(id) {
-		exec(null, "dispatch", "focuswindow", String(id))
+		exec(null, ["dispatch", "focuswindow", String(id)])
 	}
 
 	function focusWorkspace(address) {
-		exec(null, "dispatch", "workspace", String(address))
+		exec(null, ["dispatch", "workspace", String(address)])
 	}
 
 	function focusWorkspaceOnCurrentMonitor(id) {
-		exec(null, "dispatch", "workspace", String(id))
+		exec(null, ["dispatch", "workspace", String(id)])
 	}
 }

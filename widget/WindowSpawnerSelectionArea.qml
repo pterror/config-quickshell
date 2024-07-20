@@ -15,12 +15,15 @@ SelectionArea {
 		onSelectionComplete: (x, y, width, height) => {
 			Hyprland.exec(
 				null,
-				"dispatch",
-				"exec",
-				`[float;; noanim; move ${x} ${y}; size ${width} ${height}] ${app}`
-			).then(() => {
-				selectionLayer.selectionArea.selecting = false
-			})
+				[
+					"dispatch",
+					"exec",
+					`[float;; noanim; move ${x} ${y}; size ${width} ${height}] ${app}`,
+				],
+				() => {
+					selectionLayer.selectionArea.selecting = false
+				}
+			)
 		}
 
 		Connections {

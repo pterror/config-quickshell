@@ -4,7 +4,7 @@ import QtQuick
 import Quickshell
 import "root:/"
 import "root:/library/Units.mjs" as Units
-import "root:/library/Fetch.mjs" as Fetch
+import "root:/library/XHR.mjs" as XHR
 
 Singleton {
 	property real upload: 0
@@ -17,19 +17,18 @@ Singleton {
 	Timer {
 		interval: 1000; running: true; repeat: true; triggeredOnStart: true
 		onTriggered: {
-			Fetch.fetch("file:///proc/net/dev")
-				.then(res => res.text())
-				.then(text => {
-					const match = text.match(new RegExp(Config.network.interface_ + /: +(\d+) +\d+ +\d+ +\d+ +\d+ +\d+ +\d+ +\d+ +(\d+)/.source))
-					if (match) {
-						const newUpload = Number(match[1])
-						const newDownload = Number(match[2])
-						uploadSec = newUpload - upload
-						downloadSec = newDownload - download
-						upload = newUpload
-						download = newDownload
-					}
-				})
+			XHR.xhr("file:///proc/net/dev", xhr => {
+				const text = xhr.responseText
+				const match = text.match(new RegExp(Config.network.interface_ + /: +(\d+) +\d+ +\d+ +\d+ +\d+ +\d+ +\d+ +\d+ +(\d+)/.source))
+				if (match) {
+					const newUpload = Number(match[1])
+					const newDownload = Number(match[2])
+					uploadSec = newUpload - upload
+					downloadSec = newDownload - download
+					upload = newUpload
+					download = newDownload
+				}
+			})
 		}
 	}
 }
