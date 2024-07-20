@@ -7,7 +7,6 @@ ConfigBase {
 	wallpapers.folder: Quickshell.env("HOME") + "/.config/wallpapers/light/"
 
 	property QtObject colors: QtObject {
-		property string backgroundBlend: "#20ffffff"
 		property QtObject textSelection: QtObject {
 			property string bg: "#20080f0f"
 		}

@@ -55,7 +55,11 @@ ShellRoot {
 
 				color: "transparent"
 
-				Wallpaper { source: wallpaperRandomizer.wallpapers[modelData.name] ?? Config.imageUrl("dark_pixel.png") }
+				Wallpaper {
+					source: wallpaperRandomizer.wallpapers[modelData.name] ?? Config.imageUrl("dark_pixel.png")
+					layer.enabled: Config.wallpapers.effect != null
+					layer.effect: Config.wallpapers.effect
+				}
 
 				// CrankableImage {
 				// 	screen: modelData
@@ -66,11 +70,6 @@ ShellRoot {
 				// 	anchors.fill: parent
 				// 	source: wallpaperRandomizer.wallpapers[modelData.name] ?? Config.imageUrl("dark_pixel.png")
 				// }
-
-				Rectangle {
-					anchors.fill: parent
-					color: Config.colors.backgroundBlend
-				}
 
 				// ShaderView {}
 

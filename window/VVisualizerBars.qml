@@ -29,8 +29,6 @@ VisualizerBase {
 			Rectangle {
 				required property int modelData
 				property real value: input.values[modelData]
-				property real opacityBase: 1
-				opacity: opacityBase
 				Layout.alignment: root.childAlignment
 				color: root.fillColor
 				border.color: root.strokeColor
@@ -40,18 +38,15 @@ VisualizerBase {
 				radius: root.barRadius
 				Component.onCompleted: updateModulateOpacity()
 
-				Behavior on implicitHeight {
-					SmoothedAnimation { duration: root.animationDuration; velocity: root.animationVelocity }
-				}
-				Behavior on opacityBase {
+				Behavior on value {
 					SmoothedAnimation { duration: root.animationDuration; velocity: root.animationVelocity }
 				}
 
 				function updateModulateOpacity() {
 					if (root.modulateOpacity) {
-						opacityBase = Qt.binding(() => input.values[modelData] * (maxOpacity - minOpacity) + minOpacity)
+						opacity = Qt.binding(() => input.values[modelData] * (maxOpacity - minOpacity) + minOpacity)
 					} else {
-						opacityBase = 1
+						opacity = 1
 					}
 				}
 

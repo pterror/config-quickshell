@@ -6,7 +6,7 @@ import "root:/"
 Scope {
 	id: root
 	property int count: 32
-	property int noiseReduction: 70
+	property int noiseReduction: 60
 	property string channels: "mono" // or stereo
 	property string monoOption: "average" // or left or right
 	property var config: ({
@@ -48,9 +48,9 @@ Scope {
 			stdinEnabled = false
 		}
 		stdout: SplitParser {
+			property list<real> newValues: Array(count).fill(0)
 			splitMarker: ""
 			onRead: data => {
-				const newValues = [...values] // duplicate and set once to avoid spamming signals
 				if (process.index + data.length > config.general.bars) {
 					process.index = 0
 				}

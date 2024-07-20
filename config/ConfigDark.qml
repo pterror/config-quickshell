@@ -7,7 +7,6 @@ ConfigBase {
 	id: root
 
 	property QtObject colors: QtObject {
-		property string backgroundBlend: "#00000000"
 		property QtObject textSelection: QtObject {
 			property string bg: "#20e0ffff"
 		}
