@@ -89,7 +89,7 @@ Singleton {
 							info.initialClass = klass
 							info.initialTitle = title
 							windows[address] = info
-							exec("j", ["activewindow"],  json => {
+							exec("j", ["activewindow"], json => {
 								const data = JSON.parse(json)
 								const [x, y] = data.at
 								const [width, height] = data.size
