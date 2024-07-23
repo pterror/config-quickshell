@@ -28,10 +28,10 @@ ColumnLayout2 {
 		HoverIcon {
 			property bool playing: Config.mpris.currentPlayer?.playbackState === MprisPlaybackState.Playing
 			source: playing ? Config.iconUrl("flat/media_pause.svg") : Config.iconUrl("flat/media_play.svg")
-		onPressed: {
-			if (!Config.mpris.currentPlayer) return
-			Config.mpris.currentPlayer.playbackState = playing ? MprisPlaybackState.Paused : MprisPlaybackState.Playing
-		}
+			onClicked: {
+				if (!Config.mpris.currentPlayer) return
+				Config.mpris.currentPlayer.playbackState = playing ? MprisPlaybackState.Paused : MprisPlaybackState.Playing
+			}
 		}
 		HoverIcon {
 			source: Config.iconUrl("flat/media_next.svg")

@@ -1,4 +1,4 @@
-// @pragma Env QSG_USE_SIMPLE_ANIMATION_DRIVER=0
+// @pragma Env QSG_USE_SIMPLE_ANIMATION_DRIVER 0
 import "./preset/pterror"
 
 PterrorShell {
