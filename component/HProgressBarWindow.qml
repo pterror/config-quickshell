@@ -5,7 +5,7 @@ import "root:/"
 FadingWindow {
 	id: root
 	required property real fraction
-	property alias animationSpeed: progressBar.animationSpeed
+	property alias animationVelocity: progressBar.animationVelocity
 	signal input(real fraction)
 	anchors.top: true
 	color: "transparent"

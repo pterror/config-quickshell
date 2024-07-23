@@ -9,9 +9,7 @@ Rectangle {
 	color: "transparent"
 	width: content.implicitWidth
 	height: content.implicitHeight
-	Component.onCompleted: {
-		if (this.WlrLayershell) this.WlrLayershell.layer = WlrLayer.Bottom
-	}
+	Component.onCompleted: if (this.WlrLayershell) this.WlrLayershell.layer = WlrLayer.Bottom
 
 	Spinner { id: content }
 

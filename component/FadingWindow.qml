@@ -4,9 +4,8 @@ import Quickshell.Wayland
 
 PanelWindow {
 	property int persistDuration: 1000
-	property int hideHandle: 0
+	color: "transparent"
 	default property alias content: container.children
-	WlrLayershell.namespace: "shell:osd"
 
 	Rectangle {
 		id: container

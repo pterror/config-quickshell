@@ -5,7 +5,7 @@ import Quickshell.Wayland
 import Quickshell.Services.Mpris
 import "root:/io"
 import "root:/component"
-import "root:/window"
+import "root:/widget"
 import "root:/"
 
 PanelWindow {
@@ -66,12 +66,13 @@ PanelWindow {
 							text: (Config.mpris.currentPlayer?.metadata["xesam:title"] ?? "") + " - " + (Config.mpris.currentPlayer?.metadata["xesam:artist"].join(", ") ?? "")
 							LazyLoader {
 								id: mediaControlsLoader
-								MediaControls {
-									extraGrabWindows: [root].concat(root.extraGrabWindows)
-									relativeX: mediaText.mapToItem(rootRect, mediaText.implicitWidth / 2, 0).x - width / 2
-									relativeY: -height - Config.layout.popup.gap
+								PopupWindow2 {
 									parentWindow: root
+									relativeX: mediaText.mapToItem(rootRect, mediaText.implicitWidth / 2, 0).x - mediaControls.width / 2
+									relativeY: -mediaControls.height - Config.layout.popup.gap
+									extraGrabWindows: [root].concat(root.extraGrabWindows)
 									visible: true
+									MediaControls { id: mediaControls }
 								}
 							}
 						}
@@ -116,12 +117,13 @@ PanelWindow {
 							text: Math.round(Config.services.audio.volume * 100) + "%"
 							LazyLoader {
 								id: volumeControlsLoader
-								VolumeControls {
-									extraGrabWindows: [root].concat(root.extraGrabWindows)
-									relativeX: volumeItem.mapToItem(rootRect, volumeItem.implicitWidth / 2, 0).x - width / 2
-									relativeY: -height - Config.layout.popup.gap
+								PopupWindow2 {
 									parentWindow: root
+									extraGrabWindows: [root].concat(root.extraGrabWindows)
+									relativeX: volumeItem.mapToItem(rootRect, volumeItem.implicitWidth / 2, 0).x - volumeControls.width / 2
+									relativeY: -volumeControls.height - Config.layout.popup.gap
 									visible: true
+									VolumeControls { id: volumeControls }
 								}
 							}
 						}

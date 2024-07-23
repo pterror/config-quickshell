@@ -24,9 +24,14 @@ ShellRoot {
 	LazyLoader {
 		id: volumeOsdLoader
 		loading: Config.services.audio.initialized
-		VProgressBarWindow {
-			fraction: Config.services.audio.volume
-			onInput: fraction => Config.services.audio.setVolume(fraction)
+		FadingWindow {
+			width: 64; height: 240
+			anchors.right: true
+			VProgressBar {
+				anchors.fill: parent; anchors.margins: 8
+				fraction: Config.services.audio.volume
+				onInput: fraction => Config.services.audio.setVolume(fraction)
+			}
 		}
 	}
 

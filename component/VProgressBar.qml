@@ -4,7 +4,7 @@ import "root:/"
 Widget {
 	id: root
 	required property real fraction
-	property int animationSpeed: -1
+	property int animationVelocity: -1
 	property int animationDuration: 500
 	property string fg: Config.colors.panel.accent
 	property int margins: Config.layout.panel.margins
@@ -27,7 +27,7 @@ Widget {
 
 		Behavior on height {
 			SmoothedAnimation {
-				velocity: mouseArea.pressed ? 1000000 : animationSpeed
+				velocity: mouseArea.pressed ? 1000000 : animationVelocity
 				duration: animationDuration
 			}
 		}
