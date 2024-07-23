@@ -23,7 +23,7 @@ Singleton {
 	property int count: cpuCount
 
 	Timer {
-		interval: 1000; running: true; repeat: true; triggeredOnStart: true
+		interval: root.interval; running: true; repeat: true; triggeredOnStart: true
 		onTriggered: {
 			file.open()
 			const text = file.read()

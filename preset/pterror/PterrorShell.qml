@@ -79,8 +79,20 @@ ShellRoot {
 				// ShaderView {}
 
 				// WindowSpawnerSelectionArea {
-				// 	app: `${Config.terminal} -e ${Config.shell}`
-				// 	// app: `${Config.terminal} -e ${Config.shell} -C 'pipes.sh -RBCK -s 15 -p 3 -r 0 -f 100 | lolcat -F 0.02'`
+				// 	app: `${Config.terminal} -e ${Config.shell} -C 'pipes.sh -RBCK -s 15 -p 3 -r 0 -f 100 | lolcat -F 0.02'`
+				// }
+
+				// GridDelegatedLayout {
+				// 	input: CPUInfo
+				// 	delegate: VProgressBar {
+				// 		color: "transparent"
+				// 		margins: 0
+				// 		innerRadius: Config.layout.rectangle.radius
+				// 		fg: Config.colors.rectangle.bg
+				// 		animationDuration: CPUInfo.interval
+				// 		anchors.fill: parent
+				// 		fraction: value
+				// 	}
 				// }
 			}
 		}
@@ -112,7 +124,6 @@ ShellRoot {
 			innerRadius: 120; outerRadius: 220
 			anchors.horizontalCenter: parent.horizontalCenter
 			anchors.verticalCenter: parent.verticalCenter
-			// modulateOpacity: true; minOpacity: 0.7
 			animationDuration: 1000; animationVelocity: 0.0001
 			rotationOffset: cpuVizAnim.value
 
@@ -186,9 +197,8 @@ ShellRoot {
 			anchors.horizontalCenter: parent.horizontalCenter
 			anchors.verticalCenter: parent.verticalCenter
 		}
-		// ActivateLinux {}
 
-		// CPUInfoGrid { anchors.right: true; height: 480; width: 48 }
+		// ActivateLinux {}
 
 		AnalogClock {
 			anchors.left: parent.left; anchors.top: parent.top

@@ -8,11 +8,13 @@ import "root:/"
 
 GridLayout {
 	id: root
-	property real animationDuration: 0
-	property real animationVelocity: 1
-	required property Component inputDelegate
+	property Component inputDelegate
 	property var fallbackInput: Loader { active: fallbackInput === input; sourceComponent: inputDelegate }
 	property var input: fallbackInput
+	required property Component delegate
+
+	height: 256
+	width: 256
 
 	columns: 4
 	rows: Math.ceil(input.count / columns)
@@ -20,18 +22,12 @@ GridLayout {
 	Repeater {
 		model: input.count
 
-		VProgressBar {
-			required property int modelData
+		Loader {
 			Layout.fillHeight: true
 			Layout.fillWidth: true
-			animationDuration: root.animationDuration
-			animationVelocity: root.animationVelocity
-			fraction: input.values[modelData]
-			radius: 0
-			margins: 0
-			innerRadius: Config.layout.rectangle.radius
-			color: "transparent"
-			fg: Config.colors.rectangle.bg
+			required property int modelData
+			property real value: input.values[modelData]
+			sourceComponent: delegate
 		}
 	}
 }
