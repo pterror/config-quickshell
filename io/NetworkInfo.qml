@@ -18,9 +18,9 @@ Singleton {
 	Timer {
 		interval: 1000; running: true; repeat: true; triggeredOnStart: true
 		onTriggered: {
-			file.close()
 			file.open()
 			const text = file.read()
+			file.close()
 			const match = text.match(new RegExp(Config.network.interface_ + /: +(\d+) +\d+ +\d+ +\d+ +\d+ +\d+ +\d+ +\d+ +(\d+)/.source))
 			if (match) {
 				const newUpload = Number(match[1])

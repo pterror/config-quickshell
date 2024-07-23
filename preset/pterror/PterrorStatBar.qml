@@ -39,7 +39,7 @@ PanelWindow {
 				Layout.fillHeight: true
 				Layout.fillWidth: true
 
-				Text2 { text: Hyprland.activeWindow.title }
+				Text2 { text: HyprlandIpc.activeWindow.title }
 			}
 			RowLayout2 {
 				Layout.fillHeight: true

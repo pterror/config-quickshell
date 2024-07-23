@@ -25,9 +25,9 @@ Singleton {
 	Timer {
 		interval: 1000; running: true; repeat: true; triggeredOnStart: true
 		onTriggered: {
-			file.close()
 			file.open()
 			const text = file.read()
+			file.close()
 			const cpuAll = text.match(/^.+/)[0]
 			const [user, nice, system, newIdle, iowait, irq, softirq, steal, guest, guestNice] = cpuAll.match(/\d+/g).map(Number)
 			const newTotal = user + nice + system + newIdle + iowait + irq + softirq + steal + guest + guestNice

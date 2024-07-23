@@ -19,7 +19,7 @@ Scope {
 			mono_option: monoOption,
 		}
 	})
-	property list<real> values: Array(count).fill(0) // 0 <= value <= 1
+	property var values: Array(count).fill(0) // 0 <= value <= 1
 
 	onConfigChanged: {
 		process.running = false
@@ -48,7 +48,7 @@ Scope {
 			stdinEnabled = false
 		}
 		stdout: SplitParser {
-			property list<real> newValues: Array(count).fill(0)
+			property var newValues: Array(count).fill(0)
 			splitMarker: ""
 			onRead: data => {
 				if (process.index + data.length > config.general.bars) {
@@ -58,6 +58,9 @@ Scope {
 					newValues[i + process.index] = Math.min(data.charCodeAt(i), 128) / 128
 				}
 				process.index += data.length
+				if (newValues.length !== values.length) {
+					console.log("length!", values.length, newValues.length)
+				}
 				values = newValues
 			}
 		}

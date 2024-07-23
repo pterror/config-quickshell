@@ -17,7 +17,7 @@ LazyLoader {
 	property int rows: -1
 	property int spacing: 8
 
-	property bool shouldShow: !Hyprland.isOverlaid && Config.workspacesOverview.visible
+	property bool shouldShow: !HyprlandIpc.isOverlaid && Config.workspacesOverview.visible
 	onShouldShowChanged: {
 		if (shouldShow) loading = true
 		else active = false
@@ -25,7 +25,7 @@ LazyLoader {
 
 	PanelWindow {
 		id: window
-		screen: Hyprland.activeScreen
+		screen: HyprlandIpc.activeScreen
 		color: "transparent"
 		WlrLayershell.namespace: "shell:workspaces"
 		property var workspacesData: []
@@ -85,31 +85,13 @@ LazyLoader {
 			}
 		}
 
-		Process {
-			id: workspacesProcess
-			command: ["hyprctl", "workspaces", "-j"]
-			stdout: SplitParser {
-				splitMarker: ""
-				onRead: json => workspacesData = JSON.parse(json)
-			}
-		}
-
-		Process {
-			id: clientsProcess
-			command: ["hyprctl", "clients", "-j"]
-			stdout: SplitParser {
-				splitMarker: ""
-				onRead: json => clientsData = JSON.parse(json)
-			}
-		}
-
 		function reload() {
-			clientsProcess.running = true
-			workspacesProcess.running = true
+			HyprlandIpc.exec("j", ["clients"], json => clientsData = JSON.parse(json))
+			HyprlandIpc.exec("j", ["workspaces"], json => workspacesData = JSON.parse(json))
 		}
 
 		function recomputeWorkspaces() {
-			const result = Hyprland.workspaceInfosArray.map((_, i) => ({ id: i + 1, x: 0, y: 0, width: 1920, height: 1080, clients: [] }))
+			const result = HyprlandIpc.workspaceInfosArray.map((_, i) => ({ id: i + 1, x: 0, y: 0, width: 1920, height: 1080, clients: [] }))
 			for (const workspace of workspacesData) {
 				const screen = Quickshell.screens.find(m => m.name === workspace.monitor)
 				if (!screen) continue

@@ -34,8 +34,8 @@ ShellRoot {
 		target: Config.services.audio
 		function onVolumeChanged() {
 			if (!volumeOsdLoader.active || !volumeOsdLoader.item) return
-			if (volumeOsdLoader.item.screen?.name !== Hyprland.activeScreen.name) {
-				volumeOsdLoader.item.screen = Hyprland.activeScreen
+			if (volumeOsdLoader.item.screen?.name !== HyprlandIpc.activeScreen.name) {
+				volumeOsdLoader.item.screen = HyprlandIpc.activeScreen
 			}
 			volumeOsdLoader.item.show()
 		}

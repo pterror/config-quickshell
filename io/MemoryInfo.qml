@@ -13,11 +13,11 @@ Singleton {
 	Timer {
 		interval: 1000; running: true; repeat: true; triggeredOnStart: true
 		onTriggered: {
-			file.close()
 			file.open()
 			const text = file.read()
-				total = Number(text.match(/MemTotal: *(\d+)/)?.[1] ?? 1)
-				free = Number(text.match(/MemAvailable: *(\d+)/)?.[1] ?? 0)
+			file.close()
+			total = Number(text.match(/MemTotal: *(\d+)/)?.[1] ?? 1)
+			free = Number(text.match(/MemAvailable: *(\d+)/)?.[1] ?? 0)
 		}
 	}
 
