@@ -259,33 +259,42 @@ Singleton {
 	property real iconOpacity: 0xa0 / 0xff
 
 	property QtObject colors: QtObject {
+		property color primaryFg: "#a0e0ffff"
+		property color primaryBg: "#00e0ffff"
+		property color primaryHoverBg: "#20e0ffff"
+		property color secondaryFg: "#40e0ffff"
+		property color secondaryBg: "#30ffeef8"
+		property color selectionBg: "#20e0ffff"
+		property color accentFg: "#a0ffaaaa"
+
 		property QtObject textSelection: QtObject {
-			property color bg: "#20e0ffff"
+			property color bg: root.colors.selectionBg
 		}
 
 		// fallback values for arbitrary rectangles
 		property QtObject rectangle: QtObject {
-			property color bg: "#30ffeef8"
+			property color bg: root.colors.secondaryBg
+			property color fg: "#00ffeef8"
 		}
 
 		property QtObject accent: QtObject {
-			property color fg: "#a0ffaaaa"
+			property color fg: root.colors.accentFg
 		}
 
 		property QtObject bar: QtObject {
-			property color bg: "#00e0ffff"
+			property color bg: root.colors.primaryBg
 			property color outline: "#00ffffff"
 		}
 
 		property QtObject barItem: QtObject {
-			property color bg: "#00e0ffff"
+			property color bg: root.colors.primaryBg
 			property color hoverBg: "#20e0ffff"
 			property color outline: "#00ffffff"
 		}
 
 		property QtObject widget: QtObject {
-			property color fg: "#a0ffffff"
-			property color bg: "#40e0ffff"
+			property color fg: root.colors.primaryFg
+			property color bg: root.colors.secondaryFg
 			property color accent: root.colors.accent.fg
 			property color hoverBg: "#60e0ffff"
 			property color outline: "#00ffffff"
@@ -293,7 +302,7 @@ Singleton {
 
 		property QtObject button: QtObject {
 			property color fg: root.colors.widget.fg
-			property color bg: "#00e0ffff"
+			property color bg: root.colors.primaryBg
 			property color accent: root.colors.accent.fg
 			property color hoverBg: root.colors.widget.hoverBg
 			property color outline: root.colors.widget.outline
@@ -322,13 +331,13 @@ Singleton {
 		}
 
 		property QtObject greeter: QtObject {
-			property color fg: "#40e0ffff"
+			property color fg: root.colors.secondaryFg
 			property color bg: root.colors.panel.bg
 			property color outline: root.colors.panel.outline
 		}
 
 		property QtObject activateLinux: QtObject {
-			property color fg: "#40e0ffff"
+			property color fg: root.colors.secondaryFg
 			property color bg: root.colors.panel.bg
 			property color outline: root.colors.panel.outline
 		}
@@ -354,7 +363,8 @@ Singleton {
 		}
 
 		property QtObject visualizer: QtObject {
-			property color barsBg: "#30ffeef8"
+			property color barsBg: root.colors.rectangle.bg
+			property color barsFg: root.colors.rectangle.fg
 		}
 
 		property QtObject wLogout: QtObject {
