@@ -140,6 +140,7 @@ Singleton {
 
 	property QtObject shaderWallpaper: QtObject {
 		property string shader: "Night_Sky"
+		// property string shader: "../shader/full_spectrum_cyber.frag.qsb"
 		property real speed: 1.0
 		property bool mouse: true
 		property real mouseSpeedBias: 1.0

@@ -12,8 +12,12 @@ PanelWindow {
 	anchors { left: true; right: true; top: true }
 	height: Config.layout.hBar.height
 	color: "transparent"
-	WlrLayershell.layer: WlrLayer.Bottom
-	WlrLayershell.namespace: "shell:bar"
+	Component.onCompleted: {
+		if (this.WlrLayershell) {
+			this.WlrLayershell.layer = WlrLayer.Bottom
+			this.WlrLayershell.namespace = "shell:bar"
+		}
+	}
 
 	Rectangle {
 		id: barRect
@@ -39,7 +43,7 @@ PanelWindow {
 				Layout.fillHeight: true
 				Layout.fillWidth: true
 
-				Text2 { text: HyprlandIpc.activeWindow.title }
+				Text2 { text: HyprlandIpc.activeWindow.title.normalize("NFKC").toLowerCase() }
 			}
 			RowLayout2 {
 				Layout.fillHeight: true

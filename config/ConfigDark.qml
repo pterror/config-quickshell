@@ -70,13 +70,13 @@ ConfigBase {
 		}
 
 		property QtObject greeter: QtObject {
-			property string fg: "#40e0ffff"
+			property string fg: "#40ffffff"
 			property string bg: root.colors.panel.bg
 			property string outline: root.colors.panel.outline
 		}
 
 		property QtObject activateLinux: QtObject {
-			property string fg: "#40e0ffff"
+			property string fg: "#40ffffff"
 			property string bg: root.colors.panel.bg
 			property string outline: root.colors.panel.outline
 		}

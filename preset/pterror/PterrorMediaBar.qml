@@ -14,8 +14,12 @@ PanelWindow {
 	anchors { left: true; right: true; bottom: true }
 	height: Config.layout.hBar.height
 	color: "transparent"
-	WlrLayershell.layer: WlrLayer.Bottom
-	WlrLayershell.namespace: "shell:bar"
+	Component.onCompleted: {
+		if (this.WlrLayershell) {
+			this.WlrLayershell.layer = WlrLayer.Bottom
+			this.WlrLayershell.namespace = "shell:bar"
+		}
+	}
 
 	Rectangle {
 		id: rootRect
@@ -63,7 +67,7 @@ PanelWindow {
 
 						Text2 {
 							id: mediaText
-							text: (Config.mpris.currentPlayer?.metadata["xesam:title"] ?? "") + " - " + (Config.mpris.currentPlayer?.metadata["xesam:artist"].join(", ") ?? "")
+							text: ((Config.mpris.currentPlayer?.metadata["xesam:title"] ?? "") + " - " + (Config.mpris.currentPlayer?.metadata["xesam:artist"].join(", ") ?? "")).normalize("NFKC").toLowerCase()
 							LazyLoader {
 								id: mediaControlsLoader
 								PopupWindow2 {

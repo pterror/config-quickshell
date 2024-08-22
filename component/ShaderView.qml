@@ -68,7 +68,9 @@ Rectangle {
 			Qt.vector3d(iChannel3.width, iChannel3.height, iChannel3.width / iChannel3.height),
 		]
 
-		fragmentShader: "../dep/shader-wallpaper/package/contents/ui/Shaders6/" + Config.shaderWallpaper.shader + ".frag.qsb"
+		fragmentShader: Config.shaderWallpaper.shader.includes("/") ?
+			Config.shaderWallpaper.shader :
+			"../dep/shader-wallpaper/package/contents/ui/Shaders6/" + Config.shaderWallpaper.shader + ".frag.qsb"
 	}
 
 

@@ -10,7 +10,7 @@ VisualizerBase {
 	id: root
 	property var barsOnBottom: null
 	property var childAlignment: barsOnBottom ?? anchors.bottom === parent.bottom ? Qt.AlignBottom : Qt.AlignTop
-	property int spacing: 4
+	property int spacing: Config.layout.visualizer.gap
 	property int barWidth: -1
 	property int effectiveBars: input.count === -1 ? Math.floor((width + spacing) / (barWidth + spacing)) : input.count
 	property int barRadius: Config.layout.rectangle.radius
@@ -24,7 +24,7 @@ VisualizerBase {
 		id: content
 		anchors.fill: parent
 		spacing: root.spacing
-		property real childSize: barWidth !== -1 ? barWidth : (width + Config.layout.visualizer.gap) / input.count - Config.layout.visualizer.gap
+		property real childSize: barWidth !== -1 ? barWidth : (width + spacing) / input.count - spacing
 
 		Repeater {
 			model: input.count

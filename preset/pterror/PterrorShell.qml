@@ -39,7 +39,7 @@ ShellRoot {
 		target: Config.services.audio
 		function onVolumeChanged() {
 			if (!volumeOsdLoader.active || !volumeOsdLoader.item) return
-			if (volumeOsdLoader.item.screen?.name !== HyprlandIpc.activeScreen.name) {
+			if (HyprlandIpc.activeScreen && volumeOsdLoader.item.screen?.name !== HyprlandIpc.activeScreen.name) {
 				volumeOsdLoader.item.screen = HyprlandIpc.activeScreen
 			}
 			volumeOsdLoader.item.show()
@@ -52,10 +52,27 @@ ShellRoot {
 		Scope {
 			required property var modelData
 
+			// PanelWindow {
+			// 	screen: modelData
+			// 	aboveWindows: true
+			// 	color: "transparent"
+			// 	mask: Region { item: Rectangle {} }
+			// 	anchors.left: true; anchors.right: true; anchors.top: true; anchors.bottom: true
+			// 	exclusionMode: ExclusionMode.Ignore
+			// 	Rectangle {
+			// 		anchors.fill: parent
+			// 		color: "#40800000"
+			// 	}
+			// }
+
 			PanelWindow {
 				id: window
 				screen: modelData
-				WlrLayershell.layer: WlrLayer.Background
+				Component.onCompleted: {
+					if (this.WlrLayershell) {
+						this.WlrLayershell.layer = WlrLayer.Background
+					}
+				}
 				anchors { top: true; bottom: true; left: true; right: true }
 
 				color: "transparent"
