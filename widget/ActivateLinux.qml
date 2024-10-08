@@ -1,5 +1,6 @@
 import Quickshell
 import Quickshell.Wayland
+import QtQuick
 import QtQuick.Layouts
 import "root:/component"
 import "root:/"
@@ -10,8 +11,6 @@ Rectangle {
 	width: content.implicitWidth
 	height: content.implicitHeight
 	color: "transparent"
-	mask: Region {}
-	WlrLayershell.layer: WlrLayer.Overlay
 
 	ColumnLayout2 {
 		autoSize: true

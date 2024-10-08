@@ -215,7 +215,7 @@ ShellRoot {
 			anchors.verticalCenter: parent.verticalCenter
 		}
 
-		// ActivateLinux {}
+		ActivateLinux {}
 
 		AnalogClock {
 			anchors.left: parent.left; anchors.top: parent.top
