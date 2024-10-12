@@ -86,6 +86,8 @@ ShellRoot {
 				// CrankableImage {
 				// 	screen: modelData
 				// 	source: wallpaperRandomizer.wallpapers[modelData.name] ?? Config.imageUrl("dark_pixel.png")
+				// 	layer.enabled: Config.wallpapers.effect != null
+				// 	layer.effect: Config.wallpapers.effect
 				// }
 
 				// VideoPlayer {

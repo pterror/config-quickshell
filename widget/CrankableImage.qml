@@ -17,14 +17,12 @@ Rectangle {
 
 	Image {
 		id: image
+		asynchronous: true
 		cache: false
-		scale: Math.hypot(parent.width, parent.height) / (Math.min(sourceSize.width, sourceSize.height) || 1) * 1.1
-		x: (parent.width - sourceSize.x * scale) / 2
-		y: (parent.height - sourceSize.y * scale) / 2
-		transform: Rotation {
-			origin.x: width / 2; origin.y: height / 2; axis { x: 0; y: 0; z: 1 }
-			angle: -root.angle
-		}
+		scale: Math.hypot(parent.width, parent.height) / (Math.min(sourceSize.width, sourceSize.height) || 1)
+		x: (parent.width - sourceSize.width) / 2
+		y: (parent.height - sourceSize.height) / 2
+		rotation: -root.angle
 	}
 
 	LazyLoader {
@@ -66,8 +64,8 @@ Rectangle {
 						if (endAngle - prevAngle > 180) prevAngle += 360
 						else if (prevAngle - endAngle > 180) prevAngle -= 360
 						root.angle += (endAngle - prevAngle) / root.ratio
-						prevAngle = endAngle
 					}
+					prevAngle = endAngle
 				}
 			}
 		}

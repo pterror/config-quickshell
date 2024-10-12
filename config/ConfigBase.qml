@@ -128,7 +128,7 @@ Singleton {
 	property real _DAY_MS: 86400000
 
 	property QtObject wallpapers: QtObject {
-		property Component effect: MultiEffect { colorization: 0.75; colorizationColor: Qt.rgba(0.05, 0.05, 0.05, 1.0) }
+		property Component effect: MultiEffect { colorization: 0.85; colorizationColor: Qt.rgba(0.05, 0.05, 0.05, 1.0) }
 		property string folder: Quickshell.env("HOME") + "/.config/wallpapers/"
 		property list<string> formats: ["*"]
 		property real seed: Math.floor((Number(Time.time) - 7.5 * _HOUR_MS - Time.time.getTimezoneOffset() * _MIN_MS) / _DAY_MS)
