@@ -93,6 +93,7 @@ Rectangle {
 			const x = mouseX - radius
 			const y = mouseY - radius
 			endAngle = Math.atan2(-y, x) * 180 / Math.PI - 90
+			endAngle = (endAngle + 360) % 360
 			if (initial) startAngle = endAngle
 			animation.value = endAngle
 		}
