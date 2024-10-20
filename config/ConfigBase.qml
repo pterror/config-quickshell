@@ -10,7 +10,7 @@ import "root:/library"
 Singleton {
 	id: root
 	required property string name
-	required property url baseUrl
+	property url baseUrl: ""
 	property int frameRate: 60
 	property string terminal: Quickshell.env("TERM") ?? "gnome-terminal"
 	property string shell: Quickshell.env("SHELL") ?? "bash"
