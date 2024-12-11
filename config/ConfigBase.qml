@@ -10,6 +10,7 @@ import "root:/library"
 Singleton {
 	id: root
 	required property string name
+	property bool owo: true
 	property url baseUrl: ""
 	property int frameRate: 60
 	property string terminal: Quickshell.env("TERM") ?? "gnome-terminal"
@@ -67,7 +68,7 @@ Singleton {
 	}
 
 	property QtObject activateLinux: QtObject {
-		property string name: "NixOS"
+		property string name: (root.owo ? "NixOWOS" : "NixOS")
 	}
 
 	property QtObject services: QtObject {

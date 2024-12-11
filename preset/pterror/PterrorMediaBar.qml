@@ -40,13 +40,13 @@ PanelWindow {
 				width: 400
 				RowLayout2 {
 					Layout.fillHeight: true
-					width: 72
-					Text2 { text: "cpu " + Math.floor(100 * CPUInfo.activeSec / CPUInfo.totalSec) + "%" }
+					width: 80
+					Text2 { text: (Config.owo ? "cpuwu " : "cpu ") + Math.floor(100 * CPUInfo.activeSec / CPUInfo.totalSec) + "%" }
 				}
 				RowLayout2 {
 					Layout.fillHeight: true
-					width: 72
-					Text2 { text: "mem " + Math.floor(100 * MemoryInfo.used / MemoryInfo.total) + "%" }
+					width: 80
+					Text2 { text: (Config.owo ? "mlem " : "mem ") + Math.floor(100 * MemoryInfo.used / MemoryInfo.total) + "%" }
 				}
 				HSpace {}
 			}

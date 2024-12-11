@@ -19,13 +19,13 @@ Rectangle {
 			Layout.alignment: Qt.AlignLeft
 			color: Config.colors.activateLinux.fg
 			font.pointSize: 22
-			text: "Activate " + Config.activateLinux.name
+			text: (Config.owo ? "Actwivwate " : "Activate ") + Config.activateLinux.name
 		}
 		Text2 {
 			Layout.alignment: Qt.AlignLeft
 			color: Config.colors.activateLinux.fg
 			font.pointSize: 14
-			text: "Go to Settings to activate " + Config.activateLinux.name
+			text: (Config.owo ? "Gowo twu Swettwings twu actwivwate " : "Go to Settings to activate ") + Config.activateLinux.name
 		}
 	}
 }

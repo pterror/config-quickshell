@@ -35,10 +35,14 @@ Rectangle {
 			text: Time.days[Time.time.getDay()] + ", " + Time.months[Time.time.getMonth()] + " " + Time.time.getDate()
 		}
 		Text2 {
-			property string period: Time.hour < 12 ? "morning" : Time.hour < 18 ? "afternoon" : "evening"
+			property string period: Time.hour < 12 ?
+				(Config.owo ? "mwowning" : "morning") :
+				Time.hour < 18 ?
+				(Config.owo ? "awftewnwoon" : afternoon) :
+				(Config.owo ? "evwenwing" : "evening")
 			font.pointSize: 16
 			color: Config.colors.greeter.fg
-			text: "Good " + period + ", " + Config.name + "."
+			text: (Config.owo ? "Gwood " : "Good ") + period + ", " + Config.name + "."
 		}
 	}
 }
