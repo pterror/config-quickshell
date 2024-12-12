@@ -9,8 +9,8 @@ ConfigBase {
 	Component.onCompleted: {
 		wallpapers.folder = Quickshell.env("HOME") + "/.config/wallpapers/light/"
 		wallpapers.effect = wallpaperEffect
-		colors.primaryFg = "#80080220"
-		colors.secondaryFg = "#80080220"
+		colors.primaryFg = "#40080220"
+		colors.secondaryFg = "#40080220"
 		colors.secondaryBg = "#300f0e0d"
 		colors.selectionBg = "#20080f0f"
 		colors.accentFg = "#a0cc77aa"

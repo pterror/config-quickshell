@@ -39,7 +39,6 @@ Rectangle {
 	}
 
 	Rectangle {
-		required property int modelData
 		width: root.tickWidth
 		height: root.tickHeight
 		radius: tickRadius

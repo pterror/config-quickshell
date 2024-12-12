@@ -11,6 +11,7 @@ Singleton {
 	id: root
 	required property string name
 	property bool owo: true
+	property bool widgetsAcrossAllScreens: false
 	property url baseUrl: ""
 	property int frameRate: 60
 	property string terminal: Quickshell.env("TERM") ?? "gnome-terminal"
