@@ -78,7 +78,11 @@ Rectangle {
 					secondDragged = false
 				}
 			}
-			if (setTimeDelta) {
+			if (setTimeDelta && (
+				secondAngle !== actualSecondAngle ||
+				minuteAngle !== actualMinuteAngle ||
+				hourAngle !== actualHourAngle
+			)) {
 				Time.timeDelta =
 					(actualHourAngle - hourAngle) / 30 /* 1 / 30 = 12 / 360 */ * 3600000 +
 					(actualMinuteAngle - minuteAngle) / 6 /* 1 / 6 = 60 / 360 */ * 60000 +
