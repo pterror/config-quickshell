@@ -10,12 +10,18 @@ import "root:/library"
 Singleton {
 	id: root
 	required property string name
-	property bool owo: true
+	property bool owo: false
 	property bool widgetsAcrossAllScreens: false
+	property real backgroundOpacity: 0.2
+	property bool moreTransparency: true
 	property url baseUrl: ""
 	property int frameRate: 60
 	property string terminal: Quickshell.env("TERM") ?? "gnome-terminal"
 	property string shell: Quickshell.env("SHELL") ?? "bash"
+
+	function withBgOpacity(color: string): string {
+		return color.replace("#", "#" + (0 | backgroundOpacity * 255).toString(16).padStart(2, "0"))
+	}
 
 	property QtObject screens: QtObject {
 		property ShellScreen primary: Quickshell.screens[0]
@@ -136,9 +142,7 @@ Singleton {
 		property real seed: Math.floor((Number(Time.time) - 7.5 * _HOUR_MS - Time.time.getTimezoneOffset() * _MIN_MS) / _DAY_MS)
 	}
 
-	property font font: Qt.font({
-		family: "Unicorn Scribbles"
-	})
+	property font font: Qt.font({ family: "Noto Sans" })
 
 	property QtObject shaderWallpaper: QtObject {
 		property string shader: "Night_Sky"
@@ -262,7 +266,7 @@ Singleton {
 
 	property QtObject colors: QtObject {
 		property color primaryFg: "#a0e0ffff"
-		property color primaryBg: "#00e0ffff"
+		property color primaryBg: withBgOpacity("#1a1d26")
 		property color primaryHoverBg: "#20e0ffff"
 		property color secondaryFg: "#40e0ffff"
 		property color secondaryBg: "#30ffeef8"
@@ -289,7 +293,7 @@ Singleton {
 		}
 
 		property QtObject barItem: QtObject {
-			property color bg: root.colors.primaryBg
+			property color bg: root.moreTransparency ? "#00000000" : root.colors.primaryBg
 			property color hoverBg: "#20e0ffff"
 			property color outline: "#00ffffff"
 		}

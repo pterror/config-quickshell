@@ -27,6 +27,7 @@ Singleton {
 		onTriggered: {
 			file.reload()
 			const text = file.text()
+			if (!text) { return }
 			const cpuAll = text.match(/^.+/)[0]
 			const [user, nice, system, newIdle, iowait, irq, softirq, steal, guest, guestNice] = cpuAll.match(/\d+/g).map(Number)
 			const newTotal = user + nice + system + newIdle + iowait + irq + softirq + steal + guest + guestNice

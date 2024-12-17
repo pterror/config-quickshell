@@ -71,9 +71,9 @@ PanelWindow {
 							LazyLoader {
 								id: mediaControlsLoader
 								PopupWindow2 {
-									parentWindow: root
-									relativeX: mediaText.mapToItem(rootRect, mediaText.implicitWidth / 2, 0).x - mediaControls.width / 2
-									relativeY: -mediaControls.height - Config.layout.popup.gap
+									anchor.window: root
+									anchor.rect.x: mediaText.mapToItem(rootRect, mediaText.implicitWidth / 2, 0).x - mediaControls.width / 2
+									anchor.rect.y: -mediaControls.height - Config.layout.popup.gap
 									extraGrabWindows: [root].concat(root.extraGrabWindows)
 									visible: true
 									MediaControls { id: mediaControls }
@@ -122,10 +122,10 @@ PanelWindow {
 							LazyLoader {
 								id: volumeControlsLoader
 								PopupWindow2 {
-									parentWindow: root
 									extraGrabWindows: [root].concat(root.extraGrabWindows)
-									relativeX: volumeItem.mapToItem(rootRect, volumeItem.implicitWidth / 2, 0).x - volumeControls.width / 2
-									relativeY: -volumeControls.height - Config.layout.popup.gap
+									anchor.window: root
+									anchor.rect.x: volumeItem.mapToItem(rootRect, volumeItem.implicitWidth / 2, 0).x - volumeControls.width / 2
+									anchor.rect.y: -volumeControls.height - Config.layout.popup.gap
 									visible: true
 									VolumeControls { id: volumeControls }
 								}
