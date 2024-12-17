@@ -2,7 +2,7 @@ pragma Singleton
 
 import QtQuick
 import Quickshell
-import Qti.Filesystem
+import Quickshell.Io
 import "root:/library/XHR.mjs" as XHR
 
 Singleton {
@@ -25,9 +25,8 @@ Singleton {
 	Timer {
 		interval: root.interval; running: true; repeat: true; triggeredOnStart: true
 		onTriggered: {
-			file.open()
-			const text = file.read()
-			file.close()
+			file.reload()
+			const text = file.text()
 			const cpuAll = text.match(/^.+/)[0]
 			const [user, nice, system, newIdle, iowait, irq, softirq, steal, guest, guestNice] = cpuAll.match(/\d+/g).map(Number)
 			const newTotal = user + nice + system + newIdle + iowait + irq + softirq + steal + guest + guestNice
@@ -59,5 +58,5 @@ Singleton {
 		}
 	}
 
-	File { id: file; readable: true; path: "/proc/stat" }
+	FileView { id: file; path: "/proc/stat" }
 }

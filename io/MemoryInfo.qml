@@ -2,7 +2,7 @@ pragma Singleton
 
 import QtQuick
 import Quickshell
-import Qti.Filesystem
+import Quickshell.Io
 import "root:/library/XHR.mjs" as XHR
 
 Singleton {
@@ -13,13 +13,12 @@ Singleton {
 	Timer {
 		interval: 1000; running: true; repeat: true; triggeredOnStart: true
 		onTriggered: {
-			file.open()
-			const text = file.read()
-			file.close()
+			file.reload()
+			const text = file.text()
 			total = Number(text.match(/MemTotal: *(\d+)/)?.[1] ?? 1)
 			free = Number(text.match(/MemAvailable: *(\d+)/)?.[1] ?? 0)
 		}
 	}
 
-	File { id: file; readable: true; path: "/proc/meminfo" }
+	FileView { id: file; path: "/proc/meminfo" }
 }

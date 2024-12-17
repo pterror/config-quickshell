@@ -2,7 +2,7 @@ pragma Singleton
 
 import QtQuick
 import Quickshell
-import Qti.Filesystem
+import Quickshell.Io
 import "root:/"
 import "root:/library/Units.mjs" as Units
 import "root:/library/XHR.mjs" as XHR
@@ -18,9 +18,8 @@ Singleton {
 	Timer {
 		interval: 1000; running: true; repeat: true; triggeredOnStart: true
 		onTriggered: {
-			file.open()
-			const text = file.read()
-			file.close()
+			file.reload()
+			const text = file.text()
 			const match = text.match(new RegExp(Config.network.interface_ + /: +(\d+) +\d+ +\d+ +\d+ +\d+ +\d+ +\d+ +\d+ +(\d+)/.source))
 			if (match) {
 				const newUpload = Number(match[1])
@@ -33,5 +32,5 @@ Singleton {
 		}
 	}
 
-	File { id: file; readable: true; path: "/proc/net/dev" }
+	FileView { id: file; path: "/proc/net/dev" }
 }
