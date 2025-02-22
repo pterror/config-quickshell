@@ -1,4 +1,5 @@
 // @pragma Env QSG_USE_SIMPLE_ANIMATION_DRIVER 0
+import QtQuick
 import "root:/preset/pterror"
 
 PterrorShell {
