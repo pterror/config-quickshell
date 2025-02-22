@@ -143,7 +143,7 @@ Singleton {
 							const [keyboard, layout] = args
 							activeKeyboardLayout.keyboard = keyboard
 							activeKeyboardLayout.layout = layout
-							keyboardLayoutChanged(id, layout)
+							keyboardLayoutChanged(keyboard, layout)
 							break
 						}
 						case "focusedmon": {
