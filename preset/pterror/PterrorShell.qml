@@ -142,9 +142,10 @@ ShellRoot {
 					anchors.bottom: parent.bottom; anchors.left: parent.left; anchors.right: parent.right
 					modulateOpacity: true
 				}
-				
-				CPUBars {
-				}
+
+				CPUBars {}
+
+				// TimeZonesDisplay {}
 
 				// PanelWindow {
 				// 	screen: Config.screens.primary
@@ -160,8 +161,7 @@ ShellRoot {
 					anchors.verticalCenter: parent.verticalCenter
 				}
 
-				ActivateLinux {
-				}
+				ActivateLinux {}
 
 				AnalogClock {
 					anchors.left: parent.left; anchors.top: parent.top

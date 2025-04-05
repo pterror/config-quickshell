@@ -16,8 +16,22 @@ Singleton {
 	property bool moreTransparency: true
 	property url baseUrl: ""
 	property int frameRate: 60
+	property var locale: undefined
+	property var dateLocale: root.locale
 	property string terminal: Quickshell.env("TERM") ?? "gnome-terminal"
 	property string shell: Quickshell.env("SHELL") ?? "bash"
+
+	function formatDateTime(date: date, format = Locale.LongFormat) {
+		return date.toLocaleString(root.dateLocale, format)
+	}
+
+	function formatDate(date: date, format = Locale.LongFormat) {
+		return date.toLocaleDateString(root.dateLocale, format)
+	}
+
+	function formatTime(date: date, format = Locale.LongFormat) {
+		return date.toLocaleTimeString(root.dateLocale, format)
+	}
 
 	function withBgOpacity(color: string): string {
 		return color.replace("#", "#" + (0 | backgroundOpacity * 255).toString(16).padStart(2, "0"))
