@@ -99,9 +99,9 @@ ShellRoot {
 
 				// ShaderView {}
 
-				// WindowSpawnerSelectionArea {
-				// 	app: `${Config.terminal} -e ${Config.shell} -C 'pipes.sh -RBCK -s 15 -p 3 -r 0 -f 100 | lolcat -F 0.02'`
-				// }
+				WindowSpawnerSelectionArea {
+					app: console.log(`${Config.terminal} -e ${Config.shell} -C 'nix run nixpkgs#pipes -- -RBCK -s 15 -p 3 -r 0 -f 100 | nix run nixpkgs#lolcat -- -F 0.02'`) || `${Config.terminal} -e ${Config.shell} -C 'nix run nixpkgs#pipes -- -RBCK -s 15 -p 3 -r 0 -f 100 | nix run nixpkgs#lolcat -- -F 0.02'`
+				}
 
 				// GridDelegatedLayout {
 				// 	input: CPUInfo
