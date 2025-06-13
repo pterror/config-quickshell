@@ -5,7 +5,7 @@ import "root:/io"
 
 ConfigBase {
 	id: root
-	property Component wallpaperEffect: MultiEffect { brightness: 0.4; contrast: -0.5 }
+	property Component wallpaperEffect: MultiEffect {}
 	Component.onCompleted: {
 		wallpapers.folder = Quickshell.env("HOME") + "/.config/wallpapers/light/"
 		wallpapers.effect = wallpaperEffect
