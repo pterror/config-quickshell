@@ -31,8 +31,8 @@ LazyLoader {
 		property var workspacesData: []
 		property var clientsData: []
 		property var workspaces: recomputeWorkspaces()
-		width: content.implicitWidth
-		height: content.implicitHeight
+		implicitWidth: content.implicitWidth
+		implicitHeight: content.implicitHeight
 		onVisibleChanged: {
 			if (!visible) return
 			grab.active = true
