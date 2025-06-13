@@ -12,8 +12,8 @@ Rectangle {
 	property real aspectRatio: (image.implicitWidth / image.implicitHeight) || 0.01
 
 	color: "transparent"
-	implicitWidth: Config.layout.mediaPlayer.imageSize * Math.min(aspectRatio, 1)
-	implicitHeight: Config.layout.mediaPlayer.imageSize / Math.max(aspectRatio, 1)
+	implicitWidth: Config.style.mediaPlayer.imageSize * Math.min(aspectRatio, 1)
+	implicitHeight: Config.style.mediaPlayer.imageSize / Math.max(aspectRatio, 1)
 
 	Image { id: image; anchors.fill: parent; visible: false; cache: false }
 
@@ -21,7 +21,7 @@ Rectangle {
 		id: mask
 		layer.enabled: true
 		width: image.width; height: image.height
-		radius: Config.layout.panel.innerRadius
+		radius: Config.style.panel.innerRadius
 		color: "black"
 	}
 

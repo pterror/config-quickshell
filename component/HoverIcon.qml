@@ -5,7 +5,7 @@ import "root:/"
 Button {
 	id: root
 	required property string source
-	property int size: Config.layout.iconButton.size
+	property int size: Config.style.iconButton.size
 	property int maxSize: size
 	readonly property bool hovered_: mouseArea.containsMouse
 	property var toolTip: undefined
@@ -17,15 +17,15 @@ Button {
 	icon.width: maxSize
 	icon.height: maxSize
 	icon.source: source
-	ToolTip.delay: Config.tooltip.delay
-	ToolTip.timeout: Config.tooltip.timeout
+	ToolTip.delay: Config.style.tooltip.delay
+	ToolTip.timeout: Config.style.tooltip.timeout
 	ToolTip.visible: toolTip !== undefined && mouseArea.containsMouse
 	ToolTip.text: toolTip ?? ""
 
 	background: Rectangle {
-		anchors.margins: Config.layout.button.margins
-		radius: Config.layout.button.radius
-		color: mouseArea.containsMouse ? Config.colors.button.hoverBg : Config.colors.button.bg
+		anchors.margins: Config.style.button.margins
+		radius: Config.style.button.radius
+		color: mouseArea.containsMouse ? Config.style.button.hoverBg : Config.style.button.bg
 
 		Behavior on color { PropertyAnimation { duration: Config.style.button.animationDuration } }
 	}

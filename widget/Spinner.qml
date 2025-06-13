@@ -42,7 +42,7 @@ Rectangle {
 		width: root.tickWidth
 		height: root.tickHeight
 		radius: tickRadius
-		color: Config.colors.widget.accent
+		color: Config.style.widget.accent
 		x: root.radius + root.radius * Math.cos((-root.angle - 90) * Math.PI / 180)
 		y: root.radius + root.radius * Math.sin((-root.angle - 90) * Math.PI / 180)
 		transform: Rotation {
@@ -60,7 +60,7 @@ Rectangle {
 			width: root.tickWidth
 			height: root.tickHeight
 			radius: tickRadius
-			color: Config.colors.widget.bg
+			color: Config.style.widget.bg
 			x: root.radius + root.radius * Math.cos(modelData * 2 * Math.PI / root.ticks)
 			y: root.radius + root.radius * Math.sin(modelData * 2 * Math.PI / root.ticks)
 			transform: Rotation {

@@ -23,15 +23,15 @@ ColumnLayout {
 
             Text2 {
                 text: modelData.name
-                color: Config.colors.greeter.fg
+                color: Config.style.greeter.fg
             }
             Text2 {
                 text: Config.formatTime(Time.time)
-                color: Config.colors.greeter.fg
+                color: Config.style.greeter.fg
             }
             Text2 {
                 text: Config.formatDate(Time.time)
-                color: Config.colors.greeter.fg
+                color: Config.style.greeter.fg
             }
         }
     }

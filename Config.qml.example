@@ -14,8 +14,7 @@ ConfigDark {
 		// WARNING: Significantly affects performance when using `PterrorShell` in `shell.qml`
 		// widgetsAcrossAllScreens = true
 		backgroundOpacity = 0
-		layout.hBar.height = 40
-		layout.widget.fontSize = 13
+		style.widget.fontSize = 13
 		font = Qt.font({ family: "Unicorn Scribbles" })
 	}
 }

@@ -8,8 +8,8 @@ import "root:/"
 RowLayout2 {
 	id: content
 	autoSize: true
-	radius: Config.layout.panel.radius
-	margins: Config.layout.panel.margins
+	radius: Config.style.panel.radius
+	margins: Config.style.panel.margins
 	spacing: 16
 
 	ColumnLayout2 {

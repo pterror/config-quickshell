@@ -56,15 +56,15 @@ LazyLoader {
 
 		Rectangle {
 			id: content
-			color: Config.colors.workspacesOverview.bg
-			radius: Config.layout.panel.radius
-			implicitWidth: grid.implicitWidth + Config.layout.panel.margins * 2
-			implicitHeight: grid.implicitHeight + Config.layout.panel.margins * 2
+			color: Config.style.workspacesOverview.bg
+			radius: Config.style.panel.radius
+			implicitWidth: grid.implicitWidth + Config.style.panel.margins * 2
+			implicitHeight: grid.implicitHeight + Config.style.panel.margins * 2
 
 			GridLayout {
 				id: grid
 				anchors.fill: parent
-				anchors.margins: Config.layout.panel.margins
+				anchors.margins: Config.style.panel.margins
 				columns: root.columns
 				rows: root.rows
 				columnSpacing: root.spacing

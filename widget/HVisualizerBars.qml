@@ -10,10 +10,10 @@ VisualizerBase {
 	id: root
 	property var barsOnBottom: null
 	property var childAlignment: barsOnBottom ?? anchors.bottom === parent.bottom ? Qt.AlignBottom : Qt.AlignTop
-	property int spacing: Config.layout.visualizer.gap
+	property int spacing: Config.style.visualizer.gap
 	property int barWidth: -1
 	property int effectiveBars: input.count === -1 ? Math.floor((width + spacing) / (barWidth + spacing)) : input.count
-	property int barRadius: Config.layout.rectangle.radius
+	property int barRadius: Config.style.rectangle.radius
 	property bool modulateOpacity: false
 	property real minOpacity: 0.4
 	property real maxOpacity: 1.0

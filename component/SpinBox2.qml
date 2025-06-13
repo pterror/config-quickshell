@@ -5,14 +5,14 @@ import "root:/"
 SpinBox {
 	id: root
 	// FIXME: broken because of `Component` with `source` in `SettingsDynamicItem.qml`
-	anchors.margins: Config.layout.hBar.margins
+	anchors.margins: Config.style.hBar.margins
 	editable: true
 	width: 80
 	to: 999
 	font.family: Config.font.family
-	font.pointSize: Config.layout.widget.fontSize
+	font.pointSize: Config.style.widget.fontSize
 	contentItem: TextInput {
-		color: Config.colors.widget.fg
+		color: Config.style.widget.fg
 		font: root.font
 		horizontalAlignment: Qt.AlignHCenter
 		readOnly: !root.editable
@@ -25,11 +25,11 @@ SpinBox {
 		anchors.top: parent.top
 		height: parent.height / 2
 		width: parent.height
-		color: root.up.pressed ? Config.colors.widget.bg : "transparent"
-		radius: Config.layout.barItem.radius
+		color: root.up.pressed ? Config.style.widget.bg : "transparent"
+		radius: Config.style.barItem.radius
 		Text {
 			text: "▴"
-			color: Config.colors.widget.fg
+			color: Config.style.widget.fg
 			anchors.fill: parent
 			fontSizeMode: Text.Fit
 			horizontalAlignment: Text.AlignHCenter
@@ -47,11 +47,11 @@ SpinBox {
 		anchors.bottom: parent.bottom
 		height: parent.height / 2
 		width: parent.height
-		color: root.down.pressed ? Config.colors.widget.bg : "transparent"
-		radius: Config.layout.barItem.radius
+		color: root.down.pressed ? Config.style.widget.bg : "transparent"
+		radius: Config.style.barItem.radius
 		Text {
 			text: "▾"
-			color: Config.colors.widget.fg
+			color: Config.style.widget.fg
 			anchors.fill: parent
 			fontSizeMode: Text.Fit
 			horizontalAlignment: Text.AlignHCenter
@@ -65,7 +65,7 @@ SpinBox {
 		Behavior on color { PropertyAnimation { duration: 100 } }
 	}
 	background: Rectangle {
-		color: Config.colors.widget.bg
-		radius: Config.layout.barItem.radius
+		color: Config.style.widget.bg
+		radius: Config.style.barItem.radius
 	}
 }

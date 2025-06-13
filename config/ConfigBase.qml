@@ -73,19 +73,14 @@ Singleton {
 		}
 	}
 
-	property QtObject tooltip: QtObject {
-		property int delay: 1000
-		property int timeout: 5000
-	}
-
 	Item {
 		ToolTip.toolTip.contentItem: Text {
-			color: root.colors.tooltip.fg
+			color: root.style.tooltip.fg
 			text: ToolTip.toolTip.text
 		}
 		ToolTip.toolTip.background: Rectangle {
-			color: root.colors.tooltip.bg
-			border.color: root.colors.tooltip.outline
+			color: root.style.tooltip.bg
+			border.color: root.style.tooltip.outline
 		}
 	}
 
@@ -203,15 +198,29 @@ Singleton {
 	}
 
 	property QtObject style: QtObject {
-		property QtObject button: QtObject {
-			property int animationDuration: 150
-		}
-	}
+		property color primaryFg: "#a0e0ffff"
+		property color primaryBg: withBgOpacity("#1a1d26")
+		property color primaryHoverBg: withBgOpacity("#e0ffff")
+		property color secondaryFg: "#40e0ffff"
+		property color secondaryBg: withBgOpacity("#272d42")
+		property color selectionBg: withBgOpacity("#e0ffff")
+		property color accentFg: "#a0ffaaaa"
+		property color highlightBg: "#30ffeef8"
 
-	property QtObject layout: QtObject {
 		// fallback values for arbitrary rectangles
 		property QtObject rectangle: QtObject {
 			property int radius: 4
+
+			property color bg: root.style.highlightBg
+			property color fg: "#00ffeef8"
+		}
+
+		property QtObject textSelection: QtObject {
+			property color bg: root.style.selectionBg
+		}
+
+		property QtObject accent: QtObject {
+			property color fg: root.style.accentFg
 		}
 
 		property QtObject popup: QtObject {
@@ -227,13 +236,12 @@ Singleton {
 			property int margins: 4
 			property int border: 0
 			property int fontSize: 11
-		}
 
-		property QtObject window: QtObject {
-			property int radius: 8
-			property int margins: 4
-			property int border: 0
-			property int fontSize: 11
+			property color fg: root.style.primaryFg
+			property color bg: root.style.secondaryBg
+			property color accent: root.style.accent.fg
+			property color hoverBg: "#60e0ffff"
+			property color outline: "#00ffffff"
 		}
 
 		property QtObject button: QtObject {
@@ -241,6 +249,36 @@ Singleton {
 			property int margins: 4
 			property int border: 0
 			property int fontSize: 11
+
+			property color fg: root.style.widget.fg
+			property color bg: root.style.primaryBg
+			property color accent: root.style.accent.fg
+			property color hoverBg: root.style.widget.hoverBg
+			property color outline: root.style.widget.outline
+
+			property int animationDuration: 150
+		}
+
+		property QtObject tooltip: QtObject {
+			property color fg: root.style.button.fg
+			property color bg: root.style.button.bg
+			property color outline: root.style.button.outline
+
+			property int delay: 1000
+			property int timeout: 5000
+		}
+
+		property QtObject window: QtObject {
+			property int radius: 8
+			property int margins: 4
+			property int border: 0
+			property int fontSize: 11
+
+			property color fg: root.style.widget.fg
+			property color bg: root.style.widget.bg
+			property color accent: root.style.widget.accent
+			property color hoverBg: root.style.widget.hoverBg
+			property color outline: root.style.widget.outline
 		}
 
 		property QtObject iconButton: QtObject {
@@ -248,28 +286,47 @@ Singleton {
 		}
 
 		property QtObject panel: QtObject {
-			property int radius: root.layout.widget.radius * 2
-			property int margins: root.layout.widget.margins * 2
-			property int innerRadius: root.layout.panel.radius - root.layout.panel.margins
+			property int radius: root.style.widget.radius * 2
+			property int margins: root.style.widget.margins * 2
+			property int innerRadius: root.style.panel.radius - root.style.panel.margins
+
+			property color fg: root.style.window.fg
+			property color bg: root.style.window.bg
+			property color accent: root.style.window.accent
+			property color hoverBg: root.style.window.hoverBg
+			property color outline: root.style.window.outline
+		}
+
+		property QtObject bar: QtObject {
+			property color bg: root.style.primaryBg
+			property color outline: "#00ffffff"
 		}
 
 		property QtObject hBar: QtObject {
-			property int radius: 0 // root.layout.widget.radius
-			property int margins: root.layout.widget.margins
-			property int border: root.layout.widget.border
+			property int radius: 0 // root.style.widget.radius
+			property int margins: root.style.widget.margins
+			property int border: root.style.widget.border
 			// NOTE: Currently unused
-			property int fontSize: root.layout.widget.fontSize
+			property int fontSize: root.style.widget.fontSize
 			property int height: 32
 		}
 
 		property QtObject barItem: QtObject {
 			property int radius: 4
-			property int margins: root.layout.button.margins
+			property int margins: root.style.button.margins
+
+			property color bg: root.moreTransparency ? "#00000000" : root.style.primaryBg
+			property color hoverBg: "#20e0ffff"
+			property color outline: "#00ffffff"
 		}
 
 		property QtObject selection: QtObject {
-			property int radius: root.layout.widget.radius
-			property int border: root.layout.widget.border
+			property int radius: root.style.widget.radius
+			property int border: root.style.widget.border
+
+			property color bg: "#66001017"
+			property color outline: "#ee33ccff"
+			property color outlineInvalid: "#aa595959"
 		}
 
 		property QtObject mediaPlayer: QtObject {
@@ -280,120 +337,35 @@ Singleton {
 
 		property QtObject visualizer: QtObject {
 			property int gap: 4
-		}
-	}
 
-	property real iconOpacity: 0xa0 / 0xff
-
-	property QtObject colors: QtObject {
-		property color primaryFg: "#a0e0ffff"
-		property color primaryBg: withBgOpacity("#1a1d26")
-		property color primaryHoverBg: withBgOpacity("#e0ffff")
-		property color secondaryFg: "#40e0ffff"
-		property color secondaryBg: withBgOpacity("#272d42")
-		property color selectionBg: withBgOpacity("#e0ffff")
-		property color accentFg: "#a0ffaaaa"
-		property color highlightBg: "#30ffeef8"
-
-
-		property QtObject textSelection: QtObject {
-			property color bg: root.colors.selectionBg
-		}
-
-		// fallback values for arbitrary rectangles
-		property QtObject rectangle: QtObject {
-			property color bg: root.colors.highlightBg
-			property color fg: "#00ffeef8"
-		}
-
-		property QtObject accent: QtObject {
-			property color fg: root.colors.accentFg
-		}
-
-		property QtObject bar: QtObject {
-			property color bg: root.colors.primaryBg
-			property color outline: "#00ffffff"
-		}
-
-		property QtObject barItem: QtObject {
-			property color bg: root.moreTransparency ? "#00000000" : root.colors.primaryBg
-			property color hoverBg: "#20e0ffff"
-			property color outline: "#00ffffff"
-		}
-
-		property QtObject widget: QtObject {
-			property color fg: root.colors.primaryFg
-			property color bg: root.colors.secondaryBg
-			property color accent: root.colors.accent.fg
-			property color hoverBg: "#60e0ffff"
-			property color outline: "#00ffffff"
-		}
-
-		property QtObject button: QtObject {
-			property color fg: root.colors.widget.fg
-			property color bg: root.colors.primaryBg
-			property color accent: root.colors.accent.fg
-			property color hoverBg: root.colors.widget.hoverBg
-			property color outline: root.colors.widget.outline
-		}
-
-		property QtObject tooltip: QtObject {
-			property color fg: root.colors.button.fg
-			property color bg: root.colors.button.bg
-			property color outline: root.colors.button.outline
-		}
-
-		property QtObject window: QtObject {
-			property color fg: root.colors.widget.fg
-			property color bg: root.colors.widget.bg
-			property color accent: root.colors.widget.accent
-			property color hoverBg: root.colors.widget.hoverBg
-			property color outline: root.colors.widget.outline
-		}
-
-		property QtObject panel: QtObject {
-			property color fg: root.colors.window.fg
-			property color bg: root.colors.window.bg
-			property color accent: root.colors.window.accent
-			property color hoverBg: root.colors.window.hoverBg
-			property color outline: root.colors.window.outline
+			property color barsBg: root.style.rectangle.bg
+			property color barsFg: root.style.rectangle.fg
 		}
 
 		property QtObject greeter: QtObject {
-			property color fg: root.colors.secondaryFg
-			property color bg: root.colors.panel.bg
-			property color outline: root.colors.panel.outline
+			property color fg: root.style.secondaryFg
+			property color bg: root.style.panel.bg
+			property color outline: root.style.panel.outline
 		}
 
 		property QtObject activateLinux: QtObject {
-			property color fg: root.colors.secondaryFg
-			property color bg: root.colors.panel.bg
-			property color outline: root.colors.panel.outline
-		}
-
-		property QtObject selection: QtObject {
-			property color bg: "#66001017"
-			property color outline: "#ee33ccff"
-			property color outlineInvalid: "#aa595959"
+			property color fg: root.style.secondaryFg
+			property color bg: root.style.panel.bg
+			property color outline: root.style.panel.outline
 		}
 
 		property QtObject workspacesOverview: QtObject {
-			property color fg: root.colors.panel.fg
-			property color bg: "transparent" // root.colors.panel.bg
-			property color accent: root.colors.panel.accent
-			property color hoverBg: root.colors.panel.hoverBg
-			property color outline: root.colors.panel.outline
+			property color fg: root.style.panel.fg
+			property color bg: "transparent" // root.style.panel.bg
+			property color accent: root.style.panel.accent
+			property color hoverBg: root.style.panel.hoverBg
+			property color outline: root.style.panel.outline
 		}
 
 		property QtObject workspaceIndicator: QtObject {
-			property color focused: root.colors.accent.fg
+			property color focused: root.style.accent.fg
 			property color visible: "#80ffffff"
 			property color empty: "#20ffffff"
-		}
-
-		property QtObject visualizer: QtObject {
-			property color barsBg: root.colors.rectangle.bg
-			property color barsFg: root.colors.rectangle.fg
 		}
 
 		property QtObject wLogout: QtObject {
@@ -402,4 +374,6 @@ Singleton {
 			property color buttonHoverBg: "#3700b3"
 		}
 	}
+
+	property real iconOpacity: 0xa0 / 0xff
 }

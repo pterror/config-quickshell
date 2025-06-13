@@ -10,7 +10,7 @@ import "root:/"
 
 PanelWindow {
 	anchors { left: true; right: true; top: true }
-	implicitHeight: 32 // TODO[broken]: Config.layout.hBar.height
+	implicitHeight: 32 // TODO[broken]: Config.style.hBar.height
 	color: "transparent"
 	Component.onCompleted: {
 		if (this.WlrLayershell) {
@@ -23,10 +23,10 @@ PanelWindow {
 		id: barRect
 		anchors.fill: parent
 
-		color: Config.colors.bar.bg
-		radius: Config.layout.hBar.radius
-		border.color: Config.colors.bar.outline
-		border.width: Config.layout.hBar.border
+		color: Config.style.bar.bg
+		radius: Config.style.hBar.radius
+		border.color: Config.style.bar.outline
+		border.width: Config.style.hBar.border
 
 		RowLayout {
 			anchors.fill: parent

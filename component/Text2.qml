@@ -4,8 +4,8 @@ import "root:/"
 
 Text {
 	Layout.alignment: Qt.AlignVCenter | Qt.AlignHCenter
-	anchors.margins: Config.layout.hBar.margins
+	anchors.margins: Config.style.hBar.margins
 	font.family: Config.font.family
-	font.pointSize: Config.layout.widget.fontSize
-	color: Config.colors.widget.fg
+	font.pointSize: Config.style.widget.fontSize
+	color: Config.style.widget.fg
 }

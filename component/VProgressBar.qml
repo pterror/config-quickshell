@@ -6,12 +6,12 @@ Widget {
 	required property real fraction
 	property int animationVelocity: -1
 	property int animationDuration: 500
-	property string fg: Config.colors.panel.accent
-	property int margins: Config.layout.panel.margins
-	property int innerRadius: Config.layout.panel.innerRadius
+	property string fg: Config.style.panel.accent
+	property int margins: Config.style.panel.margins
+	property int innerRadius: Config.style.panel.innerRadius
 	signal input(real fraction)
-	color: Config.colors.panel.bg
-	radius: Config.layout.panel.radius
+	color: Config.style.panel.bg
+	radius: Config.style.panel.radius
 
 	Rectangle {
 		property int maxHeight: parent.height - root.margins * 2

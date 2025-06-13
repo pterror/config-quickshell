@@ -7,20 +7,20 @@ import "root:/"
 
 ColumnLayout2 {
 	autoSize: true
-	radius: Config.layout.panel.radius
-	margins: Config.layout.panel.margins
-	spacing: Config.layout.mediaPlayer.controlsGap
+	radius: Config.style.panel.radius
+	margins: Config.style.panel.margins
+	spacing: Config.style.mediaPlayer.controlsGap
 
 	RoundedImage {
-		size: Config.layout.mediaPlayer.imageSize
+		size: Config.style.mediaPlayer.imageSize
 		source: Config.mpris.currentPlayer?.metadata["mpris:artUrl"] ?? Config.imageUrl("blank.png")
-		radius: Config.layout.panel.innerRadius
+		radius: Config.style.panel.innerRadius
 	}
 
 	RowLayout2 {
 		Layout.alignment: Qt.AlignVCenter | Qt.AlignHCenter
 		autoSize: true
-		spacing: Config.layout.mediaPlayer.controlGap
+		spacing: Config.style.mediaPlayer.controlGap
 		HoverIcon {
 			source: Config.iconUrl("flat/media_previous.svg")
 			onClicked: Config.mpris.currentPlayer?.previous()

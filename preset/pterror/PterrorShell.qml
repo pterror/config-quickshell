@@ -103,8 +103,8 @@ ShellRoot {
 				// 	delegate: VProgressBar {
 				// 		color: "transparent"
 				// 		margins: 0
-				// 		innerRadius: Config.layout.rectangle.radius
-				// 		fg: Config.colors.rectangle.bg
+				// 		innerRadius: Config.style.rectangle.radius
+				// 		fg: Config.style.rectangle.bg
 				// 		animationDuration: CPUInfo.interval
 				// 		anchors.fill: parent
 				// 		fraction: value
@@ -161,13 +161,13 @@ ShellRoot {
 				AnalogClock {
 					anchors.left: parent.left; anchors.top: parent.top
 					anchors.leftMargin: 32
-					anchors.topMargin: (parent.height - Config.layout.hBar.height - height) / 2
+					anchors.topMargin: (parent.height - Config.style.hBar.height - height) / 2
 				}
 
 				ScrollSpinner {
 					anchors.right: parent.right; anchors.top: parent.top
 					anchors.rightMargin: 32
-					anchors.topMargin: (parent.height - Config.layout.hBar.height - height) / 2
+					anchors.topMargin: (parent.height - Config.style.hBar.height - height) / 2
 				}
 
 				// InteractiveCrewmate {

@@ -17,13 +17,13 @@ Rectangle {
 		id: content
 		Text2 {
 			Layout.alignment: Qt.AlignLeft
-			color: Config.colors.activateLinux.fg
+			color: Config.style.activateLinux.fg
 			font.pointSize: 22
 			text: (Config.owo ? "Actwivwate " : "Activate ") + Config.activateLinux.name
 		}
 		Text2 {
 			Layout.alignment: Qt.AlignLeft
-			color: Config.colors.activateLinux.fg
+			color: Config.style.activateLinux.fg
 			font.pointSize: 14
 			text: (Config.owo ? "Gowo twu Swettwings twu actwivwate " : "Go to Settings to activate ") + Config.activateLinux.name
 		}

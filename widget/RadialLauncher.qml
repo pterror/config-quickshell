@@ -14,7 +14,7 @@ Item {
 	property int iconSize: 64
 	property int iconMaxSize: 128
 	property var scaleByProximity: p => Math.max(0, Math.min(1, (3 - p) / 3))
-	property int iconCenterRadius: radius - (iconMaxSize / 2) - Config.layout.button.margins
+	property int iconCenterRadius: radius - (iconMaxSize / 2) - Config.style.button.margins
 	property int minimumGap: 16
 	property int count: Math.min(
 		2 * Math.PI * iconCenterRadius / (iconSize + minimumGap),

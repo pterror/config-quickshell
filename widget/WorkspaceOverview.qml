@@ -13,7 +13,7 @@ Widget {
 	required property var clients
 	property real scale: width / workspaceWidth
 	anchors.margins: 0
-	color: mouseArea.containsMouse ? Config.colors.widget.hoverBg : Config.colors.widget.bg
+	color: mouseArea.containsMouse ? Config.style.widget.hoverBg : Config.style.widget.bg
 	Behavior on color { PropertyAnimation { duration: 100 } }
 	width: 200
 	height: workspaceHeight * scale
@@ -39,12 +39,12 @@ Widget {
 			y: modelData.y * root.scale
 			width: modelData.width * root.scale
 			height: modelData.height * root.scale
-			radius: Config.layout.widget.radius
-			color: windowMouseArea.containsMouse ? Config.colors.widget.hoverBg : Config.colors.widget.bg
+			radius: Config.style.widget.radius
+			color: windowMouseArea.containsMouse ? Config.style.widget.hoverBg : Config.style.widget.bg
 			Behavior on color { PropertyAnimation { duration: 100 } }
 
 			Image {
-				readonly property int size: Math.max(1, Math.min(parent.height, parent.width, Config.layout.icon.size))
+				readonly property int size: Math.max(1, Math.min(parent.height, parent.width, Config.style.icon.size))
 				anchors.verticalCenter: parent.verticalCenter
 				anchors.horizontalCenter: parent.horizontalCenter
 				source: "image://icon/" + modelData.class

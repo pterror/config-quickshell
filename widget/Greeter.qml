@@ -16,22 +16,22 @@ Rectangle {
 		id: content
 		autoSize: true
 		anchors.horizontalCenter: parent.horizontalCenter
-		radius: Config.layout.panel.radius
-		margins: Config.layout.panel.margins
-		// color: Config.colors.panel.bg
+		radius: Config.style.panel.radius
+		margins: Config.style.panel.margins
+		// color: Config.style.panel.bg
 		spacing: 8
 
 		onImplicitWidthChanged: root.width = Math.max(root.width, implicitWidth)
 
 		Text2 {
 			font.pointSize: 64
-			color: Config.colors.greeter.fg
+			color: Config.style.greeter.fg
 			function n(n) { return String(n).padStart(2, "0") }
 			text: n(Time.hour) + ":" + n(Time.minute)
 		}
 		Text2 {
 			font.pointSize: 12
-			color: Config.colors.greeter.fg
+			color: Config.style.greeter.fg
 			text: Time.days[Time.time.getDay()] + ", " + Time.months[Time.time.getMonth()] + " " + Time.time.getDate()
 		}
 		Text2 {
@@ -41,7 +41,7 @@ Rectangle {
 				(Config.owo ? "awftewnwoon" : afternoon) :
 				(Config.owo ? "evwenwing" : "evening")
 			font.pointSize: 16
-			color: Config.colors.greeter.fg
+			color: Config.style.greeter.fg
 			text: (Config.owo ? "Gwood " : "Good ") + period + ", " + Config.name + "."
 		}
 	}

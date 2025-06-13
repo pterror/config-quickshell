@@ -12,7 +12,7 @@ PanelWindow {
 	id: root
 	property list<var> extraGrabWindows: []
 	anchors { left: true; right: true; bottom: true }
-	implicitHeight: 32 // Config.layout.hBar.height
+	implicitHeight: 32 // Config.style.hBar.height
 	color: "transparent"
 	Component.onCompleted: {
 		if (this.WlrLayershell) {
@@ -24,12 +24,12 @@ PanelWindow {
 	Rectangle {
 		id: rootRect
 		anchors.fill: parent
-		anchors.margins: Config.layout.hBar.margins
+		anchors.margins: Config.style.hBar.margins
 
-		color: Config.colors.bar.bg
-		radius: Config.layout.hBar.radius
-		border.color: Config.colors.bar.outline
-		border.width: Config.layout.hBar.border
+		color: Config.style.bar.bg
+		radius: Config.style.hBar.radius
+		border.color: Config.style.bar.outline
+		border.width: Config.style.hBar.border
 
 		RowLayout {
 			anchors.fill: parent
@@ -71,7 +71,7 @@ PanelWindow {
 								PopupWindow2 {
 									anchor.window: root
 									anchor.rect.x: mediaText.mapToItem(rootRect, mediaText.implicitWidth / 2, 0).x - mediaControls.width / 2
-									anchor.rect.y: -mediaControls.height - Config.layout.popup.gap
+									anchor.rect.y: -mediaControls.height - Config.style.popup.gap
 									extraGrabWindows: [root].concat(root.extraGrabWindows)
 									visible: true
 									MediaControls { id: mediaControls }
@@ -123,7 +123,7 @@ PanelWindow {
 									extraGrabWindows: [root].concat(root.extraGrabWindows)
 									anchor.window: root
 									anchor.rect.x: volumeItem.mapToItem(rootRect, volumeItem.implicitWidth / 2, 0).x - volumeControls.width / 2
-									anchor.rect.y: -volumeControls.height - Config.layout.popup.gap
+									anchor.rect.y: -volumeControls.height - Config.style.popup.gap
 									visible: true
 									VolumeControls { id: volumeControls }
 								}

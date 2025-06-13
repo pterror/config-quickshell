@@ -47,7 +47,7 @@ Variants {
 		}
 
 		Rectangle {
-			color: Config.colors.wLogout.bg
+			color: Config.style.wLogout.bg
 			anchors.fill: parent
 
 			MouseArea {
@@ -71,7 +71,7 @@ Variants {
 							Layout.fillWidth: true
 							Layout.fillHeight: true
 
-							color: ma.containsMouse ? Config.colors.wLogout.buttonHoverBg : Config.colors.wLogout.buttonBg
+							color: ma.containsMouse ? Config.style.wLogout.buttonHoverBg : Config.style.wLogout.buttonBg
 							border.color: "black"
 							border.width: ma.containsMouse ? 0 : 1
 
