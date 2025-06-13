@@ -12,8 +12,8 @@ Singleton {
 	required property string name
 	property bool owo: false
 	property bool widgetsAcrossAllScreens: false
-	property real backgroundOpacity: 0.2
-	property bool moreTransparency: true
+	property real backgroundOpacity: 0.8
+	property bool moreTransparency: false
 	property bool reducedMotion: false
 	property url baseUrl: ""
 	property int frameRate: 60
@@ -202,6 +202,12 @@ Singleton {
 		property string channel3: imageUrl("blank.png")
 	}
 
+	property QtObject style: QtObject {
+		property QtObject button: QtObject {
+			property int animationDuration: 150
+		}
+	}
+
 	property QtObject layout: QtObject {
 		// fallback values for arbitrary rectangles
 		property QtObject rectangle: QtObject {
@@ -248,7 +254,7 @@ Singleton {
 		}
 
 		property QtObject hBar: QtObject {
-			property int radius: root.layout.widget.radius
+			property int radius: 0 // root.layout.widget.radius
 			property int margins: root.layout.widget.margins
 			property int border: root.layout.widget.border
 			// NOTE: Currently unused
@@ -282,11 +288,13 @@ Singleton {
 	property QtObject colors: QtObject {
 		property color primaryFg: "#a0e0ffff"
 		property color primaryBg: withBgOpacity("#1a1d26")
-		property color primaryHoverBg: "#20e0ffff"
+		property color primaryHoverBg: withBgOpacity("#e0ffff")
 		property color secondaryFg: "#40e0ffff"
-		property color secondaryBg: "#30ffeef8"
-		property color selectionBg: "#20e0ffff"
+		property color secondaryBg: withBgOpacity("#272d42")
+		property color selectionBg: withBgOpacity("#e0ffff")
 		property color accentFg: "#a0ffaaaa"
+		property color highlightBg: "#30ffeef8"
+
 
 		property QtObject textSelection: QtObject {
 			property color bg: root.colors.selectionBg
@@ -294,7 +302,7 @@ Singleton {
 
 		// fallback values for arbitrary rectangles
 		property QtObject rectangle: QtObject {
-			property color bg: root.colors.secondaryBg
+			property color bg: root.colors.highlightBg
 			property color fg: "#00ffeef8"
 		}
 
@@ -315,7 +323,7 @@ Singleton {
 
 		property QtObject widget: QtObject {
 			property color fg: root.colors.primaryFg
-			property color bg: root.colors.secondaryFg
+			property color bg: root.colors.secondaryBg
 			property color accent: root.colors.accent.fg
 			property color hoverBg: "#60e0ffff"
 			property color outline: "#00ffffff"
@@ -337,7 +345,7 @@ Singleton {
 
 		property QtObject window: QtObject {
 			property color fg: root.colors.widget.fg
-			property color bg: "#20e0ffff"
+			property color bg: root.colors.widget.bg
 			property color accent: root.colors.widget.accent
 			property color hoverBg: root.colors.widget.hoverBg
 			property color outline: root.colors.widget.outline

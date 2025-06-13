@@ -1,10 +1,13 @@
+import QtQuick
 import Quickshell
 import Quickshell.Hyprland
+import "root:/"
 
 PopupWindow {
+	default property alias content: container.children
 	color: "transparent"
-	width: contentItem.children[0].implicitWidth || 1
-	height: contentItem.children[0].implicitHeight || 1
+	implicitWidth: container.children[0].implicitWidth || 1
+	implicitHeight: container.children[0].implicitHeight || 1
 
 	id: root
 	property list<var> extraGrabWindows: []
@@ -13,5 +16,12 @@ PopupWindow {
 	HyprlandFocusGrab {
 		id: grab; windows: [root].concat(extraGrabWindows); active: true
 		onActiveChanged: root.visible = active
+	}
+
+	Rectangle {
+		id: container
+		color: Config.colors.window.bg
+		radius: Config.layout.window.radius
+		anchors.fill: parent
 	}
 }

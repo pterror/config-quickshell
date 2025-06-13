@@ -26,14 +26,10 @@ ShellRoot {
 	LazyLoader {
 		id: volumeOsdLoader
 		loading: Config.services.audio.initialized
-		FadingWindow {
-			width: 64; height: 240
+		VProgressBarWindow {
 			anchors.right: true
-			VProgressBar {
-				anchors.fill: parent; anchors.margins: 8
-				fraction: Config.services.audio.volume
-				onInput: fraction => Config.services.audio.setVolume(fraction)
-			}
+			fraction: Config.services.audio.volume
+			onInput: fraction => Config.services.audio.setVolume(fraction)
 		}
 	}
 
@@ -69,6 +65,7 @@ ShellRoot {
 
 			PanelWindow {
 				id: window
+				color: "transparent"
 				screen: modelData
 				Component.onCompleted: {
 					if (this.WlrLayershell) {
@@ -76,8 +73,6 @@ ShellRoot {
 					}
 				}
 				anchors { top: true; bottom: true; left: true; right: true }
-
-				color: "transparent"
 
 				Wallpaper {
 					source: wallpaperRandomizer.wallpapers[modelData.name] ?? Config.imageUrl("dark_pixel.png")
@@ -100,7 +95,7 @@ ShellRoot {
 				// ShaderView {}
 
 				WindowSpawnerSelectionArea {
-					app: console.log(`${Config.terminal} -e ${Config.shell} -C 'nix run nixpkgs#pipes -- -RBCK -s 15 -p 3 -r 0 -f 100 | nix run nixpkgs#lolcat -- -F 0.02'`) || `${Config.terminal} -e ${Config.shell} -C 'nix run nixpkgs#pipes -- -RBCK -s 15 -p 3 -r 0 -f 100 | nix run nixpkgs#lolcat -- -F 0.02'`
+					app: `${Config.terminal} -e ${Config.shell} -C 'nix run nixpkgs#pipes -- -RBCK -s 15 -p 3 -r 0 -f 100 | nix run nixpkgs#lolcat -- -F 0.02'`
 				}
 
 				// GridDelegatedLayout {
@@ -175,39 +170,39 @@ ShellRoot {
 					anchors.topMargin: (parent.height - Config.layout.hBar.height - height) / 2
 				}
 
-				InteractiveCrewmate {
-					visible: Screen.name === Config.screens.primary.name
-					color: "transparent"
-					maxClickCount: 2
-					opacity: 0.4
-					anchors.left: parent.left
-					anchors.leftMargin: 128
-					anchors.top: parent.top
-					anchors.topMargin: 64
-				}
+				// InteractiveCrewmate {
+				// 	visible: Screen.name === Config.screens.primary.name
+				// 	color: "transparent"
+				// 	maxClickCount: 2
+				// 	opacity: 0.4
+				// 	anchors.left: parent.left
+				// 	anchors.leftMargin: 128
+				// 	anchors.top: parent.top
+				// 	anchors.topMargin: 64
+				// }
 
-				BouncingMaskedShaderWidget {
-					visible: Screen.name === Config.screens.primary.name
-					id: bouncingMaskedShader
-					moving: !bouncingMaskedShaderMouseArea.containsPress
-				}
+				// BouncingMaskedShaderWidget {
+				// 	visible: Screen.name === Config.screens.primary.name
+				// 	id: bouncingMaskedShader
+				// 	moving: !bouncingMaskedShaderMouseArea.containsPress
+				// }
 
-				MouseArea {
-					id: bouncingMaskedShaderMouseArea
-					property int startX: 0
-					property int startY: 0
-					anchors.fill: bouncingMaskedShader
-					cursorShape: Qt.PointingHandCursor
-					onPressed: event => { startX = event.x; startY = event.y }
-					onPositionChanged: event => {
-						const dx = event.x - startX
-						const dy = event.y - startY
-						bouncingMaskedShader.x += dx
-						bouncingMaskedShader.y += dy
-						bouncingMaskedShader.impulse(Math.hypot(dy, dx) * 10)
-						bouncingMaskedShader.angle = Math.atan2(dy, dx) * 180 / Math.PI
-					}
-				}
+			// 	MouseArea {
+			// 		id: bouncingMaskedShaderMouseArea
+			// 		property int startX: 0
+			// 		property int startY: 0
+			// 		anchors.fill: bouncingMaskedShader
+			// 		cursorShape: Qt.PointingHandCursor
+			// 		onPressed: event => { startX = event.x; startY = event.y }
+			// 		onPositionChanged: event => {
+			// 			const dx = event.x - startX
+			// 			const dy = event.y - startY
+			// 			bouncingMaskedShader.x += dx
+			// 			bouncingMaskedShader.y += dy
+			// 			bouncingMaskedShader.impulse(Math.hypot(dy, dx) * 10)
+			// 			bouncingMaskedShader.angle = Math.atan2(dy, dx) * 180 / Math.PI
+			// 		}
+			// 	}
 			}
 		}
 	}

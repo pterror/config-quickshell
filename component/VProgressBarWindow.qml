@@ -8,10 +8,10 @@ FadingWindow {
 	property alias animationVelocity: progressBar.animationVelocity
 	signal input(real fraction)
 	color: "transparent"
-	implicitWidth: 240
-	implicitHeight: 64
+	implicitWidth: 64
+	implicitHeight: 240
 
-	HProgressBar {
+	VProgressBar {
 		id: progressBar
 		anchors { fill: parent; margins: 8 }
 		fraction: root.fraction

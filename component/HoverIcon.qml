@@ -21,11 +21,15 @@ Button {
 	ToolTip.timeout: Config.tooltip.timeout
 	ToolTip.visible: toolTip !== undefined && mouseArea.containsMouse
 	ToolTip.text: toolTip ?? ""
+
 	background: Rectangle {
 		anchors.margins: Config.layout.button.margins
 		radius: Config.layout.button.radius
 		color: mouseArea.containsMouse ? Config.colors.button.hoverBg : Config.colors.button.bg
+
+		Behavior on color { PropertyAnimation { duration: Config.style.button.animationDuration } }
 	}
+
 	MouseArea {
 		id: mouseAreaEl
 		anchors.fill: parent

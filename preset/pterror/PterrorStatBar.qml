@@ -10,7 +10,7 @@ import "root:/"
 
 PanelWindow {
 	anchors { left: true; right: true; top: true }
-	height: 32 // TODO[broken]: Config.layout.hBar.height
+	implicitHeight: 32 // TODO[broken]: Config.layout.hBar.height
 	color: "transparent"
 	Component.onCompleted: {
 		if (this.WlrLayershell) {

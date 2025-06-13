@@ -12,7 +12,7 @@ PanelWindow {
 	id: root
 	property list<var> extraGrabWindows: []
 	anchors { left: true; right: true; bottom: true }
-	height: 32 // Config.layout.hBar.height
+	implicitHeight: 32 // Config.layout.hBar.height
 	color: "transparent"
 	Component.onCompleted: {
 		if (this.WlrLayershell) {
@@ -23,10 +23,8 @@ PanelWindow {
 
 	Rectangle {
 		id: rootRect
-		anchors {
-			fill: parent
-			margins: Config.layout.hBar.margins
-		}
+		anchors.fill: parent
+		anchors.margins: Config.layout.hBar.margins
 
 		color: Config.colors.bar.bg
 		radius: Config.layout.hBar.radius
