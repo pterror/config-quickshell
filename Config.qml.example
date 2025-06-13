@@ -9,7 +9,8 @@ ConfigDark {
 	// check e.g. `hyprctl monitors`
 	Component.onCompleted: {
 		screens.primary = Qt.binding(() => getScreen("HDMI-A-1"))
-		owo = true
+		owo = false
+		reducedMotion = false
 		// WARNING: Significantly affects performance when using `PterrorShell` in `shell.qml`
 		// widgetsAcrossAllScreens = true
 		backgroundOpacity = 0

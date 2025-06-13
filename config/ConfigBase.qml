@@ -14,6 +14,7 @@ Singleton {
 	property bool widgetsAcrossAllScreens: false
 	property real backgroundOpacity: 0.2
 	property bool moreTransparency: true
+	property bool reducedMotion: false
 	property url baseUrl: ""
 	property int frameRate: 60
 	property var locale: undefined
