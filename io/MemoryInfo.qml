@@ -3,7 +3,6 @@ pragma Singleton
 import QtQuick
 import Quickshell
 import Quickshell.Io
-import "root:/library/XHR.mjs" as XHR
 
 Singleton {
 	property real total: 1

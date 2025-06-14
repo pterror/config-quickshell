@@ -5,7 +5,6 @@ import Quickshell
 import Quickshell.Io
 import "root:/"
 import "root:/library/Units.mjs" as Units
-import "root:/library/XHR.mjs" as XHR
 
 Singleton {
 	property real upload: 0
