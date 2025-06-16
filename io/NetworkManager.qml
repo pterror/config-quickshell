@@ -21,7 +21,7 @@ Singleton {
 		command: ["nmcli", "m"]
 		stdout: SplitParser {
 			onRead: data => {
-				if (Config.debug) {
+				if (Config._.debug) {
 					console.log("NetworkManager [stdin]: " + data)
 				}
 				const a = []
@@ -57,7 +57,7 @@ Singleton {
 		command: ["nmcli", "device"]
 		stdout: SplitParser {
 			onRead: data => {
-				if (Config.debug) {
+				if (Config._.debug) {
 					console.log("NetworkManager [device:stdin]: " + data)
 				}
 				const [, _device, type, state, connection] = data.match(/^(.+?) +(.+?) +(.+?) +(.+?)$/) ?? []
@@ -84,7 +84,7 @@ Singleton {
 		command: ["nmcli", "device", "wifi", "list"]
 		stdout: SplitParser {
 			onRead: data => {
-				if (Config.debug) {
+				if (Config._.debug) {
 					console.log("NetworkManager [wifi-list:stdin]: " + data)
 				}
 				const [, inUse, _bssid, ssid, _mode, _chan, _rate, signal, _bars, _security] = data.match(/^([*])? +(.+?) +(.+?) +(.+?) +(.+?) +(.+?) Mbit[/]s +(.+?) +(.+?) +(.+?)$/) ?? []

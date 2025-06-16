@@ -19,7 +19,7 @@ Singleton {
 		onTriggered: {
 			file.reload()
 			const text = file.text()
-			const match = text.match(new RegExp(Config.network.interface_ + /: +(\d+) +\d+ +\d+ +\d+ +\d+ +\d+ +\d+ +\d+ +(\d+)/.source))
+			const match = text.match(new RegExp(Config._.network.interface_ + /: +(\d+) +\d+ +\d+ +\d+ +\d+ +\d+ +\d+ +\d+ +(\d+)/.source))
 			if (match) {
 				const newUpload = Number(match[1])
 				const newDownload = Number(match[2])

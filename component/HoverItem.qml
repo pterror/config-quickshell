@@ -8,20 +8,20 @@ Button {
 	required property var inner
 	id: root
 	flat: true
-	implicitWidth: inner.implicitWidth + Config.style.barItem.margins * 2
-	implicitHeight: inner.implicitHeight + Config.style.barItem.margins * 2
+	implicitWidth: inner.implicitWidth + Config._.style.barItem.margins * 2
+	implicitHeight: inner.implicitHeight + Config._.style.barItem.margins * 2
 	display: AbstractButton.TextOnly
 	background: Rectangle {
-		anchors.margins: Config.style.button.margins
-		radius: Config.style.button.radius
-		color: mouseArea.containsMouse ? Config.style.barItem.hoverBg : Config.style.barItem.bg
+		anchors.margins: Config._.style.button.margins
+		radius: Config._.style.button.radius
+		color: mouseArea.containsMouse ? Config._.style.barItem.hoverBg : Config._.style.barItem.bg
 	}
 
 	MouseArea {
 		id: mouseArea
 		hoverEnabled: true
 		anchors.fill: parent
-		anchors.margins: Config.style.barItem.margins
+		anchors.margins: Config._.style.barItem.margins
 		cursorShape: Qt.PointingHandCursor
 		onClicked: root.clicked()
 	}

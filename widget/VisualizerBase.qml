@@ -10,7 +10,7 @@ import "root:/"
 Rectangle {
 	id: root
 	color: "transparent"
-	property string fillColor: Config.style.visualizer.barsBg
+	property string fillColor: Config._.style.visualizer.barsBg
 	property string strokeColor: "transparent"
 	property int strokeWidth: 0
 	property real animationDuration: 0

@@ -44,18 +44,18 @@ export class Ollama {
 		this.ongoingStreamedRequests = [];
 		this.config = {
 			host: "",
-			headers: config === null || config === void 0 ? void 0 : config.headers,
+			headers: config === null || config === void 0 ? void 0 : Config._.headers,
 		};
-		if (!(config === null || config === void 0 ? void 0 : config.proxy)) {
-			this.config.host = utils.formatHost(
-				(_a = config === null || config === void 0 ? void 0 : config.host) !==
+		if (!(config === null || config === void 0 ? void 0 : Config._.proxy)) {
+			this.Config._.host = utils.formatHost(
+				(_a = config === null || config === void 0 ? void 0 : Config._.host) !==
 					null && _a !== void 0
 					? _a
 					: defaultHost
 			);
 		}
 		this.fetch =
-			(_b = config === null || config === void 0 ? void 0 : config.fetch) !==
+			(_b = config === null || config === void 0 ? void 0 : Config._.fetch) !==
 				null && _b !== void 0
 				? _b
 				: fetch;
@@ -83,12 +83,12 @@ export class Ollama {
 			var _a;
 			request.stream =
 				(_a = request.stream) !== null && _a !== void 0 ? _a : false;
-			const host = `${this.config.host}/api/${endpoint}`;
+			const host = `${this.Config._.host}/api/${endpoint}`;
 			if (request.stream) {
 				const abortController = new AbortController();
 				const response = yield utils.post(this.fetch, host, request, {
 					signal: abortController.signal,
-					headers: this.config.headers,
+					headers: this.Config._.headers,
 				});
 				if (!response.body) {
 					throw new Error("Missing body");
@@ -110,7 +110,7 @@ export class Ollama {
 				return abortableAsyncIterator;
 			}
 			const response = yield utils.post(this.fetch, host, request, {
-				headers: this.config.headers,
+				headers: this.Config._.headers,
 			});
 			return yield response.json();
 		});
@@ -229,9 +229,9 @@ export class Ollama {
 		return __awaiter(this, void 0, void 0, function* () {
 			yield utils.del(
 				this.fetch,
-				`${this.config.host}/api/delete`,
+				`${this.Config._.host}/api/delete`,
 				{ name: request.model },
-				{ headers: this.config.headers }
+				{ headers: this.Config._.headers }
 			);
 			return { status: "success" };
 		});
@@ -246,10 +246,10 @@ export class Ollama {
 		return __awaiter(this, void 0, void 0, function* () {
 			yield utils.post(
 				this.fetch,
-				`${this.config.host}/api/copy`,
+				`${this.Config._.host}/api/copy`,
 				Object.assign({}, request),
 				{
-					headers: this.config.headers,
+					headers: this.Config._.headers,
 				}
 			);
 			return { status: "success" };
@@ -264,9 +264,9 @@ export class Ollama {
 		return __awaiter(this, void 0, void 0, function* () {
 			const response = yield utils.get(
 				this.fetch,
-				`${this.config.host}/api/tags`,
+				`${this.Config._.host}/api/tags`,
 				{
-					headers: this.config.headers,
+					headers: this.Config._.headers,
 				}
 			);
 			return yield response.json();
@@ -281,10 +281,10 @@ export class Ollama {
 		return __awaiter(this, void 0, void 0, function* () {
 			const response = yield utils.post(
 				this.fetch,
-				`${this.config.host}/api/show`,
+				`${this.Config._.host}/api/show`,
 				Object.assign({}, request),
 				{
-					headers: this.config.headers,
+					headers: this.Config._.headers,
 				}
 			);
 			return yield response.json();
@@ -299,10 +299,10 @@ export class Ollama {
 		return __awaiter(this, void 0, void 0, function* () {
 			const response = yield utils.post(
 				this.fetch,
-				`${this.config.host}/api/embed`,
+				`${this.Config._.host}/api/embed`,
 				Object.assign({}, request),
 				{
-					headers: this.config.headers,
+					headers: this.Config._.headers,
 				}
 			);
 			return yield response.json();
@@ -317,10 +317,10 @@ export class Ollama {
 		return __awaiter(this, void 0, void 0, function* () {
 			const response = yield utils.post(
 				this.fetch,
-				`${this.config.host}/api/embeddings`,
+				`${this.Config._.host}/api/embeddings`,
 				Object.assign({}, request),
 				{
-					headers: this.config.headers,
+					headers: this.Config._.headers,
 				}
 			);
 			return yield response.json();
@@ -335,9 +335,9 @@ export class Ollama {
 		return __awaiter(this, void 0, void 0, function* () {
 			const response = yield utils.get(
 				this.fetch,
-				`${this.config.host}/api/ps`,
+				`${this.Config._.host}/api/ps`,
 				{
-					headers: this.config.headers,
+					headers: this.Config._.headers,
 				}
 			);
 			return yield response.json();

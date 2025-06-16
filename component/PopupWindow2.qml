@@ -20,8 +20,8 @@ PopupWindow {
 
 	Rectangle {
 		id: container
-		color: Config.style.window.bg
-		radius: Config.style.window.radius
+		color: Config._.style.window.bg
+		radius: Config._.style.window.radius
 		anchors.fill: parent
 	}
 }

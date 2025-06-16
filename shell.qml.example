@@ -3,5 +3,5 @@ import QtQuick
 import "root:/preset/pterror"
 
 PterrorShell {
-	Component.onCompleted: Config.baseUrl = Qt.resolvedUrl(".")
+	Component.onCompleted: Config._.baseUrl = Qt.resolvedUrl(".")
 }

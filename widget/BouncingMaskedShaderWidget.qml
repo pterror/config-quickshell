@@ -32,17 +32,17 @@ import "root:/"
 Rectangle {
 	id: root
 	color: "transparent"
-	property var config: Config.bouncingMaskedShader
+	property var config: Config._.bouncingMaskedShader
 	property bool playing: true
 	property bool moving: true
-	property real timeMod: Config.bouncingMaskedShader.timeMod
+	property real timeMod: Config._.bouncingMaskedShader.timeMod
 	property real angle: Math.atan2(
-		Config.bouncingMaskedShader.velocityY,
-		Config.bouncingMaskedShader.velocityX
+		Config._.bouncingMaskedShader.velocityY,
+		Config._.bouncingMaskedShader.velocityX
 	) * 180 / Math.PI
 	property real baseVelocity: Math.hypot(
-		Config.bouncingMaskedShader.velocityX,
-		Config.bouncingMaskedShader.velocityY
+		Config._.bouncingMaskedShader.velocityX,
+		Config._.bouncingMaskedShader.velocityY
 	)
 	property real velocityMultiplierX: Math.cos(angle * Math.PI / 180)
 	property real velocityMultiplierY: Math.sin(angle * Math.PI / 180)
@@ -68,7 +68,7 @@ Rectangle {
 		property vector3d iResolution: Qt.vector3d(width, height, 0)
 		property real iTime: 0
 		property list<real> iChannelTime: [0., 0., 0., 0.]
-		property real iFrameRate: Config.frameRate
+		property real iFrameRate: Config._.frameRate
 		property real iTimeDelta: 1 / iFrameRate
 		property real iSampleRate: 1
 		property int iFrame: 0
@@ -82,19 +82,19 @@ Rectangle {
 		property real iVelocityY: root.velocity * root.velocityMultiplierY * iTimeDelta
 		property vector4d iDate
 		property Image iChannel0: Image {
-			source: Config.bouncingMaskedShader.channel0
+			source: Config._.bouncingMaskedShader.channel0
 			visible: false
 		}
 		property Image iChannel1: Image {
-			source: Config.bouncingMaskedShader.channel1
+			source: Config._.bouncingMaskedShader.channel1
 			visible: false
 		}
 		property Image iChannel2: Image {
-			source: Config.bouncingMaskedShader.channel2
+			source: Config._.bouncingMaskedShader.channel2
 			visible: false
 		}
 		property Image iChannel3: Image {
-			source: Config.bouncingMaskedShader.channel3
+			source: Config._.bouncingMaskedShader.channel3
 			visible: false
 		}
 		property list<vector3d> iChannelResolution: [
@@ -104,13 +104,13 @@ Rectangle {
 			Qt.vector3d(iChannel3.width, iChannel3.height, iChannel3.width / iChannel3.height),
 		]
 
-		fragmentShader: "../shader/" + Config.bouncingMaskedShader.shader + ".frag.qsb"
+		fragmentShader: "../shader/" + Config._.bouncingMaskedShader.shader + ".frag.qsb"
 
 		FrameAnimation {
 			running: true
 			onTriggered: {
 				if (playing) {
-					shader.iTime += frameTime * Config.bouncingMaskedShader.speed
+					shader.iTime += frameTime * Config._.bouncingMaskedShader.speed
 					if (root.timeMod) shader.iTime %= root.timeMod
 					shader.iChannelTime = [shader.iTime, shader.iTime, shader.iTime, shader.iTime]
 					const newFrameDate = Number(new Date())
@@ -142,17 +142,17 @@ Rectangle {
 	Image {
 		id: mask
 		layer.enabled: true; cache: false
-		source: Config.bouncingMaskedShader.mask
+		source: Config._.bouncingMaskedShader.mask
 		property real maskAspectRatio: (implicitWidth / implicitHeight) || 0.01
-		width: Config.bouncingMaskedShader.maskWidth != -1 ?
-			Config.bouncingMaskedShader.maskWidth :
-			Config.bouncingMaskedShader.maskHeight != -1 ?
-			Config.bouncingMaskedShader.maskHeight * maskAspectRatio :
+		width: Config._.bouncingMaskedShader.maskWidth != -1 ?
+			Config._.bouncingMaskedShader.maskWidth :
+			Config._.bouncingMaskedShader.maskHeight != -1 ?
+			Config._.bouncingMaskedShader.maskHeight * maskAspectRatio :
 			implicitWidth
-		height: Config.bouncingMaskedShader.maskHeight != -1 ?
-			Config.bouncingMaskedShader.maskHeight :
-			Config.bouncingMaskedShader.maskWidth != -1 ?
-			Config.bouncingMaskedShader.maskWidth / maskAspectRatio :
+		height: Config._.bouncingMaskedShader.maskHeight != -1 ?
+			Config._.bouncingMaskedShader.maskHeight :
+			Config._.bouncingMaskedShader.maskWidth != -1 ?
+			Config._.bouncingMaskedShader.maskWidth / maskAspectRatio :
 			implicitHeight
 		visible: false
 	}
@@ -165,6 +165,6 @@ Rectangle {
 		anchors.top: parent.top
 		width: mask.width
 		height: mask.height
-		opacity: Config.bouncingMaskedShader.opacity
+		opacity: Config._.bouncingMaskedShader.opacity
 	}
 }

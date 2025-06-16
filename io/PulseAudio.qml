@@ -22,7 +22,7 @@ Singleton {
 		command: ["pactl", "subscribe"]
 		stdout: SplitParser {
 			onRead: data => {
-				if (Config.debug) {
+				if (Config._.debug) {
 					console.log("PulseAudio [stdin]: " + data)
 				}
 				const [, updatedSink] = data.match(/sink #(\d+)/) ?? []

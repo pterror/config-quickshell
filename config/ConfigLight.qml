@@ -8,7 +8,7 @@ ConfigBase {
 	property Component wallpaperEffect: MultiEffect {}
 	Component.onCompleted: {
 		wallpapers.folder = Quickshell.env("HOME") + "/.config/wallpapers/light/"
-		wallpapers.effect = wallpaperEffect
+		wallpapers_.effect = wallpaperEffect
 		colors.primaryFg = "#40080220"
 		colors.secondaryFg = "#40080220"
 		colors.secondaryBg = "#300f0e0d"

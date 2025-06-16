@@ -4,7 +4,7 @@ import "root:/io"
 import "root:/"
 
 SelectionArea {
-	property string app: Config.terminal
+	property string app: Config._.terminal
 	anchors.fill: parent
 	screen: window.screen
 	selectionArea: selectionLayer.selectionArea

@@ -2,9 +2,9 @@ import QtQuick
 import "root:/"
 
 Rectangle {
-	anchors.margins: Config.style.widget.margins
-	color: Config.style.widget.bg
-	radius: Config.style.widget.radius
-	border.color: Config.style.widget.outline
-	border.width: Config.style.widget.border
+	anchors.margins: Config._.style.widget.margins
+	color: Config._.style.widget.bg
+	radius: Config._.style.widget.radius
+	border.color: Config._.style.widget.outline
+	border.width: Config._.style.widget.border
 }

@@ -32,7 +32,7 @@ Rectangle {
 	id: root
 	anchors.fill: parent
 	color: "transparent"
-	property var config: Config.bouncingMaskedShader
+	property var config: Config._.bouncingMaskedShader
 	property var shaderName: "Night_Sky"
 	property var shader: "../dep/shader-wallpaper/package/contents/ui/Shaders6/" + shaderName + ".frag.qsb"
 	width: 240
@@ -59,23 +59,23 @@ Rectangle {
 		property real iY: 64
 		property int iW: mask.width
 		property int iH: mask.height
-		property real iVelocityX: Config.bouncingMaskedShader.velocityX * iTimeDelta
-		property real iVelocityY: Config.bouncingMaskedShader.velocityY * iTimeDelta
+		property real iVelocityX: Config._.bouncingMaskedShader.velocityX * iTimeDelta
+		property real iVelocityY: Config._.bouncingMaskedShader.velocityY * iTimeDelta
 		property vector4d iDate
 		property Image iChannel0: Image {
-			source: "../image/" + Config.bouncingMaskedShader.channel0
+			source: "../image/" + Config._.bouncingMaskedShader.channel0
 			visible: false; cache: false
 		}
 		property Image iChannel1: Image {
-			source: "../image/" + Config.bouncingMaskedShader.channel1
+			source: "../image/" + Config._.bouncingMaskedShader.channel1
 			visible: false; cache: false
 		}
 		property Image iChannel2: Image {
-			source: "../image/" + Config.bouncingMaskedShader.channel2
+			source: "../image/" + Config._.bouncingMaskedShader.channel2
 			visible: false; cache: false
 		}
 		property Image iChannel3: Image {
-			source: "../image/" + Config.bouncingMaskedShader.channel3
+			source: "../image/" + Config._.bouncingMaskedShader.channel3
 			visible: false; cache: false
 		}
 		property list<vector3d> iChannelResolution: [
@@ -85,12 +85,12 @@ Rectangle {
 			Qt.vector3d(iChannel3.width, iChannel3.height, iChannel3.width / iChannel3.height),
 		]
 
-		fragmentShader: "../shader/" + Config.bouncingMaskedShader.shader + ".frag.qsb"
+		fragmentShader: "../shader/" + Config._.bouncingMaskedShader.shader + ".frag.qsb"
 
 		Timer {
 			interval: 1000 / shader.iFrameRate; running: true; repeat: true; triggeredOnStart: true
 			onTriggered: {
-				shader.iTime += shader.iTimeDelta * Config.bouncingMaskedShader.speed
+				shader.iTime += shader.iTimeDelta * Config._.bouncingMaskedShader.speed
 				shader.iChannelTime = [shader.iTime, shader.iTime, shader.iTime, shader.iTime]
 				shader.iFrame += 1
 				shader.iDate = Qt.vector4d(0., 0., 0., Number(new Date()) / 1000 % 86400)
@@ -134,6 +134,6 @@ Rectangle {
 		anchors.topMargin: shader.iY
 		width: mask.width
 		height: mask.height
-		opacity: Config.bouncingMaskedShader.opacity
+		opacity: Config._.bouncingMaskedShader.opacity
 	}
 }

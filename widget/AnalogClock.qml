@@ -128,7 +128,7 @@ Rectangle {
 		height: root.tickHeight
 		radius: tickRadius
 		property int innerRadius: root.radius - tickHeight * 2
-		color: Config.style.widget.accent
+		color: Config._.style.widget.accent
 		x: root.radius + innerRadius * Math.cos((-root.hourAngle - 90) * Math.PI / 180)
 		y: root.radius + innerRadius * Math.sin((-root.hourAngle - 90) * Math.PI / 180)
 		transform: Rotation {
@@ -171,7 +171,7 @@ Rectangle {
 		height: root.tickHeight
 		radius: tickRadius
 		property int innerRadius: root.radius - tickHeight
-		color: Config.style.widget.accent
+		color: Config._.style.widget.accent
 		x: root.radius + innerRadius * Math.cos((-root.minuteAngle - 90) * Math.PI / 180)
 		y: root.radius + innerRadius * Math.sin((-root.minuteAngle - 90) * Math.PI / 180)
 		transform: Rotation {
@@ -213,7 +213,7 @@ Rectangle {
 		width: root.tickWidth
 		height: root.tickHeight
 		radius: tickRadius
-		color: Config.style.widget.accent
+		color: Config._.style.widget.accent
 		x: root.radius + root.radius * Math.cos((-root.secondAngle - 90) * Math.PI / 180)
 		y: root.radius + root.radius * Math.sin((-root.secondAngle - 90) * Math.PI / 180)
 		transform: Rotation {
@@ -258,7 +258,7 @@ Rectangle {
 			width: root.tickWidth
 			height: root.tickHeight
 			radius: tickRadius
-			color: Config.style.widget.bg
+			color: Config._.style.widget.bg
 			x: root.radius + root.radius * Math.cos(modelData * 2 * Math.PI / 12)
 			y: root.radius + root.radius * Math.sin(modelData * 2 * Math.PI / 12)
 			transform: Rotation {

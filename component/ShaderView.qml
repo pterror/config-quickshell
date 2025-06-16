@@ -29,7 +29,7 @@ import "root:/"
 
 Rectangle {
 	id: root
-	property var config: Config.shaderWallpaper
+	property var config: Config._.shaderWallpaper
 	anchors.fill: parent
 	ShaderEffect {
 		anchors.fill: parent
@@ -45,19 +45,19 @@ Rectangle {
 		property vector4d iMouse: Qt.vector4d(0., 0., 0., 0.)
 		property vector4d iDate
 		property Image iChannel0: Image {
-			source: "../image/" + Config.shaderWallpaper.channel0
+			source: "../image/" + Config._.shaderWallpaper.channel0
 			visible: false; cache: false
 		}
 		property Image iChannel1: Image {
-			source: "../image/" + Config.shaderWallpaper.channel1
+			source: "../image/" + Config._.shaderWallpaper.channel1
 			visible: false; cache: false
 		}
 		property Image iChannel2: Image {
-			source: "../image/" + Config.shaderWallpaper.channel2
+			source: "../image/" + Config._.shaderWallpaper.channel2
 			visible: false; cache: false
 		}
 		property Image iChannel3: Image {
-			source: "../image/" + Config.shaderWallpaper.channel3
+			source: "../image/" + Config._.shaderWallpaper.channel3
 			visible: false; cache: false
 		}
 
@@ -68,9 +68,9 @@ Rectangle {
 			Qt.vector3d(iChannel3.width, iChannel3.height, iChannel3.width / iChannel3.height),
 		]
 
-		fragmentShader: Config.shaderWallpaper.shader.includes("/") ?
-			Config.shaderWallpaper.shader :
-			"../dep/shader-wallpaper/package/contents/ui/Shaders6/" + Config.shaderWallpaper.shader + ".frag.qsb"
+		fragmentShader: Config._.shaderWallpaper.shader.includes("/") ?
+			Config._.shaderWallpaper.shader :
+			"../dep/shader-wallpaper/package/contents/ui/Shaders6/" + Config._.shaderWallpaper.shader + ".frag.qsb"
 	}
 
 
@@ -84,12 +84,12 @@ Rectangle {
 			anchors.fill: parent
 			hoverEnabled: true
 			onPositionChanged: {
-				if (!root.config.mouse) return
-				shader.iMouse.x = mouseX * root.config.mouseSpeedBias
-				shader.iMouse.y = -mouseY * root.config.mouseSpeedBias
+				if (!root.Config._.mouse) return
+				shader.iMouse.x = mouseX * root.Config._.mouseSpeedBias
+				shader.iMouse.y = -mouseY * root.Config._.mouseSpeedBias
 			}
 			onClicked: {
-				if (!root.config.mouse) return
+				if (!root.Config._.mouse) return
 				shader.iMouse.z = mouseX
 				shader.iMouse.w = mouseY
 			}
@@ -101,7 +101,7 @@ Rectangle {
 	Timer {
 		interval: 1000 / shader.iFrameRate; running: true; repeat: true; triggeredOnStart: true
 		onTriggered: {
-			shader.iTime += shader.iTimeDelta * Config.shaderWallpaper.speed
+			shader.iTime += shader.iTimeDelta * Config._.shaderWallpaper.speed
 			shader.iChannelTime = [shader.iTime, shader.iTime, shader.iTime, shader.iTime]
 			shader.iFrame += 1
 			shader.iDate = Qt.vector4d(0., 0., 0., Number(new Date()) / 1000 % 86400)

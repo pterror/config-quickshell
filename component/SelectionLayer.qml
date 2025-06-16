@@ -25,10 +25,10 @@ WlrLayershell {
 
 		readonly property bool bigEnough: width > 300 && height > 150
 
-		color: Config.style.selection.bg
-		radius: Config.style.selection.radius
-		border.color: bigEnough ? Config.style.selection.outline : Config.style.selection.outlineInvalid
-		border.width: Config.style.selection.border
+		color: Config._.style.selection.bg
+		radius: Config._.style.selection.radius
+		border.color: bigEnough ? Config._.style.selection.outline : Config._.style.selection.outlineInvalid
+		border.width: Config._.style.selection.border
 		visible: selecting
 
 		x: Math.min(startX, endX) - border.width

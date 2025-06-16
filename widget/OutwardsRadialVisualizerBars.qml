@@ -10,7 +10,7 @@ VisualizerBase {
 	id: root
 	property int outerRadius: 480
 	property int innerRadius: 240
-	property int barRadius: Config.style.rectangle.radius
+	property int barRadius: Config._.style.rectangle.radius
 	property real scale: outerRadius - innerRadius
 	property real barWidth: (innerRadius * 2 * Math.PI) / input.count - 4
 	property real degreesPerBar: 360 / input.count

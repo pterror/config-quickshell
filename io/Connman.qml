@@ -17,7 +17,7 @@ Singleton {
 		command: ["connmanctl", "monitor", "--services"]
 		stdout: SplitParser {
 			onRead: data => {
-				if (Config.debug) {
+				if (Config._.debug) {
 					console.log("Connman [stdin]: " + data)
 				}
 				const [, _type, network, key, value] = data.match(/(.+?) +(.+?) +(.+?) += +(.+)/) ?? []

@@ -17,7 +17,7 @@ LazyLoader {
 	property int rows: -1
 	property int spacing: 8
 
-	property bool shouldShow: !HyprlandIpc.isOverlaid && Config.workspacesOverview.visible
+	property bool shouldShow: !HyprlandIpc.isOverlaid && Config._.workspacesOverview.visible
 	onShouldShowChanged: {
 		if (shouldShow) loading = true
 		else active = false
@@ -43,28 +43,28 @@ LazyLoader {
 		PersistentProperties { onLoaded: reload() }
 
 		Connections {
-			target: Config.workspacesOverview
+			target: Config._.workspacesOverview
 			function onVisibleChanged() {
-				grab.active = Config.workspacesOverview.visible
+				grab.active = Config._.workspacesOverview.visible
 			}
 		}
 
 		HyprlandFocusGrab {
 			id: grab; windows: [window].concat(extraGrabWindows)
-			onActiveChanged: Config.workspacesOverview.visible = active
+			onActiveChanged: Config._.workspacesOverview.visible = active
 		}
 
 		Rectangle {
 			id: content
-			color: Config.style.workspacesOverview.bg
-			radius: Config.style.panel.radius
-			implicitWidth: grid.implicitWidth + Config.style.panel.margins * 2
-			implicitHeight: grid.implicitHeight + Config.style.panel.margins * 2
+			color: Config._.style.workspacesOverview.bg
+			radius: Config._.style.panel.radius
+			implicitWidth: grid.implicitWidth + Config._.style.panel.margins * 2
+			implicitHeight: grid.implicitHeight + Config._.style.panel.margins * 2
 
 			GridLayout {
 				id: grid
 				anchors.fill: parent
-				anchors.margins: Config.style.panel.margins
+				anchors.margins: Config._.style.panel.margins
 				columns: root.columns
 				rows: root.rows
 				columnSpacing: root.spacing

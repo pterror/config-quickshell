@@ -9,13 +9,13 @@ import "root:/library/Arrays.mjs" as Arrays
 import "root:/library/Random.mjs" as Random
 
 QtObject {
-	property real seed: Config.wallpapers.seed
+	property real seed: Config._.wallpapers.seed
 	property var wallpapers: getWallpapers()
 	readonly property var random: new Random.Random()
 	readonly property FolderListModel folder: FolderListModel {
 		showDirs: false; showOnlyReadable: true
-		folder: "file://" + Config.wallpapers.folder
-		nameFilters: Config.wallpapers.formats
+		folder: "file://" + Config._.wallpapers.folder
+		nameFilters: Config._.wallpapers.formats
 		onStatusChanged: if (status == FolderListModel.Ready) wallpapers = getWallpapers()
 	}
 
@@ -33,7 +33,7 @@ QtObject {
 			}
 			newWallpapers[screen.name] = shuffled.pop()
 		}
-		if (Config.debug) {
+		if (Config._.debug) {
 			console.log("New wallpapers:", JSON.stringify(newWallpapers))
 		}
 		return newWallpapers

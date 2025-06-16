@@ -7,35 +7,35 @@ import "root:/"
 
 ColumnLayout2 {
 	autoSize: true
-	radius: Config.style.panel.radius
-	margins: Config.style.panel.margins
-	spacing: Config.style.mediaPlayer.controlsGap
+	radius: Config._.style.panel.radius
+	margins: Config._.style.panel.margins
+	spacing: Config._.style.mediaPlayer.controlsGap
 
 	RoundedImage {
-		size: Config.style.mediaPlayer.imageSize
-		source: Config.mpris.currentPlayer?.metadata["mpris:artUrl"] ?? Config.imageUrl("blank.png")
-		radius: Config.style.panel.innerRadius
+		size: Config._.style.mediaPlayer.imageSize
+		source: Config._.mpris.currentPlayer?.metadata["mpris:artUrl"] ?? Config.imageUrl("blank.png")
+		radius: Config._.style.panel.innerRadius
 	}
 
 	RowLayout2 {
 		Layout.alignment: Qt.AlignVCenter | Qt.AlignHCenter
 		autoSize: true
-		spacing: Config.style.mediaPlayer.controlGap
+		spacing: Config._.style.mediaPlayer.controlGap
 		HoverIcon {
 			source: Config.iconUrl("flat/media_previous.svg")
-			onClicked: Config.mpris.currentPlayer?.previous()
+			onClicked: Config._.mpris.currentPlayer?.previous()
 		}
 		HoverIcon {
-			property bool playing: Config.mpris.currentPlayer?.playbackState === MprisPlaybackState.Playing
+			property bool playing: Config._.mpris.currentPlayer?.playbackState === MprisPlaybackState.Playing
 			source: playing ? Config.iconUrl("flat/media_pause.svg") : Config.iconUrl("flat/media_play.svg")
 			onClicked: {
-				if (!Config.mpris.currentPlayer) return
-				Config.mpris.currentPlayer.playbackState = playing ? MprisPlaybackState.Paused : MprisPlaybackState.Playing
+				if (!Config._.mpris.currentPlayer) return
+				Config._.mpris.currentPlayer.playbackState = playing ? MprisPlaybackState.Paused : MprisPlaybackState.Playing
 			}
 		}
 		HoverIcon {
 			source: Config.iconUrl("flat/media_next.svg")
-			onClicked: Config.mpris.currentPlayer?.next()
+			onClicked: Config._.mpris.currentPlayer?.next()
 		}
 	}
 }

@@ -9,7 +9,7 @@ Rectangle {
 	property var crankImage: "hand_crank.svg"
 	property real crankX: 100
 	property real crankY: 100
-	property real crankOpacity: Config.crankableImage.opacity
+	property real crankOpacity: Config._.crankableImage.opacity
 	property real angle: 0
 	property real ratio: 10
 	anchors.fill: parent

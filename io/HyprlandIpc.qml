@@ -57,7 +57,7 @@ Singleton {
 		parser: SplitParser {
 			splitMarker: ""
 			onRead: message => {
-				if (Config.debug) {
+				if (Config._.debug) {
 					console.log("Hyprland [stdin]: " + message)
 				}
 				const lines = message.split(/\n(?=.+>>|$)/)

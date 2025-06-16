@@ -9,7 +9,7 @@ FrameAnimation {
 	property real momentum: -1
 	property real momentumUp: momentum !== -1 ? momentum : 0
 	property real momentumDown: momentum !== -1 ? momentum : 0.2
-	property int frameRate: Config.frameRate
+	property int frameRate: Config._.frameRate
 	property real momentumUpFrame: Math.pow(momentumUp, frameTime)
 	property real momentumDownFrame: Math.pow(momentumDown, frameTime)
 	property real epsilon: 0.01

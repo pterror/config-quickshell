@@ -14,10 +14,10 @@ RowLayout2 {
 			required property var modelData
 			text: modelData.name
 			color: modelData.focused
-				? Config.style.workspaceIndicator.focused
+				? Config._.style.workspaceIndicator.focused
 				: modelData.exists
-					? Config.style.workspaceIndicator.visible
-					: Config.style.workspaceIndicator.empty
+					? Config._.style.workspaceIndicator.visible
+					: Config._.style.workspaceIndicator.empty
 		}
 	}
 }

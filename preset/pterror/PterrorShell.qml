@@ -20,21 +20,21 @@ ShellRoot {
 
 	Cava { id: cava; count: 48 }
 
-	PterrorStatBar { id: statBar; screen: Config.screens.primary }
-	PterrorMediaBar { id: mediaBar; screen: Config.screens.primary; extraGrabWindows: [statBar] }
+	PterrorStatBar { id: statBar; screen: Config._.screens.primary }
+	PterrorMediaBar { id: mediaBar; screen: Config._.screens.primary; extraGrabWindows: [statBar] }
 
 	LazyLoader {
 		id: volumeOsdLoader
-		loading: Config.services.audio.initialized
+		loading: Config._.services.audio.initialized
 		VProgressBarWindow {
 			anchors.right: true
-			fraction: Config.services.audio.volume
-			onInput: fraction => Config.services.audio.setVolume(fraction)
+			fraction: Config._.services.audio.volume
+			onInput: fraction => Config._.services.audio.setVolume(fraction)
 		}
 	}
 
 	Connections {
-		target: Config.services.audio
+		target: Config._.services.audio
 		function onVolumeChanged() {
 			if (!volumeOsdLoader.active || !volumeOsdLoader.item) return
 			if (HyprlandIpc.activeScreen && volumeOsdLoader.item.screen?.name !== HyprlandIpc.activeScreen.name) {
@@ -76,15 +76,15 @@ ShellRoot {
 
 				Wallpaper {
 					source: wallpaperRandomizer.wallpapers[modelData.name] ?? Config.imageUrl("dark_pixel.png")
-					layer.enabled: Config.wallpapers.effect != null
-					layer.effect: Config.wallpapers.effect
+					layer.enabled: Config._.wallpapers_.effect != null
+					layer.effect: Config._.wallpapers_.effect
 				}
 
 				// CrankableImage {
 				// 	screen: modelData
 				// 	source: wallpaperRandomizer.wallpapers[modelData.name] ?? Config.imageUrl("dark_pixel.png")
-				// 	layer.enabled: Config.wallpapers.effect != null
-				// 	layer.effect: Config.wallpapers.effect
+				// 	layer.enabled: Config._.wallpapers_.effect != null
+				// 	layer.effect: Config._.wallpapers_.effect
 				// }
 
 				// VideoPlayer {
@@ -95,7 +95,7 @@ ShellRoot {
 				// ShaderView {}
 
 				WindowSpawnerSelectionArea {
-					app: `${Config.terminal} -e ${Config.shell} -C 'nix run nixpkgs#pipes -- -RBCK -s 15 -p 3 -r 0 -f 100 | nix run nixpkgs#lolcat -- -F 0.02'`
+					app: `${Config._.terminal} -e ${Config._.shell} -C 'nix run nixpkgs#pipes -- -RBCK -s 15 -p 3 -r 0 -f 100 | nix run nixpkgs#lolcat -- -F 0.02'`
 				}
 
 				// GridDelegatedLayout {
@@ -103,8 +103,8 @@ ShellRoot {
 				// 	delegate: VProgressBar {
 				// 		color: "transparent"
 				// 		margins: 0
-				// 		innerRadius: Config.style.rectangle.radius
-				// 		fg: Config.style.rectangle.bg
+				// 		innerRadius: Config._.style.rectangle.radius
+				// 		fg: Config._.style.rectangle.bg
 				// 		animationDuration: CPUInfo.interval
 				// 		anchors.fill: parent
 				// 		fraction: value
@@ -115,7 +115,7 @@ ShellRoot {
 	}
 
 	Variants {
-		model: Config.widgetsAcrossAllScreens ? Quickshell.screens : [Config.screens.primary]
+		model: Config._.widgetsAcrossAllScreens ? Quickshell.screens : [Config._.screens.primary]
 
 		Scope {
 			required property var modelData
@@ -143,7 +143,7 @@ ShellRoot {
 				// TimeZonesDisplay {}
 
 				// PanelWindow {
-				// 	screen: Config.screens.primary
+				// 	screen: Config._.screens.primary
 				// 	color: "transparent"
 				// 	WlrLayershell.layer: WlrLayer.Bottom
 				// 	width: radialLauncher.implicitWidth || 1
@@ -161,17 +161,17 @@ ShellRoot {
 				AnalogClock {
 					anchors.left: parent.left; anchors.top: parent.top
 					anchors.leftMargin: 32
-					anchors.topMargin: (parent.height - Config.style.hBar.height - height) / 2
+					anchors.topMargin: (parent.height - Config._.style.hBar.height - height) / 2
 				}
 
 				ScrollSpinner {
 					anchors.right: parent.right; anchors.top: parent.top
 					anchors.rightMargin: 32
-					anchors.topMargin: (parent.height - Config.style.hBar.height - height) / 2
+					anchors.topMargin: (parent.height - Config._.style.hBar.height - height) / 2
 				}
 
 				// InteractiveCrewmate {
-				// 	visible: Screen.name === Config.screens.primary.name
+				// 	visible: Screen.name === Config._.screens.primary.name
 				// 	color: "transparent"
 				// 	maxClickCount: 2
 				// 	opacity: 0.4
@@ -182,7 +182,7 @@ ShellRoot {
 				// }
 
 				// BouncingMaskedShaderWidget {
-				// 	visible: Screen.name === Config.screens.primary.name
+				// 	visible: Screen.name === Config._.screens.primary.name
 				// 	id: bouncingMaskedShader
 				// 	moving: !bouncingMaskedShaderMouseArea.containsPress
 				// }

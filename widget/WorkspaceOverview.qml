@@ -13,7 +13,7 @@ Widget {
 	required property var clients
 	property real scale: width / workspaceWidth
 	anchors.margins: 0
-	color: mouseArea.containsMouse ? Config.style.widget.hoverBg : Config.style.widget.bg
+	color: mouseArea.containsMouse ? Config._.style.widget.hoverBg : Config._.style.widget.bg
 	Behavior on color { PropertyAnimation { duration: 100 } }
 	width: 200
 	height: workspaceHeight * scale
@@ -25,7 +25,7 @@ Widget {
 		cursorShape: Qt.PointingHandCursor
 		onClicked: {
 			HyprlandIpc.focusWorkspace(workspaceId)
-			Config.workspacesOverview.visible = false
+			Config._.workspacesOverview.visible = false
 		}
 	}
 
@@ -39,12 +39,12 @@ Widget {
 			y: modelData.y * root.scale
 			width: modelData.width * root.scale
 			height: modelData.height * root.scale
-			radius: Config.style.widget.radius
-			color: windowMouseArea.containsMouse ? Config.style.widget.hoverBg : Config.style.widget.bg
+			radius: Config._.style.widget.radius
+			color: windowMouseArea.containsMouse ? Config._.style.widget.hoverBg : Config._.style.widget.bg
 			Behavior on color { PropertyAnimation { duration: 100 } }
 
 			Image {
-				readonly property int size: Math.max(1, Math.min(parent.height, parent.width, Config.style.icon.size))
+				readonly property int size: Math.max(1, Math.min(parent.height, parent.width, Config._.style.icon.size))
 				anchors.verticalCenter: parent.verticalCenter
 				anchors.horizontalCenter: parent.horizontalCenter
 				source: "image://icon/" + modelData.class
@@ -60,7 +60,7 @@ Widget {
 				cursorShape: Qt.PointingHandCursor
 				onClicked: {
 					HyprlandIpc.focusWindow("address:" + modelData.address)
-					Config.workspacesOverview.visible = false
+					Config._.workspacesOverview.visible = false
 				}
 			}
 		}

@@ -19,8 +19,8 @@ Variants {
 	PanelWindow {
 		property var modelData
 		screen: modelData
-		// TODO: `Config.wLogout.visible` should not control all subclasses of wlogout
-		visible: !HyprlandIpc.isOverlaid && Config.wLogout.visible
+		// TODO: `Config._.wLogout.visible` should not control all subclasses of wlogout
+		visible: !HyprlandIpc.isOverlaid && Config._.wLogout.visible
 		exclusionMode: ExclusionMode.Ignore
 		WlrLayershell.layer: WlrLayer.Overlay
 		WlrLayershell.keyboardFocus: WlrKeyboardFocus.Exclusive
@@ -47,7 +47,7 @@ Variants {
 		}
 
 		Rectangle {
-			color: Config.style.wLogout.bg
+			color: Config._.style.wLogout.bg
 			anchors.fill: parent
 
 			MouseArea {
@@ -71,7 +71,7 @@ Variants {
 							Layout.fillWidth: true
 							Layout.fillHeight: true
 
-							color: ma.containsMouse ? Config.style.wLogout.buttonHoverBg : Config.style.wLogout.buttonBg
+							color: ma.containsMouse ? Config._.style.wLogout.buttonHoverBg : Config._.style.wLogout.buttonBg
 							border.color: "black"
 							border.width: ma.containsMouse ? 0 : 1
 

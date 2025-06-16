@@ -10,7 +10,7 @@ import "root:/"
 
 PanelWindow {
 	anchors { left: true; right: true; top: true }
-	implicitHeight: 32 // TODO[broken]: Config.style.hBar.height
+	implicitHeight: 32 // TODO[broken]: Config._.style.hBar.height
 	color: "transparent"
 	Component.onCompleted: {
 		if (this.WlrLayershell) {
@@ -23,10 +23,10 @@ PanelWindow {
 		id: barRect
 		anchors.fill: parent
 
-		color: Config.style.bar.bg
-		radius: Config.style.hBar.radius
-		border.color: Config.style.bar.outline
-		border.width: Config.style.hBar.border
+		color: Config._.style.bar.bg
+		radius: Config._.style.hBar.radius
+		border.color: Config._.style.bar.outline
+		border.width: Config._.style.hBar.border
 
 		RowLayout {
 			anchors.fill: parent
@@ -54,7 +54,7 @@ PanelWindow {
 				// Tray {}
 				HoverItem {
 					inner: workspacesStatus
-					onClicked: Config.workspacesOverview.visible = !Config.workspacesOverview.visible
+					onClicked: Config._.workspacesOverview.visible = !Config._.workspacesOverview.visible
 					WorkspacesStatus { id: workspacesStatus }
 				}
 			}

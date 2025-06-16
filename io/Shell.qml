@@ -15,7 +15,7 @@ Singleton {
 		handler: Socket {
 			parser: SplitParser {
 				onRead: message => {
-					if (Config.debug) {
+					if (Config._.debug) {
 						console.log("Shell: " + message)
 					}
 					switch (message) {
