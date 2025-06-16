@@ -26,7 +26,7 @@ Item {
 	Process {
 		id: process; manageLifetime: false
 		property string appCommand: ""
-		command: ["sh", "-c", "nohup " + appCommand + ">/dev/null 2>&1 & disown"]
+		command: ["sh", "-c", "nohup " + appCommand + " >/dev/null 2>&1 & disown"]
 	}
 
 	MouseArea {
