@@ -3,7 +3,7 @@ pragma Singleton
 import "root:/library/Calculator.mjs" as Calculator
 
 Singleton {
-  function suggestions(query) {
+  function search(query: string): list<var> {
     const result = Calculator.calculate(query);
     if (result === undefined) {
       return [];
@@ -13,6 +13,7 @@ Singleton {
       title: String(result),
       subtitle: qsTr("Calculator result"),
       source: qsTr("Calculator"),
+      execute: () => {},
     };
     return [suggestion];
   }

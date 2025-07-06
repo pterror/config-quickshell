@@ -1,9 +1,17 @@
 import QtQuick
 
 QtObject {
-  required property list<QtObject> providers
+  property list<var> providers: [
+    ApplicationSearchProvider,
+    FileSearchProvider,
+    WindowSearchProvider,
+    CalculatorSearchProvider,
+    UnitsSearchProvider,
+  ]
+  // TODO: sigils (>&$#%) for each search provider
+  // ideally they can be multiple characters
 
-  function search() {
-    //
+  function search(query: string): list<var> {
+    return providers.flatMap(provider => provider.search(query))
   }
 }
