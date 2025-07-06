@@ -17,7 +17,7 @@ Button {
 		color: mouseArea.containsMouse ? Config._.style.barItem.hoverBg : Config._.style.barItem.bg
 	}
 
-	scale: mouseArea.pressed ? Config._.style.button.pressedScale : 1
+	scale: mouseArea.pressed && !Config._.reducedMotion ? Config._.style.button.pressedScale : 1
 	Behavior on scale { SmoothedAnimation { velocity: Config._.style.button.pressedScaleSpeed } }
 
 	MouseArea {

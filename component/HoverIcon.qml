@@ -22,6 +22,9 @@ Button {
 	ToolTip.visible: toolTip !== undefined && mouseArea.containsMouse
 	ToolTip.text: toolTip ?? ""
 
+	scale: mouseArea.pressed && !Config._.reducedMotion ? Config._.style.button.pressedScale : 1
+	Behavior on scale { SmoothedAnimation { velocity: Config._.style.button.pressedScaleSpeed } }
+
 	background: Rectangle {
 		anchors.margins: Config._.style.button.margins
 		radius: Config._.style.button.radius
