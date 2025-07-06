@@ -114,6 +114,7 @@ LazyLoader {
 					height: client.size[1],
 					class: client.class,
 					title: client.title,
+					toplevel: ToplevelManager.toplevels.values.find(value => `0x${value.HyprlandToplevel?.address}` === client.address)
 				}
 				result[client.workspace.id - 1].clients.push(info)
 			}

@@ -52,7 +52,7 @@ Item {
 				return Math.min(Math.abs(mousePos - modelData), Math.abs(mousePos - root.count - modelData))
 			}
 			property real scale: scaleByProximity(proximity)
-			source: "image://icon/" + appInfo.icon
+			source: Quickshell.iconPath(appInfo.icon)
 			size: {
 				if (iconMaxSize === iconSize || mouseAngle === undefined) return iconSize
 				const ratio = scaleByProximity(proximity)

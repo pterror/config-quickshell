@@ -11,10 +11,14 @@ ColumnLayout2 {
 	margins: Config._.style.panel.margins
 	spacing: Config._.style.mediaPlayer.controlsGap
 
-	RoundedImage {
+	Rounded {
 		size: Config._.style.mediaPlayer.imageSize
-		source: Config._.mpris.currentPlayer?.metadata["mpris:artUrl"] ?? Config.imageUrl("blank.png")
 		radius: Config._.style.panel.innerRadius
+
+		Image {
+			cache: false
+			source: Config._.mpris.currentPlayer?.metadata["mpris:artUrl"] ?? Config.imageUrl("blank.png")
+		}
 	}
 
 	RowLayout2 {

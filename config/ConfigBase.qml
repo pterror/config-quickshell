@@ -82,6 +82,8 @@ Singleton {
 			property real backgroundOpacity: 0.8
 			property bool moreTransparency: false
 			property bool reducedMotion: false
+			property bool liveWindowPreviews: false
+			property bool liveWorkspacePreviews: liveWindowPreviews
 			property url baseUrl: ""
 			property int frameRate: 60
 			property var locale: undefined
@@ -253,7 +255,7 @@ Singleton {
 					property color fg: root.style.primaryFg
 					property color bg: root.style.secondaryBg
 					property color accent: root.style.accent.fg
-					property color hoverBg: "#60e0ffff"
+					property color hoverBg: "#38e0ffff"
 					property color outline: "#00ffffff"
 				}
 
@@ -270,6 +272,9 @@ Singleton {
 					property color outline: root.style.widget.outline
 
 					property int animationDuration: 150
+					
+					property real pressedScale: 0.9
+					property real pressedScaleSpeed: 2
 				}
 
 				property JsonObject tooltip: JsonObject {
