@@ -12,7 +12,7 @@ RowLayout2 {
 		Text2 {
 			Layout.minimumWidth: 13
 			required property int modelData
-			property var workspace: HyprlandIpc.workspacesById[modelData + 1]
+			property var workspace: Config.services.compositor.workspacesById[modelData + 1]
 			visible: !Config.isSpecialWorkspace(workspace?.name);
 			text: workspace?.name ?? String(modelData + 1)
 			color: workspace?.focused

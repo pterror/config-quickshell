@@ -24,7 +24,7 @@ Singleton {
 	property string submap: ""
 	property var overlayAddress: undefined
 	property bool isOverlaid: overlayAddress !== undefined
-	property ShellScreen focusedScreen: Quickshell.screens.find(screen => screen.name === Hyprland.focusedMonitor.name)
+	property var focusedScreen: Quickshell.screens.find(screen => screen.name === focusedMonitor?.name) ?? null
 	property var bounds: Quickshell.screens.reduce((p, c) => {
 		const x = Math.min(p.x, c.x)
 		const y = Math.min(p.y, c.y)

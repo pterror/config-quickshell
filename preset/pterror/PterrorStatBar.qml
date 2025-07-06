@@ -43,7 +43,7 @@ PanelWindow {
 				Layout.fillHeight: true
 				Layout.fillWidth: true
 
-				Text2 { text: HyprlandIpc.activeWindow.title.normalize("NFKC").toLowerCase() }
+				Text2 { text: Config.services.compositor.activeWindow.title.normalize("NFKC").toLowerCase() }
 			}
 			RowLayout2 {
 				Layout.fillHeight: true

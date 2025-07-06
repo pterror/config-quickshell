@@ -17,7 +17,7 @@ LazyLoader {
 	property int rows: -1
 	property int spacing: 8
 
-	property bool shouldShow: !HyprlandIpc.isOverlaid && Config._.workspacesOverview.visible
+	property bool shouldShow: !Config.services.compositor.isOverlaid && Config._.workspacesOverview.visible
 	onShouldShowChanged: {
 		if (shouldShow) loading = true
 		else active = false
@@ -25,7 +25,7 @@ LazyLoader {
 
 	PanelWindow {
 		id: window
-		screen: HyprlandIpc.focusedScreen
+		screen: Config.services.compositor.focusedScreen
 		color: "transparent"
 		WlrLayershell.namespace: "shell:workspaces"
 		property list<var> workspacesData: []
@@ -86,14 +86,14 @@ LazyLoader {
 		}
 
 		function reload() {
-			HyprlandIpc.exec("j", ["clients"], json => { clientsData = JSON.parse(json); });
+			Config.services.compositor.exec("j", ["clients"], json => { clientsData = JSON.parse(json); });
 		}
 
 		function recomputeWorkspaces() {
 			const result = Array.from({ length: Config._.workspaceCount }, (_, i) => ({
 				id: i, x: 0, y: 0, width: 1920, height: 1080, clients: [],
 			}));
-			for (const workspace of HyprlandIpc.workspaces.values) {
+			for (const workspace of Config.services.compositor.workspaces.values) {
 				if (!/^\d+$/.test(workspace.name)) continue;
 				const screen = Quickshell.screens.find(m => m.name === workspace.monitor.name);
 				result[workspace.id - 1] = {

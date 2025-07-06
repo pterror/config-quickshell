@@ -20,7 +20,7 @@ Variants {
 		property var modelData
 		screen: modelData
 		// TODO: `Config._.wLogout.visible` should not control all subclasses of wlogout
-		visible: !HyprlandIpc.isOverlaid && Config._.wLogout.visible
+		visible: !Config.services.compositor.isOverlaid && Config._.wLogout.visible
 		exclusionMode: ExclusionMode.Ignore
 		WlrLayershell.layer: WlrLayer.Overlay
 		WlrLayershell.keyboardFocus: WlrKeyboardFocus.Exclusive

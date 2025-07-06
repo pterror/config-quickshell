@@ -37,8 +37,9 @@ ShellRoot {
 		target: Config.services.audio
 		function onVolumeChanged() {
 			if (!volumeOsdLoader.active || !volumeOsdLoader.item) return
-			if (HyprlandIpc.focusedScreen && volumeOsdLoader.item.screen?.name !== HyprlandIpc.focusedScreen.name) {
-				volumeOsdLoader.item.screen = HyprlandIpc.focusedScreen
+			const compositor = Config.services.compositor
+			if (compositor.focusedScreen && volumeOsdLoader.item.screen?.name !== compositor.focusedScreen.name) {
+				volumeOsdLoader.item.screen = compositor.focusedScreen
 			}
 			volumeOsdLoader.item.show()
 		}
@@ -94,9 +95,9 @@ ShellRoot {
 
 				// ShaderView {}
 
-				WindowSpawnerSelectionArea {
-					app: `${Config._.terminal} -e ${Config._.shell} -C 'nix run nixpkgs#pipes -- -RBCK -s 15 -p 3 -r 0 -f 100 | nix run nixpkgs#lolcat -- -F 0.02'`
-				}
+				// HyprlandWindowSpawnerSelectionArea {
+				// 	app: `${Config._.terminal} -e ${Config._.shell} -C 'nix run nixpkgs#pipes -- -RBCK -s 15 -p 3 -r 0 -f 100 | nix run nixpkgs#lolcat -- -F 0.02'`
+				// }
 
 				// GridDelegatedLayout {
 				// 	input: CPUInfo

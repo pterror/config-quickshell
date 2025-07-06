@@ -13,7 +13,7 @@ Widget {
 	required property int workspaceWidth
 	required property int workspaceHeight
 	required property var clients
-	visible: !Config.isSpecialWorkspace(modelData.name);
+	// visible: !Config.isSpecialWorkspace(modelData.name)
 	property real scale: width / workspaceWidth
 	anchors.margins: 0
 	color: mouseArea.containsMouse ? Config._.style.widget.hoverBg : Config._.style.widget.bg
@@ -42,7 +42,7 @@ Widget {
 		anchors.fill: parent
 		cursorShape: Qt.PointingHandCursor
 		onClicked: {
-			HyprlandIpc.focusWorkspace(workspaceId)
+			Config.services.compositor.focusWorkspace(workspaceId)
 			Config._.workspacesOverview.visible = false
 		}
 	}
@@ -88,7 +88,7 @@ Widget {
 				anchors.fill: parent
 				cursorShape: Qt.PointingHandCursor
 				onClicked: {
-					HyprlandIpc.focusWindow("address:" + modelData.address)
+					Config.services.compositor.focusWindow("address:" + modelData.address)
 					Config._.workspacesOverview.visible = false
 				}
 			}
