@@ -1,6 +1,7 @@
 import QtQuick
 import QtQuick.Layouts
 import QtQuick.Controls
+import Quickshell.Widgets
 import Quickshell.Services.Mpris
 import "root:/component"
 import "root:/"
@@ -11,11 +12,15 @@ ColumnLayout2 {
 	margins: Config._.style.panel.margins
 	spacing: Config._.style.mediaPlayer.controlsGap
 
-	Rounded {
-		size: Config._.style.mediaPlayer.imageSize
+	ClippingRectangle {
 		radius: Config._.style.panel.innerRadius
+		property real aspectRatio: (image.implicitWidth / image.implicitHeight) || 0.01
+		implicitWidth: Config._.style.mediaPlayer.imageSize * Math.min(aspectRatio, 1)
+		implicitHeight: Config._.style.mediaPlayer.imageSize / Math.max(aspectRatio, 1)
 
 		Image {
+			id: image
+			anchors.fill: parent
 			cache: false
 			source: Config._.mpris.currentPlayer?.metadata["mpris:artUrl"] ?? Config.imageUrl("blank.png")
 		}

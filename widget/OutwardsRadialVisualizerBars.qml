@@ -20,7 +20,7 @@ VisualizerBase {
 	property real rotationOffset: 0
 	width: outerRadius * 2
 	height: outerRadius * 2
-	inputDelegate: Cava { channels: "stereo"; count: 40 }
+	inputDelegate: Cava { channels: "stereo" }
 
 	Repeater {
 		model: input.count

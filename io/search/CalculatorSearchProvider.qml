@@ -1,6 +1,5 @@
 pragma Singleton
 
-import QtQuick
 import "root:/library/Calculator.mjs" as Calculator
 
 Singleton {

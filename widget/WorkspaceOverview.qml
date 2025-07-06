@@ -2,6 +2,7 @@ import QtQuick
 import QtQuick.Controls
 import Quickshell
 import Quickshell.Wayland
+import Quickshell.Widgets
 import "root:/io"
 import "root:/component"
 import "root:/"
@@ -48,42 +49,35 @@ Widget {
 	Repeater {
 		model: clients
 
-		Rectangle {
+		ClippingRectangle {
 			id: rect
 			required property var modelData
 			x: modelData.x * root.scale
 			y: modelData.y * root.scale
 			width: modelData.width * root.scale
 			height: modelData.height * root.scale
-			color: "transparent"
+			radius: Config._.style.widget.radius
 
-			Rounded {
-				enabled: true
-				implicitWidth: parent.width
-				implicitHeight: parent.height
-				radius: Config._.style.widget.radius
+			ScreencopyView {
+				anchors.fill: parent
+				captureSource: modelData.toplevel
+				live: Config._.liveWindowPreviews
 
-				ScreencopyView {
+				Rectangle {
 					anchors.fill: parent
-					captureSource: modelData.toplevel
-					live: Config._.liveWindowPreviews
+					color: windowMouseArea.containsMouse ? Config._.style.widget.hoverBg : "transparent"
+					Behavior on color { PropertyAnimation { duration: 150 } }
+				}
 
-					Rectangle {
-						anchors.fill: parent
-						color: windowMouseArea.containsMouse ? Config._.style.widget.hoverBg : "transparent"
-						Behavior on color { PropertyAnimation { duration: 150 } }
-					}
-
-					Image {
-						readonly property int size: Math.max(1, Math.min(parent.height, parent.width, Config._.style.icon.size))
-						anchors.verticalCenter: parent.verticalCenter
-						anchors.horizontalCenter: parent.horizontalCenter
-						source: Quickshell.iconPath(guessIcon(modelData.class))
-						width: size
-						height: size
-						sourceSize: Qt.size(width, height)
-						cache: false
-					}
+				Image {
+					readonly property int size: Math.max(1, Math.min(parent.height, parent.width, Config._.style.icon.size))
+					anchors.verticalCenter: parent.verticalCenter
+					anchors.horizontalCenter: parent.horizontalCenter
+					source: Quickshell.iconPath(guessIcon(modelData.class))
+					width: size
+					height: size
+					sourceSize: Qt.size(width, height)
+					cache: false
 				}
 			}
 
