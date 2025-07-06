@@ -25,20 +25,20 @@ ShellRoot {
 
 	LazyLoader {
 		id: volumeOsdLoader
-		loading: Config._.services.audio.initialized
+		loading: Config.services.audio.initialized
 		VProgressBarWindow {
 			anchors.right: true
-			fraction: Config._.services.audio.volume
-			onInput: fraction => Config._.services.audio.setVolume(fraction)
+			fraction: Config.services.audio.volume
+			onInput: fraction => Config.services.audio.setVolume(fraction)
 		}
 	}
 
 	Connections {
-		target: Config._.services.audio
+		target: Config.services.audio
 		function onVolumeChanged() {
 			if (!volumeOsdLoader.active || !volumeOsdLoader.item) return
-			if (HyprlandIpc.activeScreen && volumeOsdLoader.item.screen?.name !== HyprlandIpc.activeScreen.name) {
-				volumeOsdLoader.item.screen = HyprlandIpc.activeScreen
+			if (HyprlandIpc.focusedScreen && volumeOsdLoader.item.screen?.name !== HyprlandIpc.focusedScreen.name) {
+				volumeOsdLoader.item.screen = HyprlandIpc.focusedScreen
 			}
 			volumeOsdLoader.item.show()
 		}

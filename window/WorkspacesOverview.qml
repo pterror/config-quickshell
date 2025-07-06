@@ -25,12 +25,12 @@ LazyLoader {
 
 	PanelWindow {
 		id: window
-		screen: HyprlandIpc.activeScreen
+		screen: HyprlandIpc.focusedScreen
 		color: "transparent"
 		WlrLayershell.namespace: "shell:workspaces"
-		property var workspacesData: []
-		property var clientsData: []
-		property var workspaces: recomputeWorkspaces()
+		property list<var> workspacesData: []
+		property list<var> clientsData: []
+		property list<var> workspaces: recomputeWorkspaces()
 		implicitWidth: content.implicitWidth
 		implicitHeight: content.implicitHeight
 		onVisibleChanged: {
@@ -86,26 +86,28 @@ LazyLoader {
 		}
 
 		function reload() {
-			HyprlandIpc.exec("j", ["clients"], json => clientsData = JSON.parse(json))
-			HyprlandIpc.exec("j", ["workspaces"], json => workspacesData = JSON.parse(json))
+			HyprlandIpc.exec("j", ["clients"], json => { clientsData = JSON.parse(json); });
 		}
 
 		function recomputeWorkspaces() {
-			const result = HyprlandIpc.workspaceInfosArray.map((_, i) => ({ id: i + 1, x: 0, y: 0, width: 1920, height: 1080, clients: [] }))
-			for (const workspace of workspacesData) {
-				const screen = Quickshell.screens.find(m => m.name === workspace.monitor)
-				if (!screen) continue
-				const boundingBox = result[workspace.id - 1]
-				if (!boundingBox) continue
-				boundingBox.x = screen.x
-				boundingBox.y = screen.y
-				boundingBox.width = screen.width
-				boundingBox.height = screen.height
-				result[workspace.id - 1] = boundingBox
+			const result = Array.from({ length: Config._.workspaceCount }, (_, i) => ({
+				id: i, x: 0, y: 0, width: 1920, height: 1080, clients: [],
+			}));
+			for (const workspace of HyprlandIpc.workspaces.values) {
+				if (!/^\d+$/.test(workspace.name)) continue;
+				const screen = Quickshell.screens.find(m => m.name === workspace.monitor.name);
+				result[workspace.id - 1] = {
+					id: workspace.id,
+					x: screen?.x ?? 0,
+					y: screen?.y ?? 0,
+					width: screen?.width ?? 1920,
+					height: screen?.height ?? 1080,
+					clients: [],
+				};
 			}
 			for (const client of clientsData) {
-				const boundingBox = result[client.workspace.id - 1]
-				if (!boundingBox) continue
+				const boundingBox = result[client.workspace.id - 1];
+				if (!boundingBox) continue;
 				const info = {
 					address: client.address,
 					x: client.at[0] - boundingBox.x,
@@ -114,11 +116,11 @@ LazyLoader {
 					height: client.size[1],
 					class: client.class,
 					title: client.title,
-					toplevel: ToplevelManager.toplevels.values.find(value => `0x${value.HyprlandToplevel?.address}` === client.address)
+					toplevel: ToplevelManager.toplevels.values.find(value => `0x${value.HyprlandToplevel?.address}` === client.address),
 				}
-				result[client.workspace.id - 1].clients.push(info)
+				result[client.workspace.id - 1].clients.push(info);
 			}
-			return result
+			return result;
 		}
 	}
 }

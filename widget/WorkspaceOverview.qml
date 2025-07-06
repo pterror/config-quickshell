@@ -13,6 +13,7 @@ Widget {
 	required property int workspaceWidth
 	required property int workspaceHeight
 	required property var clients
+	visible: !Config.isSpecialWorkspace(modelData.name);
 	property real scale: width / workspaceWidth
 	anchors.margins: 0
 	color: mouseArea.containsMouse ? Config._.style.widget.hoverBg : Config._.style.widget.bg

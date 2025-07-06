@@ -39,15 +39,19 @@ Singleton {
 		objects: [Pipewire.defaultAudioSink, Pipewire.defaultAudioSource]
 	}
 
-	function formatDateTime(date: date, format = Locale.LongFormat) {
+	function isSpecialWorkspace(name: string): bool {
+		return /^special:/i.test(name);
+	}
+
+	function formatDateTime(date: date, format = Locale.LongFormat): string {
 		return date.toLocaleString(root.dateLocale, format)
 	}
 
-	function formatDate(date: date, format = Locale.LongFormat) {
+	function formatDate(date: date, format = Locale.LongFormat): string {
 		return date.toLocaleDateString(root.dateLocale, format)
 	}
 
-	function formatTime(date: date, format = Locale.LongFormat) {
+	function formatTime(date: date, format = Locale.LongFormat): string {
 		return date.toLocaleTimeString(root.dateLocale, format)
 	}
 
@@ -68,6 +72,52 @@ Singleton {
 			Quickshell.screens[0]
 	}
 
+	property QtObject services: QtObject {
+		property var audio: QtObject {
+			property bool initialized: volume === volume && micVolume === micVolume // check for NaNs
+			property real volume: Pipewire.defaultAudioSink?.audio?.volume ?? 0
+			property real micVolume: Pipewire.defaultAudioSource?.audio?.volume ?? 0
+			property bool muted: Pipewire.defaultAudioSink?.audio?.muted ?? false
+			property bool micMuted: Pipewire.defaultAudioSource?.audio?.muted ?? false
+
+			function setVolume(volume: real) {
+				if (!Pipewire.defaultAudioSink?.audio) return
+				Pipewire.defaultAudioSink.audio.volume = volume
+			}
+
+			function changeVolume(change: real) {
+				if (!Pipewire.defaultAudioSink?.audio) return
+				Pipewire.defaultAudioSink.audio.volume += change
+			}
+
+			function setMicVolume(volume: real) {
+				if (!Pipewire.defaultAudioSource?.audio) return
+				Pipewire.defaultAudioSource.audio.volume = volume
+			}
+
+			function changeMicVolume(change: real) {
+				if (!Pipewire.defaultAudioSource?.audio) return
+				Pipewire.defaultAudioSource.audio.volume += change
+			}
+
+			function setMuted(muted: bool) {
+				if (!Pipewire.defaultAudioSink?.audio) return
+				Pipewire.defaultAudioSink.audio.muted = muted
+			}
+
+			function toggleMute() { setMuted(!muted) }
+
+			function setMicMuted(muted: bool) {
+				if (!Pipewire.defaultAudioSource?.audio) return
+				Pipewire.defaultAudioSource.audio.muted = muted
+			}
+
+			function toggleMicMute() { setMicMuted(!micMuted) }
+		}
+		property var network: NetworkManager
+		property var compositor: HyprlandIpc
+	}
+
 	FileView {
 		path: url("config.json")
 		watchChanges: true
@@ -84,6 +134,7 @@ Singleton {
 			property bool reducedMotion: false
 			property bool liveWindowPreviews: false
 			property bool liveWorkspacePreviews: liveWindowPreviews
+			property int workspaceCount: 9
 			property url baseUrl: ""
 			property int frameRate: 60
 			property var locale: undefined
@@ -106,51 +157,6 @@ Singleton {
 
 			property JsonObject activateLinux: JsonObject {
 				property string name: (root.owo ? "NixOWOS" : "NixOS")
-			}
-
-			property JsonObject services: JsonObject {
-				property var audio: JsonObject {
-					property bool initialized: volume === volume && micVolume === micVolume // check for NaNs
-					property real volume: Pipewire.defaultAudioSink?.audio?.volume ?? 0
-					property real micVolume: Pipewire.defaultAudioSource?.audio?.volume ?? 0
-					property bool muted: Pipewire.defaultAudioSink?.audio?.muted ?? false
-					property bool micMuted: Pipewire.defaultAudioSource?.audio?.muted ?? false
-
-					function setVolume(volume: real) {
-						if (!Pipewire.defaultAudioSink?.audio) return
-						Pipewire.defaultAudioSink.audio.volume = volume
-					}
-
-					function changeVolume(change: real) {
-						if (!Pipewire.defaultAudioSink?.audio) return
-						Pipewire.defaultAudioSink.audio.volume += change
-					}
-
-					function setMicVolume(volume: real) {
-						if (!Pipewire.defaultAudioSource?.audio) return
-						Pipewire.defaultAudioSource.audio.volume = volume
-					}
-
-					function changeMicVolume(change: real) {
-						if (!Pipewire.defaultAudioSource?.audio) return
-						Pipewire.defaultAudioSource.audio.volume += change
-					}
-
-					function setMuted(muted: bool) {
-						if (!Pipewire.defaultAudioSink?.audio) return
-						Pipewire.defaultAudioSink.audio.muted = muted
-					}
-
-					function toggleMute() { setMuted(!muted) }
-
-					function setMicMuted(muted: bool) {
-						if (!Pipewire.defaultAudioSource?.audio) return
-						Pipewire.defaultAudioSource.audio.muted = muted
-					}
-
-					function toggleMicMute() { setMicMuted(!micMuted) }
-				}
-				property var network: NetworkManager
 			}
 
 			property JsonObject network: JsonObject {
@@ -325,7 +331,7 @@ Singleton {
 					property int margins: root.style.widget.margins
 					property int border: root.style.widget.border
 					// NOTE: Currently unused
-					property int fontSize: root.style.widget.fontSize
+					property int fontSize: 11
 					property int height: 32
 				}
 

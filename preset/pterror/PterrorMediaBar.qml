@@ -107,16 +107,16 @@ PanelWindow {
 								height: 16
 								anchors.verticalCenter: parent.verticalCenter
 								opacity: Config._.iconOpacity
-								source: Config._.services.audio.muted ? Config.iconUrl("flat/speaker_muted.svg") :
-									Config._.services.audio.volume < 0.25 ? Config.iconUrl("flat/speaker_volume_very_low.svg") :
-									Config._.services.audio.volume < 0.50 ? Config.iconUrl("flat/speaker_volume_low.svg") :
-									Config._.services.audio.volume < 0.75 ? Config.iconUrl("flat/speaker_volume_medium.svg") :
+								source: Config.services.audio.muted ? Config.iconUrl("flat/speaker_muted.svg") :
+									Config.services.audio.volume < 0.25 ? Config.iconUrl("flat/speaker_volume_very_low.svg") :
+									Config.services.audio.volume < 0.50 ? Config.iconUrl("flat/speaker_volume_low.svg") :
+									Config.services.audio.volume < 0.75 ? Config.iconUrl("flat/speaker_volume_medium.svg") :
 									Config.iconUrl("flat/speaker_volume_high.svg")
 							}
 						}
 
 						Text2 {
-							text: Math.round(Config._.services.audio.volume * 100) + "%"
+							text: Math.round(Config.services.audio.volume * 100) + "%"
 							LazyLoader {
 								id: volumeControlsLoader
 								PopupWindow2 {
@@ -142,11 +142,11 @@ PanelWindow {
 								height: 16
 								anchors.verticalCenter: parent.verticalCenter
 								opacity: Config._.iconOpacity
-								source: Config._.services.audio.micMuted ? Config.iconUrl("flat/microphone_muted.svg") : Config.iconUrl("flat/microphone.svg")
+								source: Config.services.audio.micMuted ? Config.iconUrl("flat/microphone_muted.svg") : Config.iconUrl("flat/microphone.svg")
 							}
 						}
 
-						Text2 { id: micVolumeText; text: Math.round(Config._.services.audio.micVolume * 100) + "%" }
+						Text2 { id: micVolumeText; text: Math.round(Config.services.audio.micVolume * 100) + "%" }
 					}
 				}
 				RowLayout2 {
@@ -161,13 +161,13 @@ PanelWindow {
 							height: 16
 							anchors.verticalCenter: parent.verticalCenter
 							opacity: Config._.iconOpacity
-							source: !Config._.services.network.connected ? Config.iconUrl("flat/wifi_disconnected.svg") :
-								Config._.services.network.strength < 33 ? Config.iconUrl("flat/wifi_low.svg") :
-								Config._.services.network.strength < 67 ? Config.iconUrl("flat/wifi_medium.svg") :
+							source: !Config.services.network.connected ? Config.iconUrl("flat/wifi_disconnected.svg") :
+								Config.services.network.strength < 33 ? Config.iconUrl("flat/wifi_low.svg") :
+								Config.services.network.strength < 67 ? Config.iconUrl("flat/wifi_medium.svg") :
 								Config.iconUrl("flat/wifi_high.svg")
 					}
 					}
-					Text2 { text: Config._.services.network.network }
+					Text2 { text: Config.services.network.network }
 				}
 				RowLayout2 {
 					Layout.fillHeight: true

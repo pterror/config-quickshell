@@ -15,34 +15,34 @@ RowLayout2 {
 	ColumnLayout2 {
 		autoSize: true
 		VProgressBar {
-			fraction: Config._.services.audio.volume
+			fraction: Config.services.audio.volume
 			width: 48
 			height: 224
-			onInput: fraction => Config._.services.audio.setVolume(fraction)
+			onInput: fraction => Config.services.audio.setVolume(fraction)
 		}
 		HoverIcon {
 			Layout.alignment: Qt.AlignHCenter
-			source: Config._.services.audio.muted ? Config.iconUrl("flat/speaker_muted.svg") :
-				Config._.services.audio.volume < 0.25 ? Config.iconUrl("flat/speaker_volume_very_low.svg") :
-				Config._.services.audio.volume < 0.50 ? Config.iconUrl("flat/speaker_volume_low.svg") :
-				Config._.services.audio.volume < 0.75 ? Config.iconUrl("flat/speaker_volume_medium.svg") :
+			source: Config.services.audio.muted ? Config.iconUrl("flat/speaker_muted.svg") :
+				Config.services.audio.volume < 0.25 ? Config.iconUrl("flat/speaker_volume_very_low.svg") :
+				Config.services.audio.volume < 0.50 ? Config.iconUrl("flat/speaker_volume_low.svg") :
+				Config.services.audio.volume < 0.75 ? Config.iconUrl("flat/speaker_volume_medium.svg") :
 				Config.iconUrl("flat/speaker_volume_high.svg")
-			onClicked: Config._.services.audio.toggleMute()
+			onClicked: Config.services.audio.toggleMute()
 		}
 	}
 
 	ColumnLayout2 {
 		autoSize: true
 		VProgressBar {
-			fraction: Config._.services.audio.micVolume
+			fraction: Config.services.audio.micVolume
 			width: 48
 			height: 224
-			onInput: fraction => Config._.services.audio.setMicVolume(fraction)
+			onInput: fraction => Config.services.audio.setMicVolume(fraction)
 		}
 		HoverIcon {
 			Layout.alignment: Qt.AlignHCenter
-			source: Config._.services.audio.micMuted ? Config.iconUrl("flat/microphone_muted.svg") : Config.iconUrl("flat/microphone.svg")
-			onClicked: Config._.services.audio.toggleMicMute()
+			source: Config.services.audio.micMuted ? Config.iconUrl("flat/microphone_muted.svg") : Config.iconUrl("flat/microphone.svg")
+			onClicked: Config.services.audio.toggleMicMute()
 		}
 	}
 }

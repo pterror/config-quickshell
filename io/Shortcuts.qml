@@ -51,60 +51,60 @@ Singleton {
 	GlobalShortcut {
 		name: "audio:volume_up"
 		description: "increase speaker volume by 5%"
-		onPressed: Config._.services.audio.changeVolume(0.05)
+		onPressed: Config.services.audio.changeVolume(0.05)
 	}
 
 	GlobalShortcut {
 		name: "audio:volume_down"
 		description: "decrease speaker volume by 5%"
-		onPressed: Config._.services.audio.changeVolume(-0.05)
+		onPressed: Config.services.audio.changeVolume(-0.05)
 	}
 
 	GlobalShortcut {
 		name: "audio:mic_volume_up"
 		description: "increase microphone volume by 5%"
-		onPressed: Config._.services.audio.changeMicVolume(0.05)
+		onPressed: Config.services.audio.changeMicVolume(0.05)
 	}
 
 	GlobalShortcut {
 		name: "audio:mic_volume_down"
 		description: "decrease microphone volume by 5%"
-		onPressed: Config._.services.audio.changeMicVolume(-0.05)
+		onPressed: Config.services.audio.changeMicVolume(-0.05)
 	}
 
 	GlobalShortcut {
 		name: "audio:toggle_mute"
 		description: "toggle speaker muted state"
-		onPressed: Config._.services.audio.toggleMute()
+		onPressed: Config.services.audio.toggleMute()
 	}
 
 	GlobalShortcut {
 		name: "audio:mute"
 		description: "mute speaker"
-		onPressed: Config._.services.audio.setMuted(true)
+		onPressed: Config.services.audio.setMuted(true)
 	}
 
 	GlobalShortcut {
 		name: "audio:unmute"
 		description: "unmute speaker"
-		onPressed: Config._.services.audio.setMuted(false)
+		onPressed: Config.services.audio.setMuted(false)
 	}
 
 	GlobalShortcut {
 		name: "audio:toggle_mic_mute"
 		description: "toggle microphone muted state"
-		onPressed: Config._.services.audio.toggleMicMute()
+		onPressed: Config.services.audio.toggleMicMute()
 	}
 
 	GlobalShortcut {
 		name: "audio:mic_mute"
 		description: "mute microphone"
-		onPressed: Config._.services.audio.setMicMuted(true)
+		onPressed: Config.services.audio.setMicMuted(true)
 	}
 
 	GlobalShortcut {
 		name: "audio:mic_unmute"
 		description: "unmute microphone"
-		onPressed: Config._.services.audio.setMicMuted(false)
+		onPressed: Config.services.audio.setMicMuted(false)
 	}
 }
