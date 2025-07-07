@@ -51,17 +51,19 @@ Scope {
 			property var newValues: Array(count).fill(0)
 			splitMarker: ""
 			onRead: data => {
-				if (process.index + data.length > config.general.bars) {
-					process.index = 0
+				const length = config.general.bars;
+				if (process.index + data.length > length) {
+					process.index = 0;
 				}
 				for (let i = 0; i < data.length; i += 1) {
-					newValues[i + process.index] = Math.min(data.charCodeAt(i), 128) / 128
+					const newIndex = i + process.index;
+					if (newIndex > length) {
+						break;
+					}
+					newValues[newIndex] = Math.min(data.charCodeAt(i), 128) / 128;
 				}
-				process.index += data.length
-				if (newValues.length !== values.length) {
-					console.log("length!", values.length, newValues.length)
-				}
-				values = newValues
+				process.index += data.length;
+				values = newValues;
 			}
 		}
 	}

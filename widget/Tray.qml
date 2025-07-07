@@ -1,16 +1,18 @@
 import QtQuick
+import QtQuick.Layouts
 import Quickshell.Services.SystemTray
 import "root:/component"
 
-RowLayout2 {
+GridLayout {
 	id: root
 
     Repeater {
         model: SystemTray.items
 
-        Rectangle {
+        HoverIcon {
             required property var modelData
-            property var foo: console.log(Object.keys(modelData))
+            source: modelData.icon
+            size: 16
         }
     }
 }

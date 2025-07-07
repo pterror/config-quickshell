@@ -2,6 +2,7 @@ pragma Singleton
 
 import Quickshell
 import Quickshell.Io
+import Quickshell.Wayland
 import Quickshell.Hyprland
 import QtQuick
 import "root:/"
@@ -38,6 +39,7 @@ Singleton {
 		property string klass: ""
 	}
 	property var windows: ({}) // { [address]: { workspace, klass, title, initialClass, initialTitle } }
+	property list<var> clientsData: []
 	property QtObject activeKeyboardLayout: QtObject {
 		property string keyboard: "(unknown)"
 		property string layout: "(unknown)"
@@ -222,5 +224,43 @@ Singleton {
 
 	function focusWorkspaceOnCurrentMonitor(id) {
 		Hyprland.dispatch(`workspace ${id}`)
+	}
+
+	function refetchClients() {
+		exec("j", ["clients"], json => { clientsData = JSON.parse(json); });
+	}
+
+	function recomputeWorkspaces() {
+		const result = Array.from({ length: Config._.workspaceCount }, (_, i) => ({
+			id: i, x: 0, y: 0, width: 1920, height: 1080, clients: [],
+		}));
+		for (const workspace of workspaces.values) {
+			if (!/^\d+$/.test(workspace.name)) continue;
+			const screen = Quickshell.screens.find(m => m.name === workspace.monitor.name);
+			result[workspace.id - 1] = {
+				id: workspace.id,
+				x: screen?.x ?? 0,
+				y: screen?.y ?? 0,
+				width: screen?.width ?? 1920,
+				height: screen?.height ?? 1080,
+				clients: [],
+			};
+		}
+		for (const client of clientsData) {
+			const boundingBox = result[client.workspace.id - 1];
+			if (!boundingBox) continue;
+			const info = {
+				address: client.address,
+				x: client.at[0] - boundingBox.x,
+				y: client.at[1] - boundingBox.y,
+				width: client.size[0],
+				height: client.size[1],
+				class: client.class,
+				title: client.title,
+				toplevel: ToplevelManager.toplevels.values.find(value => `0x${value.HyprlandToplevel?.address}` === client.address),
+			}
+			result[client.workspace.id - 1].clients.push(info);
+		}
+		return result;
 	}
 }

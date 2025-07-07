@@ -59,8 +59,8 @@ PanelWindow {
 					HoverItem {
 						inner: mediaText
 						onClicked: {
-							if (!mediaControlsLoader.active) mediaControlsLoader.loading = true
-							else mediaControlsLoader.active = false
+							if (!mediaControlsLoader.active) mediaControlsLoader.loading = true;
+							else mediaControlsLoader.active = false;
 						}
 
 						Text2 {

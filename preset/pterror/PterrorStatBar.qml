@@ -51,7 +51,7 @@ PanelWindow {
 				implicitWidth: 400
 
 				HSpace {}
-				// Tray {}
+				TrayStatus {}
 				HoverItem {
 					inner: workspacesStatus
 					onClicked: Config._.workspacesOverview.visible = !Config._.workspacesOverview.visible

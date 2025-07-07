@@ -30,17 +30,17 @@ LazyLoader {
 		WlrLayershell.namespace: "shell:workspaces"
 		property list<var> workspacesData: []
 		property list<var> clientsData: []
-		property list<var> workspaces: recomputeWorkspaces()
+		property list<var> workspaces: Config.services.compositor.recomputeWorkspaces()
 		implicitWidth: content.implicitWidth
 		implicitHeight: content.implicitHeight
 		onVisibleChanged: {
 			if (!visible) return
 			grab.active = true
-			reload()
+			Config.services.compositor.refetchClients()
 		}
 
 		// `onVisibleChanged` does not fire on reload
-		PersistentProperties { onLoaded: reload() }
+		PersistentProperties { onLoaded: Config.services.compositor.refetchClients() }
 
 		Connections {
 			target: Config._.workspacesOverview
@@ -83,44 +83,6 @@ LazyLoader {
 					}
 				}
 			}
-		}
-
-		function reload() {
-			Config.services.compositor.exec("j", ["clients"], json => { clientsData = JSON.parse(json); });
-		}
-
-		function recomputeWorkspaces() {
-			const result = Array.from({ length: Config._.workspaceCount }, (_, i) => ({
-				id: i, x: 0, y: 0, width: 1920, height: 1080, clients: [],
-			}));
-			for (const workspace of Config.services.compositor.workspaces.values) {
-				if (!/^\d+$/.test(workspace.name)) continue;
-				const screen = Quickshell.screens.find(m => m.name === workspace.monitor.name);
-				result[workspace.id - 1] = {
-					id: workspace.id,
-					x: screen?.x ?? 0,
-					y: screen?.y ?? 0,
-					width: screen?.width ?? 1920,
-					height: screen?.height ?? 1080,
-					clients: [],
-				};
-			}
-			for (const client of clientsData) {
-				const boundingBox = result[client.workspace.id - 1];
-				if (!boundingBox) continue;
-				const info = {
-					address: client.address,
-					x: client.at[0] - boundingBox.x,
-					y: client.at[1] - boundingBox.y,
-					width: client.size[0],
-					height: client.size[1],
-					class: client.class,
-					title: client.title,
-					toplevel: ToplevelManager.toplevels.values.find(value => `0x${value.HyprlandToplevel?.address}` === client.address),
-				}
-				result[client.workspace.id - 1].clients.push(info);
-			}
-			return result;
 		}
 	}
 }

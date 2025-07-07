@@ -1,7 +1,8 @@
-// @pragma Env QSG_USE_SIMPLE_ANIMATION_DRIVER 0
+//@ pragma UseQApplication
+// UseQApplication is required for system tray menus to work.
 import QtQuick
 import "root:/preset/pterror"
 
 PterrorShell {
-	Component.onCompleted: Config._.baseUrl = Qt.resolvedUrl(".")
+	Component.onCompleted: Config.baseUrl = Qt.resolvedUrl(".")
 }

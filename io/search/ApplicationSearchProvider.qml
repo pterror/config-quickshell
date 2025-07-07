@@ -6,7 +6,7 @@ import "root:/library/Calculator.mjs" as Calculator
 
 Singleton {
   function search(query: string): list<var> {
-    const regexes = Strings.regExpEscape(query).split(" ").map(term => new RegExp(term));
+    const regexes = Strings.regExpEscape(query).split(" ").map(term => new RegExp(term, "i"));
     const isMatch = s => regexes.every(regex => regex.test(s));
     return DesktopEntries.applications
       .filter(app => isMatch(app.name) || isMatch(app.genericName) || isMatch(app.comment))
