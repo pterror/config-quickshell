@@ -4,17 +4,4 @@ pragma Singleton
 import QtQuick
 import "root:/config"
 
-ConfigDark {
-	name: "your name"
-	// check e.g. `hyprctl monitors`
-	Component.onCompleted: {
-		screens.primary = Qt.binding(() => getScreen("HDMI-A-1"))
-		owo = false
-		reducedMotion = false
-		// WARNING: Significantly affects performance when using `PterrorShell` in `shell.qml`
-		// widgetsAcrossAllScreens = true
-		backgroundOpacity = 0
-		style.widget.fontSize = 13
-		font = Qt.font({ family: "Unicorn Scribbles" })
-	}
-}
+ConfigDark {}

@@ -17,6 +17,7 @@ RowLayout2 {
 		model: SystemTray.items.values
 
 		HoverIcon {
+			id: icon
 			required property var modelData
 			source: modelData.icon
 			size: Config._.style.trayStatus.iconSize
@@ -27,15 +28,15 @@ RowLayout2 {
 
 			QsMenuAnchor {
 				id: menu
-				anchor.item: parent
+				anchor.item: icon
 				anchor.edges: root.edges
 				anchor.gravity: root.gravity
-				anchor.margins.left: anchor.gravity & Edges.Left ? -Config._.style.popup.gap : anchor.gravity & Edges.Right ? 0 : parent.implicitWidth / 2
+				anchor.margins.left: anchor.gravity & Edges.Left ? -Config._.style.popup.gap : anchor.gravity & Edges.Right ? 0 : icon.implicitWidth / 2
 				anchor.margins.right: anchor.gravity & Edges.Right ? -Config._.style.popup.gap : 0
-				anchor.margins.top: anchor.gravity & Edges.Top ? -Config._.style.popup.gap : anchor.gravity & Edges.Top ? 0 : parent.implicitHeight / 2
+				anchor.margins.top: anchor.gravity & Edges.Top ? -Config._.style.popup.gap : anchor.gravity & Edges.Top ? 0 : icon.implicitHeight / 2
 				anchor.margins.bottom: anchor.gravity & Edges.Bottom ? -Config._.style.popup.gap : 0
-				anchor.rect.width: parent.implicitWidth
-				anchor.rect.height: parent.implicitHeight
+				anchor.rect.width: icon.implicitWidth
+				anchor.rect.height: icon.implicitHeight
 
 				menu: modelData.menu
 			}
