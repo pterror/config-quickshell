@@ -38,7 +38,7 @@ Crewmate {
 		}
 	}
 
-	MediaPlayer { id: audio; source: Config._.soundUrl(sound); audioOutput: AudioOutput {} }
+	MediaPlayer { id: audio; source: Config.soundUrl(sound); audioOutput: AudioOutput {} }
 
 	scale: mouseArea.pressed ? 0.9 : 1.0
 	Behavior on scale { SmoothedAnimation { velocity: 2 } }

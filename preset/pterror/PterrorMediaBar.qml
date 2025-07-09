@@ -65,7 +65,7 @@ PanelWindow {
 
 						Text2 {
 							id: mediaText
-							text: ((Config._.mpris.currentPlayer?.metadata["xesam:title"] ?? "") + " - " + (Config._.mpris.currentPlayer?.metadata["xesam:artist"].join(", ") ?? "")).normalize("NFKC").toLowerCase()
+							text: ((Config.mpris.currentPlayer?.metadata["xesam:title"] ?? "") + " - " + (Config.mpris.currentPlayer?.metadata["xesam:artist"].join(", ") ?? "")).normalize("NFKC").toLowerCase()
 							LazyLoader {
 								id: mediaControlsLoader
 								PopupWindow2 {

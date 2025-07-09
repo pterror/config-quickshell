@@ -8,10 +8,10 @@ import "root:/component"
 RowLayout2 {
 	id: root
 	Layout.fillHeight: true
+	autoSize: true
 	property var menuAlignment: Qt.AlignHCenter | Qt.AlignBottom
 	property var edges: Edges.Bottom | Edges.Left
 	property var gravity: Edges.Bottom
-	implicitWidth: 16 * SystemTray.items.values.length + 8
 
 	Repeater {
 		model: SystemTray.items.values
@@ -19,7 +19,7 @@ RowLayout2 {
 		HoverIcon {
 			required property var modelData
 			source: modelData.icon
-			size: 16
+			size: Config._.style.trayStatus.iconSize
 			onClicked: {
 				if (!menu.visible) menu.open();
 				else menu.close();

@@ -20,8 +20,8 @@ ShellRoot {
 
 	Cava { id: cava; count: 48 }
 
-	PterrorStatBar { id: statBar; screen: Config._.screens.primary }
-	PterrorMediaBar { id: mediaBar; screen: Config._.screens.primary; extraGrabWindows: [statBar] }
+	PterrorStatBar { id: statBar; screen: Config.screens.primary }
+	PterrorMediaBar { id: mediaBar; screen: Config.screens.primary; extraGrabWindows: [statBar] }
 
 	LazyLoader {
 		id: volumeOsdLoader
@@ -77,15 +77,15 @@ ShellRoot {
 
 				Wallpaper {
 					source: wallpaperRandomizer.wallpapers[modelData.name] ?? Config.imageUrl("dark_pixel.png")
-					layer.enabled: Config._.wallpapers_.effect != null
-					layer.effect: Config._.wallpapers_.effect
+					layer.enabled: Config.wallpapers.effect != null
+					layer.effect: Config.wallpapers.effect
 				}
 
 				// CrankableImage {
 				// 	screen: modelData
 				// 	source: wallpaperRandomizer.wallpapers[modelData.name] ?? Config.imageUrl("dark_pixel.png")
-				// 	layer.enabled: Config._.wallpapers_.effect != null
-				// 	layer.effect: Config._.wallpapers_.effect
+				// 	layer.enabled: Config.wallpapers.effect != null
+				// 	layer.effect: Config.wallpapers.effect
 				// }
 
 				// VideoPlayer {
@@ -116,7 +116,7 @@ ShellRoot {
 	}
 
 	Variants {
-		model: Config._.widgetsAcrossAllScreens ? Quickshell.screens : [Config._.screens.primary]
+		model: Config._.widgetsAcrossAllScreens ? Quickshell.screens : [Config.screens.primary]
 
 		Scope {
 			required property var modelData
@@ -144,7 +144,7 @@ ShellRoot {
 				// TimeZonesDisplay {}
 
 				// PanelWindow {
-				// 	screen: Config._.screens.primary
+				// 	screen: Config.screens.primary
 				// 	color: "transparent"
 				// 	WlrLayershell.layer: WlrLayer.Bottom
 				// 	width: radialLauncher.implicitWidth || 1
@@ -171,39 +171,39 @@ ShellRoot {
 					anchors.topMargin: (parent.height - Config._.style.hBar.height - height) / 2
 				}
 
-				// InteractiveCrewmate {
-				// 	visible: Screen.name === Config._.screens.primary.name
-				// 	color: "transparent"
-				// 	maxClickCount: 2
-				// 	opacity: 0.4
-				// 	anchors.left: parent.left
-				// 	anchors.leftMargin: 128
-				// 	anchors.top: parent.top
-				// 	anchors.topMargin: 64
-				// }
+				InteractiveCrewmate {
+					visible: Screen.name === Config.screens.primary.name
+					color: "transparent"
+					maxClickCount: 2
+					opacity: 0.4
+					anchors.left: parent.left
+					anchors.leftMargin: 128
+					anchors.top: parent.top
+					anchors.topMargin: 64
+				}
 
-				// BouncingMaskedShaderWidget {
-				// 	visible: Screen.name === Config._.screens.primary.name
-				// 	id: bouncingMaskedShader
-				// 	moving: !bouncingMaskedShaderMouseArea.containsPress
-				// }
+				BouncingMaskedShaderWidget {
+					visible: Screen.name === Config.screens.primary.name
+					id: bouncingMaskedShader
+					moving: !bouncingMaskedShaderMouseArea.containsPress
+				}
 
-			// 	MouseArea {
-			// 		id: bouncingMaskedShaderMouseArea
-			// 		property int startX: 0
-			// 		property int startY: 0
-			// 		anchors.fill: bouncingMaskedShader
-			// 		cursorShape: Qt.PointingHandCursor
-			// 		onPressed: event => { startX = event.x; startY = event.y }
-			// 		onPositionChanged: event => {
-			// 			const dx = event.x - startX
-			// 			const dy = event.y - startY
-			// 			bouncingMaskedShader.x += dx
-			// 			bouncingMaskedShader.y += dy
-			// 			bouncingMaskedShader.impulse(Math.hypot(dy, dx) * 10)
-			// 			bouncingMaskedShader.angle = Math.atan2(dy, dx) * 180 / Math.PI
-			// 		}
-			// 	}
+				MouseArea {
+					id: bouncingMaskedShaderMouseArea
+					property int startX: 0
+					property int startY: 0
+					anchors.fill: bouncingMaskedShader
+					cursorShape: Qt.PointingHandCursor
+					onPressed: event => { startX = event.x; startY = event.y }
+					onPositionChanged: event => {
+						const dx = event.x - startX
+						const dy = event.y - startY
+						bouncingMaskedShader.x += dx
+						bouncingMaskedShader.y += dy
+						bouncingMaskedShader.impulse(Math.hypot(dy, dx) * 10)
+						bouncingMaskedShader.angle = Math.atan2(dy, dx) * 180 / Math.PI
+					}
+				}
 			}
 		}
 	}

@@ -6,6 +6,7 @@ import Quickshell.Widgets
 import "root:/io"
 import "root:/component"
 import "root:/"
+import "root:/library/Applications.mjs" as Applications
 
 Widget {
 	id: root
@@ -20,21 +21,6 @@ Widget {
 	Behavior on color { PropertyAnimation { duration: 100 } }
 	width: 200
 	height: workspaceHeight * scale
-
-	function guessIcon(name: string): string {
-		// See https://github.com/end-4/dots-hyprland/blob/9d6452aaaf3723f2fcce38fdd90e62168e41bb3f/.config/quickshell/services/AppSearch.qml#L17-L27
-		return {
-        "code-url-handler": "visual-studio-code",
-        "Code": "visual-studio-code",
-        "gnome-tweaks": "org.gnome.tweaks",
-        "pavucontrol-qt": "pavucontrol",
-        "wps": "wps-office2019-kprometheus",
-        "wpsoffice": "wps-office2019-kprometheus",
-        "footclient": "foot",
-        "zen": "zen-browser",
-        "brave-browser": "brave-desktop"
-    }[name] ?? name;
-	}
 
 	MouseArea {
 		id: mouseArea
@@ -74,7 +60,7 @@ Widget {
 					readonly property int size: Math.max(1, Math.min(parent.height, parent.width, Config._.style.icon.size))
 					anchors.verticalCenter: parent.verticalCenter
 					anchors.horizontalCenter: parent.horizontalCenter
-					source: Quickshell.iconPath(guessIcon(modelData.class))
+					source: Quickshell.iconPath(Applications.guessIcon(modelData.class))
 					width: size
 					height: size
 					sourceSize: Qt.size(width, height)

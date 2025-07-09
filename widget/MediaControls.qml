@@ -22,7 +22,7 @@ ColumnLayout2 {
 			id: image
 			anchors.fill: parent
 			cache: false
-			source: Config._.mpris.currentPlayer?.metadata["mpris:artUrl"] ?? Config.imageUrl("blank.png")
+			source: Config.mpris.currentPlayer?.metadata["mpris:artUrl"] ?? Config.imageUrl("blank.png")
 		}
 	}
 
@@ -32,19 +32,19 @@ ColumnLayout2 {
 		spacing: Config._.style.mediaPlayer.controlGap
 		HoverIcon {
 			source: Config.iconUrl("flat/media_previous.svg")
-			onClicked: Config._.mpris.currentPlayer?.previous()
+			onClicked: Config.mpris.currentPlayer?.previous()
 		}
 		HoverIcon {
-			property bool playing: Config._.mpris.currentPlayer?.playbackState === MprisPlaybackState.Playing
+			property bool playing: Config.mpris.currentPlayer?.playbackState === MprisPlaybackState.Playing
 			source: playing ? Config.iconUrl("flat/media_pause.svg") : Config.iconUrl("flat/media_play.svg")
 			onClicked: {
-				if (!Config._.mpris.currentPlayer) return
-				Config._.mpris.currentPlayer.playbackState = playing ? MprisPlaybackState.Paused : MprisPlaybackState.Playing
+				if (!Config.mpris.currentPlayer) return
+				Config.mpris.currentPlayer.playbackState = playing ? MprisPlaybackState.Paused : MprisPlaybackState.Playing
 			}
 		}
 		HoverIcon {
 			source: Config.iconUrl("flat/media_next.svg")
-			onClicked: Config._.mpris.currentPlayer?.next()
+			onClicked: Config.mpris.currentPlayer?.next()
 		}
 	}
 }

@@ -29,7 +29,6 @@ LazyLoader {
 		color: "transparent"
 		WlrLayershell.namespace: "shell:workspaces"
 		property list<var> workspacesData: []
-		property list<var> clientsData: []
 		property list<var> workspaces: Config.services.compositor.recomputeWorkspaces()
 		implicitWidth: content.implicitWidth
 		implicitHeight: content.implicitHeight

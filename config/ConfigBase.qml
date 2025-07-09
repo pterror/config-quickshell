@@ -15,6 +15,24 @@ Singleton {
 	property real _HOUR_MS: 3600000
 	property real _DAY_MS: 86400000
 
+	function writeConfig() {
+		file.writeAdapter()
+	}
+
+	property QtObject screens: QtObject {
+		property ShellScreen primary: getScreen(root.screens.primary) ?? Quickshell.screens[0]
+	}
+
+	property QtObject mpris: QtObject {
+		property MprisPlayer currentPlayer: Mpris.players.values[0] ?? null
+	}
+
+	property QtObject wallpapers: QtObject {
+		property Component effect: MultiEffect { colorization: 0.85; colorizationColor: Qt.rgba(0.05, 0.05, 0.05, 1.0) }
+	}
+
+	property font font: Qt.font({ family: root.font.family })
+
 	Variants {
 		model: Mpris.players.values
 		Connections {
@@ -65,7 +83,7 @@ Singleton {
 	function soundUrl(path: string): url { return url(path, "sound/") }
 	function videoUrl(path: string): url { return url(path, "video/") }
 
-	function getScreen(name) {
+	function getScreen(name: string): ShellScreen {
 		return Quickshell.screens.find(screen => screen.name === name) ??
 			Quickshell.screens.find(screen => screen.name.startsWith(name)) ??
 			Quickshell.screens.find(screen => screen.name.includes(name)) ??
@@ -119,10 +137,10 @@ Singleton {
 	}
 
 	FileView {
+		id: file
 		path: url("config.json")
 		watchChanges: true
 		onFileChanged: reload()
-		onAdapterUpdated: writeAdapter()
 
 		JsonAdapter {
 			id: root
@@ -142,8 +160,8 @@ Singleton {
 			property string terminal: Quickshell.env("TERM") ?? "gnome-terminal"
 			property string shell: Quickshell.env("SHELL") ?? "bash"
 
-			property QtObject screens: QtObject {
-				property ShellScreen primary: Quickshell.screens[0]
+			property JsonObject screens: JsonObject {
+				property string primary: "HDMI-A-1"
 			}
 
 			property bool debug: false
@@ -151,12 +169,8 @@ Singleton {
 				property bool debugRectangles: root.debug && true
 			}
 
-			property QtObject mpris: QtObject {
-				property MprisPlayer currentPlayer: Mpris.players.values[0] ?? null
-			}
-
 			property JsonObject activateLinux: JsonObject {
-				property string name: (root.owo ? "NixOWOS" : "NixOS")
+				property string name: (root.owo ? "Linuwux" : "Linux")
 			}
 
 			property JsonObject network: JsonObject {
@@ -169,11 +183,9 @@ Singleton {
 				property real seed: Math.floor((Number(Time.time) - 7.5 * _HOUR_MS - Time.time.getTimezoneOffset() * _MIN_MS) / _DAY_MS)
 			}
 
-			property QtObject wallpapers_: QtObject {
-				property Component effect: MultiEffect { colorization: 0.85; colorizationColor: Qt.rgba(0.05, 0.05, 0.05, 1.0) }
+			property JsonObject font: JsonObject {
+				property string family: "Noto Sans"
 			}
-
-			property font font: Qt.font({ family: "Noto Sans" })
 
 			property JsonObject shaderWallpaper: JsonObject {
 				property string shader: "Night_Sky"
@@ -396,6 +408,10 @@ Singleton {
 					property color bg: "#e60c0c0c"
 					property color buttonBg: "#1e1e1e"
 					property color buttonHoverBg: "#3700b3"
+				}
+
+				property JsonObject trayStatus: JsonObject {
+					property int iconSize: 16
 				}
 			}
 

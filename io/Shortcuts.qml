@@ -22,9 +22,9 @@ Singleton {
 		name: "media:play_pause"
 		description: "toggle the current media track between playing and paused"
 		onPressed: {
-			if (!Config._.mpris.currentPlayer) return
-			Config._.mpris.currentPlayer.playbackState =
-				Config._.mpris.currentPlayer.playbackState === MprisPlaybackState.Playing
+			if (!Config.mpris.currentPlayer) return
+			Config.mpris.currentPlayer.playbackState =
+				Config.mpris.currentPlayer.playbackState === MprisPlaybackState.Playing
 					? MprisPlaybackState.Paused
 					: MprisPlaybackState.Playing
 		}
@@ -34,8 +34,8 @@ Singleton {
 		name: "media:play"
 		description: "play the current media track"
 		onPressed: {
-			if (!Config._.mpris.currentPlayer) return
-			Config._.mpris.currentPlayer.playbackState = MprisPlaybackState.Playing
+			if (!Config.mpris.currentPlayer) return
+			Config.mpris.currentPlayer.playbackState = MprisPlaybackState.Playing
 		}
 	}
 
@@ -43,8 +43,8 @@ Singleton {
 		name: "media:pause"
 		description: "pause the current media track"
 		onPressed: {
-			if (!Config._.mpris.currentPlayer) return
-			Config._.mpris.currentPlayer.playbackState = MprisPlaybackState.Paused
+			if (!Config.mpris.currentPlayer) return
+			Config.mpris.currentPlayer.playbackState = MprisPlaybackState.Paused
 		}
 	}
 
