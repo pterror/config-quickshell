@@ -3,9 +3,9 @@ import QtQuick.Layouts
 import QtQuick.Shapes
 import Quickshell
 import Quickshell.Wayland
-import "root:/component"
-import "root:/io"
-import "root:/"
+import qs.component
+import qs.io
+import qs
 
 Rectangle {
 	id: root

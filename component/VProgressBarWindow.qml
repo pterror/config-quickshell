@@ -1,6 +1,6 @@
 import Quickshell
 import QtQuick
-import "root:/"
+import qs
 
 FadingWindow {
 	id: root

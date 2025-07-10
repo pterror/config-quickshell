@@ -5,8 +5,7 @@ import Quickshell
 import Quickshell.Io
 import Quickshell.Services.Mpris
 import Quickshell.Services.Pipewire
-import "root:/io"
-import "root:/library"
+import qs.io
 
 Singleton {
 	property JsonAdapter _: root

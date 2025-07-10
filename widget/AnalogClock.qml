@@ -1,6 +1,6 @@
 import QtQuick
-import "root:/library"
-import "root:/"
+import qs
+import qs.io
 
 Rectangle {
 	id: root

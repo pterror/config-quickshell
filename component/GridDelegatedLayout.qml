@@ -2,9 +2,9 @@ import Quickshell
 import Quickshell.Wayland
 import QtQuick
 import QtQuick.Layouts
-import "root:/component"
-import "root:/io"
-import "root:/"
+import qs.component
+import qs.io
+import qs
 
 GridLayout {
 	id: root

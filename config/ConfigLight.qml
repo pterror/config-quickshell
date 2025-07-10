@@ -1,7 +1,7 @@
 import QtQuick
 import QtQuick.Effects
 import Quickshell
-import "root:/io"
+import qs.io
 
 ConfigBase {
 	id: root

@@ -3,8 +3,8 @@ import Quickshell.Io
 // import Qti.ApplicationDatabase
 import QtQuick
 import QtQuick.Controls
-import "root:/component"
-import "root:/"
+import qs.component
+import qs
 
 Item {
 	id: root

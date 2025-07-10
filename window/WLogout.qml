@@ -3,10 +3,10 @@ import Quickshell.Io
 import Quickshell.Wayland
 import QtQuick
 import QtQuick.Layouts
-import "root:/component"
-import "root:/widget"
-import "root:/io"
-import "root:/"
+import qs.component
+import qs.widget
+import qs.io
+import qs
 
 Variants {
 	id: root

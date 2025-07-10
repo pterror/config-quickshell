@@ -4,10 +4,10 @@ import Quickshell.Wayland
 import Quickshell.Hyprland
 import QtQuick
 import QtQuick.Layouts
-import "root:/io"
-import "root:/component"
-import "root:/widget"
-import "root:/"
+import qs.io
+import qs.component
+import qs.widget
+import qs
 
 LazyLoader {
 	id: root

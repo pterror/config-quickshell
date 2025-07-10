@@ -1,8 +1,8 @@
 import QtQuick
-import "root:/io"
-import "root:/component"
-import "root:/widget"
-import "root:/"
+import qs.io
+import qs.component
+import qs.widget
+import qs
 
 InwardsRadialVisualizerBars {
 	id: cpuViz

@@ -1,9 +1,9 @@
 import QtQuick
 import QtQuick.Layouts
 import Quickshell
-import "root:/io"
-import "root:/component"
-import "root:/"
+import qs.io
+import qs.component
+import qs
 
 RowLayout2 {
 	autoSize: true

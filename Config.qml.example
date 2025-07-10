@@ -2,6 +2,6 @@
 pragma Singleton
 
 import QtQuick
-import "root:/config"
+import qs.config
 
 ConfigDark {}

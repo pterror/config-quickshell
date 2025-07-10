@@ -1,9 +1,9 @@
 import QtQuick
 import QtQuick.Layouts
 import Quickshell.Io
-import "root:/component"
-import "root:/library"
-import "root:/"
+import qs
+import qs.component
+import qs.io
 import "root:/library/temporal.mjs" as Temporal
 
 ColumnLayout {

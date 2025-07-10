@@ -1,7 +1,7 @@
 //@ pragma UseQApplication
 // UseQApplication is required for system tray menus to work.
 import QtQuick
-import "root:/preset/pterror"
+import qs.preset.pterror
 
 PterrorShell {
 	Component.onCompleted: Config.baseUrl = Qt.resolvedUrl(".")

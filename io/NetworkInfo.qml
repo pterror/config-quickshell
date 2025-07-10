@@ -3,7 +3,7 @@ pragma Singleton
 import QtQuick
 import Quickshell
 import Quickshell.Io
-import "root:/"
+import qs
 import "root:/library/Units.mjs" as Units
 
 Singleton {

@@ -3,8 +3,8 @@ import QtQuick.Layouts
 import QtQuick.Controls
 import Quickshell.Widgets
 import Quickshell.Services.Mpris
-import "root:/component"
-import "root:/"
+import qs.component
+import qs
 
 ColumnLayout2 {
 	autoSize: true

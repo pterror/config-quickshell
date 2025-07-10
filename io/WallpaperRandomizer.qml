@@ -4,7 +4,7 @@ import Quickshell.Wayland
 import QtQuick
 import QtQuick.Layouts
 import Qt.labs.folderlistmodel
-import "root:/"
+import qs
 import "root:/library/Arrays.mjs" as Arrays
 import "root:/library/Random.mjs" as Random
 
@@ -31,7 +31,8 @@ QtObject {
 			if (shuffled.length === 0) {
 				shuffled = Arrays.shuffle(unshuffled, () => random.random());
 			}
-			newWallpapers[screen.name] = shuffled.pop()
+			const path = shuffled.pop();
+			newWallpapers[screen.name] = path ? "file://" + path : undefined;
 		}
 		if (Config._.debug) {
 			console.log("New wallpapers:", JSON.stringify(newWallpapers))

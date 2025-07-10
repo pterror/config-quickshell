@@ -1,7 +1,7 @@
 import QtQuick
 import Quickshell
 import Quickshell.Hyprland
-import "root:/"
+import qs
 
 PopupWindow {
 	default property alias content: container.children

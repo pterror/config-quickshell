@@ -5,7 +5,7 @@ import Quickshell.Io
 import Quickshell.Wayland
 import Quickshell.Hyprland
 import QtQuick
-import "root:/"
+import qs
 
 Singleton {
 	property string eventSocketPath: Hyprland.eventSocketPath

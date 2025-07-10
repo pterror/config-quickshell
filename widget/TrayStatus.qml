@@ -2,8 +2,8 @@ import QtQuick
 import QtQuick.Layouts
 import Quickshell
 import Quickshell.Services.SystemTray
-import "root:/"
-import "root:/component"
+import qs
+import qs.component
 
 RowLayout2 {
 	id: root

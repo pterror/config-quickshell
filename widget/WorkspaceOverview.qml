@@ -3,9 +3,9 @@ import QtQuick.Controls
 import Quickshell
 import Quickshell.Wayland
 import Quickshell.Widgets
-import "root:/io"
-import "root:/component"
-import "root:/"
+import qs.io
+import qs.component
+import qs
 import "root:/library/Applications.mjs" as Applications
 
 Widget {

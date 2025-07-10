@@ -2,9 +2,9 @@ import Quickshell
 import Quickshell.Wayland
 import QtQuick
 import QtQuick.Layouts
-import "root:/component"
-import "root:/library"
-import "root:/"
+import qs
+import qs.component
+import qs.io
 
 Rectangle {
 	id: root

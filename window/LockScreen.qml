@@ -1,6 +1,6 @@
 import QtQuick
 import QtQuick.Controls.Basic
-import "root:/component"
+import qs.component
 
 Item {
 	required property AuthContext context

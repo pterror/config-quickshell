@@ -2,9 +2,9 @@ import QtQuick
 import QtQuick.Layouts
 import Quickshell
 import Quickshell.Wayland
-import "root:/component"
-import "root:/io"
-import "root:/"
+import qs.component
+import qs.io
+import qs
 
 VisualizerBase {
 	id: root

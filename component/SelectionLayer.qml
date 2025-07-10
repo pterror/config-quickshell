@@ -1,7 +1,7 @@
 import QtQuick
 import Quickshell
 import Quickshell.Wayland
-import "root:/"
+import qs
 
 WlrLayershell {
 	property var selectionArea: area

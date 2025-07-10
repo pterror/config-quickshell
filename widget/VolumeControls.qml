@@ -1,9 +1,9 @@
 import QtQuick
 import QtQuick.Layouts
 import Quickshell
-import "root:/component"
-import "root:/io"
-import "root:/"
+import qs.component
+import qs.io
+import qs
 
 RowLayout2 {
 	id: content
