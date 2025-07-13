@@ -21,41 +21,38 @@ PanelWindow {
 	Rectangle {
 		id: barRect
 		anchors.fill: parent
-
 		color: Config._.style.bar.bg
 		radius: Config._.style.hBar.radius
 		border.color: Config._.style.bar.outline
 		border.width: Config._.style.hBar.border
 
-		RowLayout {
-			anchors.fill: parent
-			RowLayout2 {
-				Layout.fillHeight: true
-				width: 400
-				Text2 {
-					function n(n) { return String(n).padStart(2, "0") }
-					text: " " + n(Time.hour) + ":" + n(Time.minute) + ":" + n(Time.second) + " " + n(Time.time.getDate()) + "/" + n(Time.time.getMonth() + 1)
-				}
-				HSpace {}
-			}
-			RowLayout2 {
-				Layout.fillHeight: true
-				Layout.fillWidth: true
+		RowLayout2 {
+			implicitHeight: parent.height
+			anchors.left: parent.left
 
-				Text2 { text: Config.services.compositor.activeWindow.title.normalize("NFKC").toLowerCase() }
+			Text2 {
+				function n(n) { return String(n).padStart(2, "0") }
+				text: " " + n(Time.hour) + ":" + n(Time.minute) + ":" + n(Time.second) + " " + n(Time.time.getDate()) + "/" + n(Time.time.getMonth() + 1)
 			}
-			RowLayout2 {
-				Layout.fillHeight: true
-				autoSize: true
-				implicitWidth: 400
+		}
 
-				HSpace {}
-				TrayStatus {}
-				HoverItem {
-					inner: workspacesStatus
-					onClicked: Config._.workspacesOverview.visible = !Config._.workspacesOverview.visible
-					WorkspacesStatus { id: workspacesStatus }
-				}
+		RowLayout2 {
+			implicitHeight: parent.height
+			anchors.centerIn: parent
+
+			Text2 { text: Config.services.compositor.activeWindow.title.normalize("NFKC").toLowerCase() }
+		}
+
+		RowLayout2 {
+			implicitHeight: parent.height
+			anchors.right: parent.right
+
+			TrayStatus {}
+
+			HoverItem {
+				inner: workspacesStatus
+				onClicked: Config._.workspacesOverview.visible = !Config._.workspacesOverview.visible
+				WorkspacesStatus { id: workspacesStatus }
 			}
 		}
 	}

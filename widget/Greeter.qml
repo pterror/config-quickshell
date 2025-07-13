@@ -14,7 +14,6 @@ Rectangle {
 
 	ColumnLayout2 {
 		id: content
-		autoSize: true
 		anchors.horizontalCenter: parent.horizontalCenter
 		radius: Config._.style.panel.radius
 		margins: Config._.style.panel.margins
@@ -38,7 +37,7 @@ Rectangle {
 			property string period: Time.hour < 12 ?
 				(Config._.owo ? "mwowning" : "morning") :
 				Time.hour < 18 ?
-				(Config._.owo ? "awftewnwoon" : afternoon) :
+				(Config._.owo ? "awftewnwoon" : "afternoon") :
 				(Config._.owo ? "evwenwing" : "evening")
 			font.pointSize: 16
 			color: Config._.style.greeter.fg

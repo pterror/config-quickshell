@@ -7,7 +7,6 @@ import qs.component
 import qs
 
 ColumnLayout2 {
-	autoSize: true
 	radius: Config._.style.panel.radius
 	margins: Config._.style.panel.margins
 	spacing: Config._.style.mediaPlayer.controlsGap
@@ -28,7 +27,6 @@ ColumnLayout2 {
 
 	RowLayout2 {
 		Layout.alignment: Qt.AlignVCenter | Qt.AlignHCenter
-		autoSize: true
 		spacing: Config._.style.mediaPlayer.controlGap
 		HoverIcon {
 			source: Config.iconUrl("flat/media_previous.svg")

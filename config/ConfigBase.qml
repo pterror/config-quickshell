@@ -412,6 +412,11 @@ Singleton {
 				property JsonObject trayStatus: JsonObject {
 					property int iconSize: 16
 				}
+
+				property JsonObject network: JsonObject {
+					property color uploadFg: "#a088ffaa"
+					property color downloadFg: "#a0ff88aa"
+				}
 			}
 
 			property real iconOpacity: 0xa0 / 0xff

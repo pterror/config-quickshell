@@ -7,19 +7,18 @@ import qs
 
 RowLayout2 {
 	id: content
-	autoSize: true
 	radius: Config._.style.panel.radius
 	margins: Config._.style.panel.margins
 	spacing: 16
 
 	ColumnLayout2 {
-		autoSize: true
 		VProgressBar {
 			fraction: Config.services.audio.volume
 			width: 48
 			height: 224
 			onInput: fraction => Config.services.audio.setVolume(fraction)
 		}
+
 		HoverIcon {
 			Layout.alignment: Qt.AlignHCenter
 			source: Config.services.audio.muted ? Config.iconUrl("flat/speaker_muted.svg") :
@@ -32,13 +31,13 @@ RowLayout2 {
 	}
 
 	ColumnLayout2 {
-		autoSize: true
 		VProgressBar {
 			fraction: Config.services.audio.micVolume
 			width: 48
 			height: 224
 			onInput: fraction => Config.services.audio.setMicVolume(fraction)
 		}
+
 		HoverIcon {
 			Layout.alignment: Qt.AlignHCenter
 			source: Config.services.audio.micMuted ? Config.iconUrl("flat/microphone_muted.svg") : Config.iconUrl("flat/microphone.svg")

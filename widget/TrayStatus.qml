@@ -8,7 +8,6 @@ import qs.component
 RowLayout2 {
 	id: root
 	Layout.fillHeight: true
-	autoSize: true
 	property var menuAlignment: Qt.AlignHCenter | Qt.AlignBottom
 	property var edges: Edges.Bottom | Edges.Left
 	property var gravity: Edges.Bottom

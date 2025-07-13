@@ -6,7 +6,6 @@ import qs.component
 import qs
 
 RowLayout2 {
-	autoSize: true
 	Repeater {
 		model: Config._.workspaceCount
 		Text2 {
