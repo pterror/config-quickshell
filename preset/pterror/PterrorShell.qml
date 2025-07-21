@@ -74,7 +74,13 @@ ShellRoot {
 				}
 				anchors { top: true; bottom: true; left: true; right: true }
 
-				Wallpaper {
+				// Wallpaper {
+				// 	source: wallpaperRandomizer.wallpapers[modelData.name] ?? Config.imageUrl("dark_pixel.png")
+				// 	layer.enabled: Config.wallpapers.effect != null
+				// 	layer.effect: Config.wallpapers.effect
+				// }
+
+				PanoramaViewer {
 					source: wallpaperRandomizer.wallpapers[modelData.name] ?? Config.imageUrl("dark_pixel.png")
 					layer.enabled: Config.wallpapers.effect != null
 					layer.effect: Config.wallpapers.effect
@@ -181,7 +187,7 @@ ShellRoot {
 					anchors.topMargin: 64
 				}
 
-				BouncingMaskedShaderWidget {
+				BouncingMaskedShader {
 					visible: Screen.name === Config.screens.primary.name
 					id: bouncingMaskedShader
 					moving: !bouncingMaskedShaderMouseArea.containsPress

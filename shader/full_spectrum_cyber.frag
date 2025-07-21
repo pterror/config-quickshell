@@ -21,7 +21,7 @@ layout(std140, binding = 0) uniform buf {
     vec3 iResolution;
     float iChannelTime[4];
     vec3 iChannelResolution[4];
-} ubuf;
+};
 
 layout(binding = 1) uniform sampler2D iChannel0;
 layout(binding = 1) uniform sampler2D iChannel1;
@@ -79,8 +79,8 @@ float de(vec3 p) {
     h-=tcol*.1;
     vec3 pp=p-hpos;
     pp=lookat(point)*pp;
-    pp.y-=abs(sin(ubuf.iTime))*3.+(fparam-(2.-fparam));
-    pp.yz*=rot(-ubuf.iTime);
+    pp.y-=abs(sin(iTime))*3.+(fparam-(2.-fparam));
+    pp.yz*=rot(-iTime);
     float bola=length(pp)-1.;
     bcol=smoothstep(0.,.5,hex(pp.xy*3.));
     bola-=bcol*.1;
@@ -143,8 +143,8 @@ vec3 march(vec3 from, vec3 dir) {
             m=min(m,length(p));
         }
         col=mix(col,refcol,m)-m*.3;
-        col+=step(.3,hp)*step(.9,fract(pr.z*.05+ubuf.iTime*.5+hp*.1))*.7;
-        col+=step(.3,hexpos)*step(.9,fract(zz*.05+ubuf.iTime+hexpos*.1))*.3;
+        col+=step(.3,hp)*step(.9,fract(pr.z*.05+iTime*.5+hp*.1))*.7;
+        col+=step(.3,hexpos)*step(.9,fract(zz*.05+iTime+hexpos*.1))*.3;
     }
     col+=g*.03;
 	col.rb*=rot(odir.y*.5);
@@ -153,12 +153,12 @@ vec3 march(vec3 from, vec3 dir) {
 
 
 void main() {
-    vec2 fragCoord = vec2(qt_TexCoord0.x, 1.0 - qt_TexCoord0.y) * ubuf.iResolution.xy;
-    vec2 uv = fragCoord/ubuf.iResolution.xy-.5;
-    uv.x*=ubuf.iResolution.x/ubuf.iResolution.y;
-    float t=ubuf.iTime*2.;
+    vec2 fragCoord = vec2(qt_TexCoord0.x, 1.0 - qt_TexCoord0.y) * iResolution.xy;
+    vec2 uv = fragCoord/iResolution.xy-.5;
+    uv.x*=iResolution.x/iResolution.y;
+    float t=iTime*2.;
     vec3 from=path(t);
-    if (mod(ubuf.iTime-10.,20.)>10.) {
+    if (mod(iTime-10.,20.)>10.) {
         from=path(floor(t/20.)*20.+10.);
         from.x+=2.;
     }
@@ -167,7 +167,7 @@ void main() {
     vec3 dir=normalize(vec3(uv,.7));
     vec3 dd=normalize(adv-from);
     point=normalize(adv-hpos);
-    point.xz*=rot(sin(ubuf.iTime)*.2);
+    point.xz*=rot(sin(iTime)*.2);
     dir=lookat(dd)*dir;
     vec3 col = march(from, dir);
     col*=vec3(1.,.9,.8);

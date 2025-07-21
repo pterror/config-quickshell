@@ -56,7 +56,6 @@ PanelWindow {
 				Layout.alignment: Qt.AlignVCenter | Qt.AlignHCenter
 
 				HoverItem {
-					inner: mediaText
 					onClicked: {
 						if (!mediaControlsLoader.active) mediaControlsLoader.loading = true;
 						else mediaControlsLoader.active = false;
@@ -87,7 +86,6 @@ PanelWindow {
 			anchors.right: parent.right
 
 			HoverItem {
-				inner: volumeItem
 				Layout.fillHeight: true
 				onClicked: {
 					if (!volumeControlsLoader.active) volumeControlsLoader.loading = true

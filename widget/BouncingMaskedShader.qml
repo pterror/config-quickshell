@@ -35,14 +35,14 @@ Rectangle {
 	property var config: Config._.bouncingMaskedShader
 	property bool playing: true
 	property bool moving: true
-	property real timeMod: Config._.bouncingMaskedShader.timeMod
+	property real timeMod: config.timeMod
 	property real angle: Math.atan2(
-		Config._.bouncingMaskedShader.velocityY,
-		Config._.bouncingMaskedShader.velocityX
+		config.velocityY,
+		config.velocityX
 	) * 180 / Math.PI
 	property real baseVelocity: Math.hypot(
-		Config._.bouncingMaskedShader.velocityX,
-		Config._.bouncingMaskedShader.velocityY
+		config.velocityX,
+		config.velocityY
 	)
 	property real velocityMultiplierX: Math.cos(angle * Math.PI / 180)
 	property real velocityMultiplierY: Math.sin(angle * Math.PI / 180)
@@ -57,7 +57,7 @@ Rectangle {
 
 	MomentumAnimation { id: extraVelocityAnimation }
 
-	function impulse(value) { extraVelocityAnimation.impulse(value) }
+	function impulse(value: real) { extraVelocityAnimation.impulse(value) }
 
 	ShaderEffect {
 		id: shader
@@ -82,19 +82,19 @@ Rectangle {
 		property real iVelocityY: root.velocity * root.velocityMultiplierY * iTimeDelta
 		property vector4d iDate
 		property Image iChannel0: Image {
-			source: Config._.bouncingMaskedShader.channel0
+			source: config.channel0
 			visible: false
 		}
 		property Image iChannel1: Image {
-			source: Config._.bouncingMaskedShader.channel1
+			source: config.channel1
 			visible: false
 		}
 		property Image iChannel2: Image {
-			source: Config._.bouncingMaskedShader.channel2
+			source: config.channel2
 			visible: false
 		}
 		property Image iChannel3: Image {
-			source: Config._.bouncingMaskedShader.channel3
+			source: config.channel3
 			visible: false
 		}
 		property list<vector3d> iChannelResolution: [
@@ -104,13 +104,13 @@ Rectangle {
 			Qt.vector3d(iChannel3.width, iChannel3.height, iChannel3.width / iChannel3.height),
 		]
 
-		fragmentShader: "../shader/" + Config._.bouncingMaskedShader.shader + ".frag.qsb"
+		fragmentShader: "../shader/" + config.shader + ".frag.qsb"
 
 		FrameAnimation {
 			running: true
 			onTriggered: {
 				if (playing) {
-					shader.iTime += frameTime * Config._.bouncingMaskedShader.speed
+					shader.iTime += frameTime * config.speed
 					if (root.timeMod) shader.iTime %= root.timeMod
 					shader.iChannelTime = [shader.iTime, shader.iTime, shader.iTime, shader.iTime]
 					const newFrameDate = Number(new Date())
@@ -142,17 +142,17 @@ Rectangle {
 	Image {
 		id: mask
 		layer.enabled: true; cache: false
-		source: Config._.bouncingMaskedShader.mask
+		source: config.mask
 		property real maskAspectRatio: (implicitWidth / implicitHeight) || 0.01
-		width: Config._.bouncingMaskedShader.maskWidth != -1 ?
-			Config._.bouncingMaskedShader.maskWidth :
-			Config._.bouncingMaskedShader.maskHeight != -1 ?
-			Config._.bouncingMaskedShader.maskHeight * maskAspectRatio :
+		width: config.maskWidth != -1 ?
+			config.maskWidth :
+			config.maskHeight != -1 ?
+			config.maskHeight * maskAspectRatio :
 			implicitWidth
-		height: Config._.bouncingMaskedShader.maskHeight != -1 ?
-			Config._.bouncingMaskedShader.maskHeight :
-			Config._.bouncingMaskedShader.maskWidth != -1 ?
-			Config._.bouncingMaskedShader.maskWidth / maskAspectRatio :
+		height: config.maskHeight != -1 ?
+			config.maskHeight :
+			config.maskWidth != -1 ?
+			config.maskWidth / maskAspectRatio :
 			implicitHeight
 		visible: false
 	}
@@ -165,6 +165,6 @@ Rectangle {
 		anchors.top: parent.top
 		width: mask.width
 		height: mask.height
-		opacity: Config._.bouncingMaskedShader.opacity
+		opacity: config.opacity
 	}
 }

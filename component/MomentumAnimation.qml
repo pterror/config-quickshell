@@ -15,7 +15,8 @@ FrameAnimation {
 	property real epsilon: 0.01
 	property var processValue: x => x
 
-	function impulse(value) { newVelocity += value }
+	function impulse(value: real) { newVelocity += value }
+	function stop() { velocity = 0; newVelocity = 0 }
 
 	onTriggered: {
 		if (velocity === 0 && newVelocity === 0) {

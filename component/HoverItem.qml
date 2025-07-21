@@ -5,11 +5,11 @@ import qs
 Button {
 	default property alias content: mouseArea.children
 	property bool alias: false
-	required property var inner
+	property var inner: mouseArea.children[0]
 	id: root
 	flat: true
-	implicitWidth: inner.implicitWidth + Config._.style.barItem.margins * 2
-	implicitHeight: inner.implicitHeight + Config._.style.barItem.margins * 2
+	implicitWidth: (inner?.implicitWidth ?? 0) + Config._.style.barItem.margins * 2
+	implicitHeight: (inner?.implicitHeight ?? 0) + Config._.style.barItem.margins * 2
 	display: AbstractButton.TextOnly
 	background: Rectangle {
 		anchors.margins: Config._.style.button.margins

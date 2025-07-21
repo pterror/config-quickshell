@@ -50,9 +50,8 @@ PanelWindow {
 			TrayStatus {}
 
 			HoverItem {
-				inner: workspacesStatus
 				onClicked: Config._.workspacesOverview.visible = !Config._.workspacesOverview.visible
-				WorkspacesStatus { id: workspacesStatus }
+				WorkspacesStatus {}
 			}
 		}
 	}
