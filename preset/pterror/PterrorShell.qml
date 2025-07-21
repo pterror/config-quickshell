@@ -128,6 +128,13 @@ ShellRoot {
 
 			PanelWindow {
 				screen: modelData
+				mask: Region {
+					item: cpuBars
+					Region { item: clock }
+					Region { item: amogus }
+					Region { item: fidgetSpinner }
+					Region { item: bouncingMaskedShader }
+				}
 				anchors.left: true; anchors.right: true; anchors.top: true; anchors.bottom: true
 				color: "transparent"
 				WlrLayershell.layer: WlrLayer.Bottom
@@ -144,7 +151,7 @@ ShellRoot {
 					modulateOpacity: true
 				}
 
-				CPUBars {}
+				CPUBars { id: cpuBars }
 
 				// TimeZonesDisplay {}
 
@@ -165,18 +172,21 @@ ShellRoot {
 				ActivateLinux {}
 
 				AnalogClock {
+					id: clock
 					anchors.left: parent.left; anchors.top: parent.top
 					anchors.leftMargin: 32
 					anchors.topMargin: (parent.height - Config._.style.hBar.height - height) / 2
 				}
 
 				ScrollSpinner {
+					id: fidgetSpinner
 					anchors.right: parent.right; anchors.top: parent.top
 					anchors.rightMargin: 32
 					anchors.topMargin: (parent.height - Config._.style.hBar.height - height) / 2
 				}
 
 				InteractiveCrewmate {
+					id: amogus
 					visible: Screen.name === Config.screens.primary.name
 					color: "transparent"
 					maxClickCount: 2
