@@ -10,6 +10,7 @@ layout(std140, binding = 0) uniform buf {
     vec2 iResolution;
     float iYaw;
     float iPitch;
+    float iFov;
 };
 
 layout(binding = 1) uniform sampler2D iChannel0;
@@ -19,6 +20,7 @@ const float PI = 3.14159265359;
 void main() {
     vec2 uv = qt_TexCoord0 * 2.0 - 1.0;
     float aspect = iResolution.x / iResolution.y;
+    uv *= tan(iFov / 2.0);
     uv.x *= aspect;
     vec3 dir = normalize(vec3(uv, -1.0));
     float cy = cos(iYaw), sy = sin(iYaw);

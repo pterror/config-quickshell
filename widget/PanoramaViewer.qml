@@ -35,6 +35,9 @@ Rectangle {
 	anchors.fill: parent
 	width: 100
 	height: 100
+	property var config: Config._.wallpapers.panorama
+	property real fovDegrees: config.fov
+	property real fov: fovDegrees * Math.PI / 180
 	property bool playing: false
 	property bool moving: !mouseArea.containsPress
 	property real yawVelocity: Math.PI / 1800
@@ -54,9 +57,11 @@ Rectangle {
 		id: shader
 		anchors.fill: parent
 		blending: false
-		property vector3d iResolution: Qt.vector3d(width, height, 0)
+		property vector3d iResolution: Qt.vector3d(width, height, width / height)
 		property real iYaw: 0
 		property real iPitch: 0
+		property real iFov: root.fov / (mouseArea.pressedButtons & Qt.RightButton ? config.rightClickZoom : 1)
+		Behavior on iFov { SmoothedAnimation { velocity: -1; duration: config.fovAnimationDuration } }
 		property Image iChannel0: Image {
 			id: shaderImage
 			visible: false
@@ -83,20 +88,26 @@ Rectangle {
 
 	MouseArea {
 		id: mouseArea
+		anchors.fill: parent
 		property int prevX: 0
 		property int prevY: 0
-		anchors.fill: parent
+		acceptedButtons: Qt.LeftButton | Qt.RightButton
 		onPressed: event => {
 			prevX = event.x
 			prevY = event.y
 			momentumAnimationX.stop()
 			momentumAnimationY.stop()
 		}
+		onWheel: event => {
+			const power = -event.angleDelta.y / 60
+			const newFovRaw = root.fovDegrees * Math.pow(config.scrollExponent, power)
+			root.fovDegrees = Math.max(config.minFov, Math.min(config.maxFov, newFovRaw))
+		}
 		onPositionChanged: event => {
 			const rev = 2 * Math.PI
 			const verticalClamp = Math.PI / 2
-			const dx = (event.x - prevX) * Math.PI / 720
-			const dy = (event.y - prevY) * Math.PI / 720
+			const dx = (event.x - prevX) * shader.iFov / 1080
+			const dy = (event.y - prevY) * shader.iFov / 1080
 			prevX = event.x
 			prevY = event.y
 			shader.iYaw = ((shader.iYaw + dx) % rev + rev) % rev
