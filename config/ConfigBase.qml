@@ -181,7 +181,7 @@ Singleton {
 				property list<string> formats: ["*"]
 				property real seed: Math.floor((Number(Time.time) - 7.5 * _HOUR_MS - Time.time.getTimezoneOffset() * _MIN_MS) / _DAY_MS)
 				property JsonObject panorama: JsonObject {
-					property real fov: 90
+					property real fov: 60
 					property real minFov: 10
 					property real maxFov: 135
 					property real rightClickZoom: 2
