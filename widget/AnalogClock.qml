@@ -122,6 +122,24 @@ Rectangle {
 		}
 	}
 
+	Repeater {
+		model: 12
+
+		Rectangle {
+			required property int modelData
+			width: root.tickWidth
+			height: root.tickHeight
+			radius: tickRadius
+			color: Config._.style.widget.bg
+			x: root.radius + root.radius * Math.cos(modelData * 2 * Math.PI / 12)
+			y: root.radius + root.radius * Math.sin(modelData * 2 * Math.PI / 12)
+			transform: Rotation {
+				origin.x: root.tickWidth / 2; origin.y: 0; axis { x: 0; y: 0; z: 1 }
+				angle: 90 + 360 * modelData / 12
+			}
+		}
+	}
+
 	Rectangle {
 		visible: hourHandVisible
 		width: root.tickWidth
@@ -248,23 +266,5 @@ Rectangle {
 		secondAngle = rawAngle2 + 180 < secondAngle ? rawAngle2 + 360
 			: rawAngle2 - 180 > secondAngle ? rawAngle2 - 360
 			: rawAngle2
-	}
-
-	Repeater {
-		model: 12
-
-		Rectangle {
-			required property int modelData
-			width: root.tickWidth
-			height: root.tickHeight
-			radius: tickRadius
-			color: Config._.style.widget.bg
-			x: root.radius + root.radius * Math.cos(modelData * 2 * Math.PI / 12)
-			y: root.radius + root.radius * Math.sin(modelData * 2 * Math.PI / 12)
-			transform: Rotation {
-				origin.x: root.tickWidth / 2; origin.y: 0; axis { x: 0; y: 0; z: 1 }
-				angle: 90 + 360 * modelData / 12
-			}
-		}
 	}
 }

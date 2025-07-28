@@ -130,9 +130,10 @@ ShellRoot {
 				screen: modelData
 				mask: Region {
 					item: cpuBars
-					Region { item: clock }
+					shape: RegionShape.Ellipse
+					Region { item: clock; shape: RegionShape.Ellipse }
 					Region { item: amogus }
-					Region { item: fidgetSpinner }
+					Region { item: fidgetSpinner; shape: RegionShape.Ellipse }
 					Region { item: bouncingMaskedShader }
 				}
 				anchors.left: true; anchors.right: true; anchors.top: true; anchors.bottom: true
