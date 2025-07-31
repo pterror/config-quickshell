@@ -1,8 +1,8 @@
-import QtQuick
+import QtQuick as Q
 import QtQuick.Controls
 import qs
 
-SpinBox {
+Q.SpinBox {
 	id: root
 	// FIXME: broken because of `Component` with `source` in `SettingsDynamicItem.qml`
 	anchors.margins: Config._.style.hBar.margins

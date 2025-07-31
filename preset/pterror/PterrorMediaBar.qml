@@ -31,28 +31,28 @@ PanelWindow {
 		border.color: Config._.style.bar.outline
 		border.width: Config._.style.hBar.border
 
-		RowLayout2 {
+		RowLayout {
 			implicitHeight: parent.height
 			anchors.left: parent.left
 
-			RowLayout2 {
+			RowLayout {
 				Layout.fillHeight: true
 				width: 80
-				Text2 { text: (Config._.owo ? "cpuwu " : "cpu ") + Math.floor(100 * CPUInfo.activeSec / CPUInfo.totalSec) + "%" }
+				Text { text: (Config._.owo ? "cpuwu " : "cpu ") + Math.floor(100 * CPUInfo.activeSec / CPUInfo.totalSec) + "%" }
 			}
 
-			RowLayout2 {
+			RowLayout {
 				Layout.fillHeight: true
 				width: 80
-				Text2 { text: (Config._.owo ? "mlem " : "mem ") + Math.floor(100 * MemoryInfo.used / MemoryInfo.total) + "%" }
+				Text { text: (Config._.owo ? "mlem " : "mem ") + Math.floor(100 * MemoryInfo.used / MemoryInfo.total) + "%" }
 			}
 		}
 
-		RowLayout2 {
+		RowLayout {
 			implicitHeight: parent.height
 			anchors.centerIn: parent
 
-			RowLayout2 {
+			RowLayout {
 				Layout.alignment: Qt.AlignVCenter | Qt.AlignHCenter
 
 				HoverItem {
@@ -61,12 +61,12 @@ PanelWindow {
 						else mediaControlsLoader.active = false;
 					}
 
-					Text2 {
+					Text {
 						id: mediaText
 						text: ((Config.mpris.currentPlayer?.metadata["xesam:title"] ?? "") + " - " + (Config.mpris.currentPlayer?.metadata["xesam:artist"].join(", ") ?? "")).normalize("NFKC").toLowerCase()
 						LazyLoader {
 							id: mediaControlsLoader
-							PopupWindow2 {
+							PopupWindow {
 								anchor.window: root
 								anchor.rect.x: mediaText.mapToItem(rootRect, mediaText.implicitWidth / 2, 0).x - mediaControls.width / 2
 								anchor.rect.y: -mediaControls.height - Config._.style.popup.gap
@@ -80,7 +80,7 @@ PanelWindow {
 			}
 		}
 
-		RowLayout2 {
+		RowLayout {
 			id: rightRow
 			implicitHeight: parent.height
 			anchors.right: parent.right
@@ -92,7 +92,7 @@ PanelWindow {
 					else volumeControlsLoader.active = false
 				}
 
-				RowLayout2 {
+				RowLayout {
 					id: volumeItem
 					Rectangle {
 						implicitWidth: speakerImage.width
@@ -112,11 +112,11 @@ PanelWindow {
 						}
 					}
 
-					Text2 {
+					Text {
 						text: Math.round(Config.services.audio.volume * 100) + "%"
 						LazyLoader {
 							id: volumeControlsLoader
-							PopupWindow2 {
+							PopupWindow {
 								extraGrabWindows: [root].concat(root.extraGrabWindows)
 								anchor.window: root
 								anchor.rect.x: volumeItem.mapToItem(rootRect, volumeItem.implicitWidth / 2, 0).x - volumeControls.width / 2
@@ -143,11 +143,11 @@ PanelWindow {
 						}
 					}
 
-					Text2 { id: micVolumeText; text: Math.round(Config.services.audio.micVolume * 100) + "%" }
+					Text { id: micVolumeText; text: Math.round(Config.services.audio.micVolume * 100) + "%" }
 				}
 			}
 
-			RowLayout2 {
+			RowLayout {
 				Rectangle {
 					implicitWidth: wifiImage.width
 					implicitHeight: wifiImage.height
@@ -164,24 +164,24 @@ PanelWindow {
 							Config.iconUrl("flat/wifi_high.svg")
 					}
 				}
-				Text2 { text: Config.services.network.network }
+				Text { text: Config.services.network.network }
 			}
 
-			RowLayout2 {
+			RowLayout {
 				Layout.fillHeight: true
 				implicitWidth: 48
 
-				Text2 {
+				Text {
 					color: Config._.style.network.downloadFg
 					text: NetworkInfo.uploadSecText
 				}
 			}
 
-			RowLayout2 {
+			RowLayout {
 				Layout.fillHeight: true
 				implicitWidth: 48
 
-				Text2 {
+				Text {
 					color: Config._.style.network.uploadFg
 					text: NetworkInfo.downloadSecText
 				}

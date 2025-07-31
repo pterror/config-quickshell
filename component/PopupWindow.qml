@@ -1,9 +1,9 @@
 import QtQuick
-import Quickshell
+import Quickshell as Q
 import Quickshell.Hyprland
 import qs
 
-PopupWindow {
+Q.PopupWindow {
 	default property alias content: container.children
 	color: "transparent"
 	implicitWidth: container.children[0].implicitWidth || 1

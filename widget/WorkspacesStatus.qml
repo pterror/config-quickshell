@@ -5,10 +5,10 @@ import qs.io
 import qs.component
 import qs
 
-RowLayout2 {
+RowLayout {
 	id: root
 
-	property Component component: Text2 {
+	property Component component: Text {
 		Layout.minimumWidth: 13
 		property var workspace: Config.services.compositor.workspacesById[modelData + 1]
 		visible: !Config.isSpecialWorkspace(workspace?.name);

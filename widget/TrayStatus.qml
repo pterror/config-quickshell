@@ -5,7 +5,7 @@ import Quickshell.Services.SystemTray
 import qs
 import qs.component
 
-RowLayout2 {
+RowLayout {
 	id: root
 	Layout.fillHeight: true
 	property var menuAlignment: Qt.AlignHCenter | Qt.AlignBottom

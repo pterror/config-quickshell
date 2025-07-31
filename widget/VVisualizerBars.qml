@@ -19,7 +19,7 @@ VisualizerBase {
 	property real maxOpacity: 1.0
 	width: 480
 
-	ColumnLayout2 {
+	ColumnLayout {
 		id: content
 		spacing: root.spacing
 		property real childSize: barHeight !== -1 ? barHeight : (height + spacing) / input.count - spacing

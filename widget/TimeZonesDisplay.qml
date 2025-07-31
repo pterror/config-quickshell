@@ -21,15 +21,15 @@ ColumnLayout {
             required property var modelData
             property var localizedTime: console.log(Temporal) || Time.time
 
-            Text2 {
+            Text {
                 text: modelData.name
                 color: Config._.style.greeter.fg
             }
-            Text2 {
+            Text {
                 text: Config._.formatTime(Time.time)
                 color: Config._.style.greeter.fg
             }
-            Text2 {
+            Text {
                 text: Config._.formatDate(Time.time)
                 color: Config._.style.greeter.fg
             }

@@ -23,7 +23,7 @@ Item {
 			onEnabledChanged: enabled && (text = "")
 		}
 
-		Text2 {
+		Text {
 			id: status; color: "white"; font.pointSize: 24
 			anchors {
 				horizontalCenter: entryBox.horizontalCenter

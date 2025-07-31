@@ -5,13 +5,13 @@ import qs.component
 import qs.io
 import qs
 
-RowLayout2 {
+RowLayout {
 	id: content
 	radius: Config._.style.panel.radius
 	margins: Config._.style.panel.margins
 	spacing: 16
 
-	ColumnLayout2 {
+	ColumnLayout {
 		VProgressBar {
 			fraction: Config.services.audio.volume
 			width: 48
@@ -30,7 +30,7 @@ RowLayout2 {
 		}
 	}
 
-	ColumnLayout2 {
+	ColumnLayout {
 		VProgressBar {
 			fraction: Config.services.audio.micVolume
 			width: 48

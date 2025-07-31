@@ -6,7 +6,7 @@ import Quickshell.Services.Mpris
 import qs.component
 import qs
 
-ColumnLayout2 {
+ColumnLayout {
 	radius: Config._.style.panel.radius
 	margins: Config._.style.panel.margins
 	spacing: Config._.style.mediaPlayer.controlsGap
@@ -25,7 +25,7 @@ ColumnLayout2 {
 		}
 	}
 
-	RowLayout2 {
+	RowLayout {
 		Layout.alignment: Qt.AlignVCenter | Qt.AlignHCenter
 		spacing: Config._.style.mediaPlayer.controlGap
 		HoverIcon {

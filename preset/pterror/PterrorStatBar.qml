@@ -26,24 +26,24 @@ PanelWindow {
 		border.color: Config._.style.bar.outline
 		border.width: Config._.style.hBar.border
 
-		RowLayout2 {
+		RowLayout {
 			implicitHeight: parent.height
 			anchors.left: parent.left
 
-			Text2 {
+			Text {
 				function n(n) { return String(n).padStart(2, "0") }
 				text: " " + n(Time.hour) + ":" + n(Time.minute) + ":" + n(Time.second) + " " + n(Time.time.getDate()) + "/" + n(Time.time.getMonth() + 1)
 			}
 		}
 
-		RowLayout2 {
+		RowLayout {
 			implicitHeight: parent.height
 			anchors.centerIn: parent
 
-			Text2 { text: Config.services.compositor.activeWindow.title.normalize("NFKC").toLowerCase() }
+			Text { text: Config.services.compositor.activeWindow.title.normalize("NFKC").toLowerCase() }
 		}
 
-		RowLayout2 {
+		RowLayout {
 			implicitHeight: parent.height
 			anchors.right: parent.right
 

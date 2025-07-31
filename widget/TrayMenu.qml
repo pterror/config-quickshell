@@ -16,7 +16,7 @@ ColumnLayout {
         else mediaControlsLoader.active = false;
       }
 
-      Text2 {
+      Text {
         //
       }
     }

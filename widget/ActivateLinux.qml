@@ -12,17 +12,17 @@ Rectangle {
 	height: content.implicitHeight
 	color: "transparent"
 
-	ColumnLayout2 {
+	ColumnLayout {
 		id: content
 
-		Text2 {
+		Text {
 			Layout.alignment: Qt.AlignLeft
 			color: Config._.style.activateLinux.fg
 			font.pointSize: 22
 			text: (Config._.owo ? "Actwivwate " : "Activate ") + Config._.activateLinux.name
 		}
 
-		Text2 {
+		Text {
 			Layout.alignment: Qt.AlignLeft
 			color: Config._.style.activateLinux.fg
 			font.pointSize: 14

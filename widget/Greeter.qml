@@ -12,7 +12,7 @@ Rectangle {
 	width: content.implicitWidth
 	height: content.implicitHeight
 
-	ColumnLayout2 {
+	ColumnLayout {
 		id: content
 		anchors.horizontalCenter: parent.horizontalCenter
 		radius: Config._.style.panel.radius
@@ -22,18 +22,18 @@ Rectangle {
 
 		onImplicitWidthChanged: root.width = Math.max(root.width, implicitWidth)
 
-		Text2 {
+		Text {
 			font.pointSize: 64
 			color: Config._.style.greeter.fg
 			function n(n) { return String(n).padStart(2, "0") }
 			text: n(Time.hour) + ":" + n(Time.minute)
 		}
-		Text2 {
+		Text {
 			font.pointSize: 12
 			color: Config._.style.greeter.fg
 			text: Time.days[Time.time.getDay()] + ", " + Time.months[Time.time.getMonth()] + " " + Time.time.getDate()
 		}
-		Text2 {
+		Text {
 			property string period: Time.hour < 12 ?
 				(Config._.owo ? "mwowning" : "morning") :
 				Time.hour < 18 ?

@@ -19,7 +19,7 @@ VisualizerBase {
 	property real maxOpacity: 1.0
 	height: 320
 
-	RowLayout2 {
+	RowLayout {
 		id: content
 		anchors.fill: parent
 		spacing: root.spacing

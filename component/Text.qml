@@ -1,8 +1,8 @@
-import QtQuick
+import QtQuick as Q
 import QtQuick.Layouts
 import qs
 
-Text {
+Q.Text {
 	Layout.alignment: Qt.AlignVCenter | Qt.AlignHCenter
 	anchors.margins: Config._.style.hBar.margins
 	font.family: Config._.font.family
