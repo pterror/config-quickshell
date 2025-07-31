@@ -38,20 +38,6 @@ Rectangle {
 		}
 	}
 
-	Rectangle {
-		width: root.tickWidth
-		height: root.tickHeight
-		radius: tickRadius
-		color: Config._.style.widget.accent
-		x: root.radius + root.radius * Math.cos((-root.angle - 90) * Math.PI / 180)
-		y: root.radius + root.radius * Math.sin((-root.angle - 90) * Math.PI / 180)
-		transform: Rotation {
-			origin.x: root.tickWidth / 2; origin.y: 0
-			axis { x: 0; y: 0; z: 1 }
-			angle: -root.angle
-		}
-	}
-
 	Repeater {
 		model: ticks
 
@@ -68,6 +54,20 @@ Rectangle {
 				axis { x: 0; y: 0; z: 1 }
 				angle: 90 + 360 * modelData / root.ticks
 			}
+		}
+	}
+
+	Rectangle {
+		width: root.tickWidth
+		height: root.tickHeight
+		radius: tickRadius
+		color: Config._.style.widget.accent
+		x: root.radius + root.radius * Math.cos((-root.angle - 90) * Math.PI / 180)
+		y: root.radius + root.radius * Math.sin((-root.angle - 90) * Math.PI / 180)
+		transform: Rotation {
+			origin.x: root.tickWidth / 2; origin.y: 0
+			axis { x: 0; y: 0; z: 1 }
+			angle: -root.angle
 		}
 	}
 
