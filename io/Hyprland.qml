@@ -3,17 +3,17 @@ pragma Singleton
 import Quickshell
 import Quickshell.Io
 import Quickshell.Wayland
-import Quickshell.Hyprland
+import Quickshell.Hyprland as Q
 import QtQuick
 import qs
 
 Singleton {
-	property string eventSocketPath: Hyprland.eventSocketPath
-	property string requestSocketPath: Hyprland.requestSocketPath
-	property HyprlandMonitor focusedMonitor: Hyprland.focusedMonitor
-	property HyprlandWorkspace focusedWorkspace: Hyprland.focusedWorkspace
-	property ObjectModel monitors: Hyprland.monitors
-	property ObjectModel workspaces: Hyprland.workspaces
+	property string eventSocketPath: Q.Hyprland.eventSocketPath
+	property string requestSocketPath: Q.Hyprland.requestSocketPath
+	property Q.HyprlandMonitor focusedMonitor: Q.Hyprland.focusedMonitor
+	property Q.HyprlandWorkspace focusedWorkspace: Q.Hyprland.focusedWorkspace
+	property ObjectModel monitors: Q.Hyprland.monitors
+	property ObjectModel workspaces: Q.Hyprland.workspaces
 
 	property var workspacesById: {
 		const result = {};
@@ -52,12 +52,33 @@ Singleton {
 	signal windowClosed(address: string)
 	signal windowFocused(klass: string, title: string)
 	signal keyboardLayoutChanged(keyboard: string, layout: string)
-	signal rawEvent(event: HyprlandEvent)
+	signal rawEvent(event: Q.HyprlandEvent)
+
+	function workspacesList(length) {
+		if (length === undefined) {
+			for (const workspace of workspaces.values) {
+				if (workspace.id > length) {
+					length = workspace.id;
+				}
+			}
+		}
+		return Array.from({ length }, (_, i) => workspacesById[i + 1] ?? {
+			hasFullscreen: false,
+			id: i + 1,
+			monitor: focusedMonitor,
+			name: String(i + 1),
+			active: false,
+			focused: false,
+			activate: () => {
+				focusWorkspaceOnCurrentMonitor(id);
+			},
+		});
+	}
 
 	Connections {
 		target: Hyprland
 
-		function onRawEvent(event: HyprlandEvent) {
+		function onRawEvent(event: Q.HyprlandEvent) {
 			rawEvent(event)
 			if (Config._.debug) {
 				console.log("Hyprland [onRawEvent]:", JSON.stringify(event))
@@ -214,16 +235,16 @@ Singleton {
 		});
 	}
 
-	function focusWindow(id) {
-		Hyprland.dispatch(`focuswindow ${id}`)
+	function focusWindow(id: string) {
+		Q.Hyprland.dispatch(`focuswindow ${id}`);
 	}
 
-	function focusWorkspace(address) {
-		Hyprland.dispatch(`workspace ${address}`)
+	function focusWorkspace(address: string) {
+		Q.Hyprland.dispatch(`workspace ${address}`);
 	}
 
-	function focusWorkspaceOnCurrentMonitor(id) {
-		Hyprland.dispatch(`workspace ${id}`)
+	function focusWorkspaceOnCurrentMonitor(id: int) {
+		Q.Hyprland.dispatch(`workspace ${id}`);
 	}
 
 	function refetchClients() {
@@ -257,7 +278,7 @@ Singleton {
 				height: client.size[1],
 				class: client.class,
 				title: client.title,
-				toplevel: ToplevelManager.toplevels.values.find(value => `0x${value.HyprlandToplevel?.address}` === client.address),
+				toplevel: ToplevelManager.toplevels.values.find(value => `0x${value.Q.HyprlandToplevel?.address}` === client.address),
 			}
 			result[client.workspace.id - 1].clients.push(info);
 		}

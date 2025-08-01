@@ -28,8 +28,8 @@ Widget {
 		anchors.fill: parent
 		cursorShape: Qt.PointingHandCursor
 		onClicked: {
-			Config.services.compositor.focusWorkspace(workspaceId)
-			Config._.workspacesOverview.visible = false
+			Config.services.compositor.focusWorkspace(workspaceId);
+			Config._.workspacesOverview.visible = false;
 		}
 	}
 

@@ -92,6 +92,9 @@ Singleton {
 	property QtObject services: QtObject {
 		property var audio: QtObject {
 			property bool initialized: volume === volume && micVolume === micVolume // check for NaNs
+			// cannot be `string` as they are initially `undefined`
+			property var name: Pipewire.defaultAudioSink?.nickname
+			property var micName: Pipewire.defaultAudioSource?.nickname
 			property real volume: Pipewire.defaultAudioSink?.audio?.volume ?? 0
 			property real micVolume: Pipewire.defaultAudioSource?.audio?.volume ?? 0
 			property bool muted: Pipewire.defaultAudioSink?.audio?.muted ?? false
@@ -132,7 +135,7 @@ Singleton {
 			function toggleMicMute() { setMicMuted(!micMuted) }
 		}
 		property var network: NetworkManager
-		property var compositor: HyprlandIpc
+		property var compositor: Hyprland
 	}
 
 	FileView {
@@ -259,10 +262,6 @@ Singleton {
 					property color bg: root.style.selectionBg
 				}
 
-				property JsonObject accent: JsonObject {
-					property color fg: root.style.accentFg
-				}
-
 				property JsonObject popup: JsonObject {
 					property int gap: 8
 				}
@@ -279,7 +278,7 @@ Singleton {
 
 					property color fg: root.style.primaryFg
 					property color bg: root.style.secondaryBg
-					property color accent: root.style.accent.fg
+					property color accent: root.style.accentFg
 					property color hoverBg: "#38e0ffff"
 					property color outline: "#00ffffff"
 				}
@@ -292,7 +291,7 @@ Singleton {
 
 					property color fg: root.style.widget.fg
 					property color bg: root.style.primaryBg
-					property color accent: root.style.accent.fg
+					property color accent: root.style.accentFg
 					property color hoverBg: root.style.widget.hoverBg
 					property color outline: root.style.widget.outline
 
@@ -403,12 +402,6 @@ Singleton {
 					property color accent: root.style.panel.accent
 					property color hoverBg: root.style.panel.hoverBg
 					property color outline: root.style.panel.outline
-				}
-
-				property JsonObject workspaceIndicator: JsonObject {
-					property color focused: root.style.accent.fg
-					property color visible: "#80ffffff"
-					property color empty: "#20ffffff"
 				}
 
 				property JsonObject wLogout: JsonObject {

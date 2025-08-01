@@ -51,7 +51,10 @@ PanelWindow {
 
 			HoverItem {
 				onClicked: Config._.workspacesOverview.visible = !Config._.workspacesOverview.visible
-				WorkspacesStatus {}
+				RowRepeater {
+					model: Config.services.compositor.workspacesList(9)
+					sourceComponent: WorkspaceExpandingDot {}
+				}
 			}
 		}
 	}

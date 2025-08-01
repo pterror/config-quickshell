@@ -12,8 +12,8 @@ SelectionArea {
 	SelectionLayer {
 		id: selectionLayer
 
-		onSelectionComplete: (x, y, width, height) => {
-			HyprlandIpc.exec(
+		onSelectionComplete: (x: int, y: int, width: int, height: int) => {
+			Hyprland.exec(
 				null,
 				[
 					"dispatch",
