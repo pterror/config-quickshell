@@ -32,7 +32,7 @@ PanelWindow {
 
 			Text {
 				function n(n) { return String(n).padStart(2, "0") }
-				text: " " + n(Time.hour) + ":" + n(Time.minute) + ":" + n(Time.second) + " " + n(Time.time.getDate()) + "/" + n(Time.time.getMonth() + 1)
+				text: " " + n(Time.time.getHours()) + ":" + n(Time.time.getMinutes()) + ":" + n(Time.time.getSeconds()) + " " + n(Time.time.getDate()) + "/" + n(Time.time.getMonth() + 1)
 			}
 		}
 

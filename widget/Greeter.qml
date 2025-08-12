@@ -26,7 +26,7 @@ Rectangle {
 			font.pointSize: 64
 			color: Config._.style.greeter.fg
 			function n(n) { return String(n).padStart(2, "0") }
-			text: n(Time.hour) + ":" + n(Time.minute)
+			text: n(Time.time.getHours()) + ":" + n(Time.time.getMinutes())
 		}
 		Text {
 			font.pointSize: 12
@@ -34,9 +34,9 @@ Rectangle {
 			text: Time.days[Time.time.getDay()] + ", " + Time.months[Time.time.getMonth()] + " " + Time.time.getDate()
 		}
 		Text {
-			property string period: Time.hour < 12 ?
+			property string period: Time.time.getHours() < 12 ?
 				(Config._.owo ? "mwowning" : "morning") :
-				Time.hour < 18 ?
+				Time.time.getHours() < 18 ?
 				(Config._.owo ? "awftewnwoon" : "afternoon") :
 				(Config._.owo ? "evwenwing" : "evening")
 			font.pointSize: 16
