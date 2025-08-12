@@ -54,27 +54,6 @@ Singleton {
 	signal keyboardLayoutChanged(keyboard: string, layout: string)
 	signal rawEvent(event: Q.HyprlandEvent)
 
-	function workspacesList(length) {
-		if (length === undefined) {
-			for (const workspace of workspaces.values) {
-				if (workspace.id > length) {
-					length = workspace.id;
-				}
-			}
-		}
-		return Array.from({ length }, (_, i) => workspacesById[i + 1] ?? {
-			hasFullscreen: false,
-			id: i + 1,
-			monitor: focusedMonitor,
-			name: String(i + 1),
-			active: false,
-			focused: false,
-			activate: () => {
-				focusWorkspaceOnCurrentMonitor(id);
-			},
-		});
-	}
-
 	Connections {
 		target: Hyprland
 

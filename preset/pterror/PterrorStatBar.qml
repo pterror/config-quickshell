@@ -52,7 +52,7 @@ PanelWindow {
 			HoverItem {
 				onClicked: Config._.workspacesOverview.visible = !Config._.workspacesOverview.visible
 				RowRepeater {
-					model: Config.services.compositor.workspacesList(9)
+					model: HyprlandWorkspacesModel { count: 9 }
 					sourceComponent: WorkspaceExpandingDot {}
 				}
 			}
