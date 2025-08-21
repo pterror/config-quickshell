@@ -7,7 +7,7 @@ import qs
 
 Singleton {
 	property bool connected: ethernetConnected || wifiConnected
-	property string network: ethernetNetwork || wifiNetwork
+	property string network: ethernetNetwork.trim() || wifiNetwork.trim()
 	property int strength: wifiStrength
 	property string ethernetNetwork: ""
 	property bool ethernetConnected: ethernetNetwork !== ""
