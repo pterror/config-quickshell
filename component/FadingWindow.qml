@@ -5,6 +5,7 @@ import Quickshell.Wayland
 PanelWindow {
 	property int persistDuration: 1000
 	color: "transparent"
+	exclusiveZone: 0
 	default property alias content: container.children
 
 	Rectangle {
