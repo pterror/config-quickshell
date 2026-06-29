@@ -8,6 +8,7 @@ import qs.component
 import qs.window
 import qs.widget
 import qs
+import qs.models3d
 
 ShellRoot {
 	// reference `Shortcuts` so that it is loaded
@@ -80,8 +81,19 @@ ShellRoot {
 				// 	layer.effect: Config.wallpapers.effect
 				// }
 
-				PanoramaViewer {
-					source: wallpaperRandomizer.wallpapers[modelData.name] ?? Config.imageUrl("dark_pixel.png")
+				// PanoramaViewer {
+				// 	source: wallpaperRandomizer.wallpapers[modelData.name] ?? Config.imageUrl("dark_pixel.png")
+				// 	layer.enabled: Config.wallpapers.effect != null
+				// 	layer.effect: Config.wallpapers.effect
+				// }
+
+				Viewer3D {
+					BitterMajesty {}
+					clearColor: "#a351a4"
+					cameraX: 0
+					cameraY: 35
+					cameraZ: 105
+					cameraRotation: Quaternion.fromEulerAngles(-15, -10, 0)
 					layer.enabled: Config.wallpapers.effect != null
 					layer.effect: Config.wallpapers.effect
 				}

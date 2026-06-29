@@ -19,7 +19,7 @@ Scope {
 			mono_option: monoOption,
 		}
 	})
-	property var values: Array(count).fill(0) // 0 <= value <= 1
+	property list<real> values: Array(count).fill(0.0) // 0 <= value <= 1
 
 	onConfigChanged: {
 		process.running = false
