@@ -24,7 +24,9 @@ View3D {
 		ambientColor: "#c0c0c0"
 	}
 
-	// note: does not work on layershells
+	// NOTE: does not work on layershells
+	// TODO: implement a custom WASD controller that rotates around model origin instead of camera origin
+	// and uses right click to pan instead of wasd
 	WasdController {
 		controlledObject: camera
 	}

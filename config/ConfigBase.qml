@@ -27,7 +27,7 @@ Singleton {
 	}
 
 	property QtObject wallpapers: QtObject {
-		property Component effect: null // MultiEffect { colorization: 0.85; colorizationColor: Qt.rgba(0.05, 0.05, 0.05, 1.0) }
+		property Component effect: MultiEffect { colorization: 0.3; colorizationColor: Qt.rgba(0.05, 0.05, 0.05, 1.0) }
 	}
 
 	property font font: Qt.font({ family: root.font.family })
