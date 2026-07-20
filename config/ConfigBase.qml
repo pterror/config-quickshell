@@ -384,6 +384,10 @@ Singleton {
 					property color barsFg: root.style.rectangle.fg
 				}
 
+				property JsonObject cpu: JsonObject {
+					property color iowaitFg: "#a0ff8844"
+				}
+
 				property JsonObject greeter: JsonObject {
 					property color fg: root.style.secondaryFg
 					property color bg: root.style.panel.bg

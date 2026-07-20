@@ -5,8 +5,8 @@ import Quickshell
 import Quickshell.Io
 
 Singleton {
-	property real total: 1
-	property real free: 1
+	property real total: 0
+	property real free: 0
 	property real used: total - free
 
 	Timer {

@@ -44,6 +44,12 @@ PanelWindow {
 			RowLayout {
 				Layout.fillHeight: true
 				width: 80
+				Text { text: (Config._.owo ? "iowo " : "io ") + Math.floor(100 * CPUInfo.iowaitFraction) + "%" }
+			}
+
+			RowLayout {
+				Layout.fillHeight: true
+				width: 80
 				Text { text: (Config._.owo ? "mlem " : "mem ") + Math.floor(100 * MemoryInfo.used / MemoryInfo.total) + "%" }
 			}
 		}
