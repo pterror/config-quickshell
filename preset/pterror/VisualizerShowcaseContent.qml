@@ -95,6 +95,7 @@ Item {
 	Component {
 		id: compInwardsRadialBars
 		StackedInwardsRadialVisualizerBars {
+			input: content.fakeInput
 			outerRadius: 150
 			innerRadius: 80
 			values: [content.layerA0, content.layerA1, content.layerA2]

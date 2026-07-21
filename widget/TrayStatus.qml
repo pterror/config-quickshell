@@ -8,9 +8,9 @@ import qs.component
 RowLayout {
 	id: root
 	Layout.fillHeight: true
-	property var menuAlignment: Qt.AlignHCenter | Qt.AlignBottom
-	property var edges: Edges.Bottom | Edges.Left
-	property var gravity: Edges.Bottom
+	property PanelWindow anchorWindow: null
+	property Item anchorItem: null
+	property list<var> extraGrabWindows: []
 
 	Repeater {
 		model: SystemTray.items.values
@@ -21,23 +21,25 @@ RowLayout {
 			source: modelData.icon
 			size: Config._.style.trayStatus.iconSize
 			onClicked: {
-				if (!menu.visible) menu.open();
-				else menu.close();
+				if (!menuLoader.active) menuLoader.loading = true
+				else menuLoader.active = false
 			}
 
-			QsMenuAnchor {
-				id: menu
-				anchor.item: icon
-				anchor.edges: root.edges
-				anchor.gravity: root.gravity
-				anchor.margins.left: anchor.gravity & Edges.Left ? -Config._.style.popup.gap : anchor.gravity & Edges.Right ? 0 : icon.implicitWidth / 2
-				anchor.margins.right: anchor.gravity & Edges.Right ? -Config._.style.popup.gap : 0
-				anchor.margins.top: anchor.gravity & Edges.Top ? -Config._.style.popup.gap : anchor.gravity & Edges.Top ? 0 : icon.implicitHeight / 2
-				anchor.margins.bottom: anchor.gravity & Edges.Bottom ? -Config._.style.popup.gap : 0
-				anchor.rect.width: icon.implicitWidth
-				anchor.rect.height: icon.implicitHeight
-
-				menu: modelData.menu
+			LazyLoader {
+				id: menuLoader
+				PopupWindow {
+					id: menuPopup
+					anchor.window: root.anchorWindow
+					anchor.rect.x: icon.mapToItem(root.anchorItem, icon.width / 2, 0).x - menuPopup.implicitWidth / 2
+					anchor.rect.y: icon.mapToItem(root.anchorItem, 0, icon.height).y + Config._.style.popup.gap
+					extraGrabWindows: root.extraGrabWindows
+					visible: true
+					onDismissed: Qt.callLater(() => menuLoader.active = false)
+					TrayMenu {
+						menu: icon.modelData.menu
+						onTriggered: menuLoader.active = false
+					}
+				}
 			}
 		}
 	}

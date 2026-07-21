@@ -49,22 +49,85 @@ PanelWindow {
 			implicitHeight: parent.height
 			anchors.left: parent.left
 
-			RowLayout {
+			Item {
 				Layout.fillHeight: true
-				width: 80
-				Text { text: (Config._.owo ? "cpuwu " : "cpu ") + Math.floor(100 * CPUInfo.activeSec / CPUInfo.totalSec) + "%" }
+				implicitWidth: 80
+				Rectangle {
+					anchors.fill: parent
+					anchors.topMargin: 4
+					anchors.bottomMargin: 4
+					radius: Config._.style.rectangle.radius
+					color: "#10e0ffff"
+				}
+				Rectangle {
+					anchors.left: parent.left
+					anchors.top: parent.top
+					anchors.bottom: parent.bottom
+					anchors.topMargin: 4
+					anchors.bottomMargin: 4
+					width: parent.width * Math.min(1, CPUInfo.activeSec / CPUInfo.totalSec)
+					radius: Config._.style.rectangle.radius
+					color: "#20e0ffff"
+					Behavior on width { SmoothedAnimation { duration: 1000; velocity: -1 } }
+				}
+				Text {
+					anchors.centerIn: parent
+					text: (Config._.owo ? "cpuwu " : "cpu ") + Math.floor(100 * CPUInfo.activeSec / CPUInfo.totalSec) + "%"
+				}
 			}
 
-			RowLayout {
+			Item {
 				Layout.fillHeight: true
-				width: 80
-				Text { text: (Config._.owo ? "iowo " : "io ") + Math.floor(100 * CPUInfo.iowaitFraction) + "%" }
+				implicitWidth: 80
+				Rectangle {
+					anchors.fill: parent
+					anchors.topMargin: 4
+					anchors.bottomMargin: 4
+					radius: Config._.style.rectangle.radius
+					color: "#10e0ffff"
+				}
+				Rectangle {
+					anchors.left: parent.left
+					anchors.top: parent.top
+					anchors.bottom: parent.bottom
+					anchors.topMargin: 4
+					anchors.bottomMargin: 4
+					width: parent.width * Math.min(1, CPUInfo.iowaitFraction)
+					radius: Config._.style.rectangle.radius
+					color: "#20e0ffff"
+					Behavior on width { SmoothedAnimation { duration: 1000; velocity: -1 } }
+				}
+				Text {
+					anchors.centerIn: parent
+					text: (Config._.owo ? "iowo " : "io ") + Math.floor(100 * CPUInfo.iowaitFraction) + "%"
+				}
 			}
 
-			RowLayout {
+			Item {
 				Layout.fillHeight: true
-				width: 80
-				Text { text: (Config._.owo ? "mlem " : "mem ") + Math.floor(100 * MemoryInfo.used / MemoryInfo.total) + "%" }
+				implicitWidth: 80
+				Rectangle {
+					anchors.fill: parent
+					anchors.topMargin: 4
+					anchors.bottomMargin: 4
+					radius: Config._.style.rectangle.radius
+					color: "#10e0ffff"
+				}
+				Rectangle {
+					anchors.left: parent.left
+					anchors.top: parent.top
+					anchors.bottom: parent.bottom
+					anchors.topMargin: 4
+					anchors.bottomMargin: 4
+					width: parent.width * Math.min(1, MemoryInfo.used / MemoryInfo.total)
+					radius: Config._.style.rectangle.radius
+					color: "#20e0ffff"
+					Behavior on width { SmoothedAnimation { duration: 1000; velocity: -1 } }
+				}
+				Text {
+					anchors.centerIn: parent
+					text: (Config._.owo ? "mlem " : "mem ") + Math.floor(100 * MemoryInfo.used / MemoryInfo.total) + "%"
+				}
 			}
 		}
 

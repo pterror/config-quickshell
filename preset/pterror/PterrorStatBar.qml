@@ -53,7 +53,7 @@ PanelWindow {
 			implicitHeight: parent.height
 			anchors.right: parent.right
 
-			TrayStatus {}
+			TrayStatus { anchorWindow: root; anchorItem: barRect; extraGrabWindows: [root] }
 
 			HoverItem {
 				onClicked: {

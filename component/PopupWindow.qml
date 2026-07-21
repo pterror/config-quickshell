@@ -44,6 +44,18 @@ Q.PopupWindow {
 		// paints straight over the rounding and hides the translucent glass tint.
 		clip: true
 
+		scale: 0.92
+		opacity: 0
+		transformOrigin: Item.Top
+
+		Component.onCompleted: {
+			scale = 1
+			opacity = 1
+		}
+
+		Behavior on scale { SmoothedAnimation { duration: 150; velocity: -1 } }
+		Behavior on opacity { SmoothedAnimation { duration: 150; velocity: -1 } }
+
 		layer.enabled: true
 		layer.effect: MultiEffect {
 			shadowEnabled: true

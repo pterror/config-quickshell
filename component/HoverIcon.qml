@@ -17,6 +17,7 @@ Button {
 	icon.width: maxSize
 	icon.height: maxSize
 	icon.source: source
+	icon.color: Config._.style.widget.fg
 	ToolTip.delay: Config._.style.tooltip.delay
 	ToolTip.timeout: Config._.style.tooltip.timeout
 	ToolTip.visible: toolTip !== undefined && mouseArea.containsMouse
