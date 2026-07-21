@@ -253,19 +253,25 @@ Singleton {
 
 			property JsonObject style: JsonObject {
 				property color primaryFg: "#a0e0ffff"
-				property color primaryBg: withBgOpacity("#1a1d26")
-				property color primaryHoverBg: withBgOpacity("#e0ffff")
+				// Pale-cyan family (matches barItem's e0ffff hue) with fixed low
+				// alphas rather than withBgOpacity (which would give ~55% and read as
+				// a heavy cyan wash). Alpha hierarchy:
+				//   barItem idle #10 (6%) < primaryBg #14 (8%) < bar.bg #18 (9%)
+				//   < barItem hover #20 (12%) < secondaryBg #24 (14%)
+				//   < primaryHoverBg #30 (19%) < widget.hoverBg #38 (22%)
+				property color primaryBg: "#14e0ffff"
+				property color primaryHoverBg: "#30e0ffff"
 				property color secondaryFg: "#40e0ffff"
-				property color secondaryBg: withBgOpacity("#272d42")
+				property color secondaryBg: "#24e0ffff"
 				property color selectionBg: withBgOpacity("#e0ffff")
 				property color accentFg: "#a0ffaaaa"
 				property color highlightBg: "#30ffeef8"
 
-				// Glassmorphism tokens: frosted-glass surfaces are translucent tint (the
-				// bg colors above already carry alpha via withBgOpacity/backgroundOpacity)
-				// plus a subtle hairline border and a soft drop shadow. No backdrop blur —
-				// deliberately not used here (Wayland/compositor blur is out of scope and
-				// was explicitly declined).
+				// Glassmorphism tokens: frosted-glass surfaces are translucent tint
+				// (the bg colors above carry alpha inline) plus a subtle hairline
+				// border and a soft drop shadow. No backdrop blur — deliberately not
+				// used here (Wayland/compositor blur is out of scope and was explicitly
+				// declined).
 				property JsonObject glass: JsonObject {
 					property color border: "#26ffffff" // ~15% white hairline
 					property color borderHover: "#40ffffff"
@@ -372,7 +378,10 @@ Singleton {
 				}
 
 				property JsonObject bar: JsonObject {
-					property color bg: "#18c8c8d0"
+					// Same e0ffff pale-cyan hue as barItem, same alpha the old
+					// grayish-blue c8c8d0 tone used -- keeps the bar shell consistent
+					// with the buttons that sit on top of it.
+					property color bg: "#18e0ffff"
 					property color outline: root.style.glass.border
 				}
 
@@ -389,7 +398,9 @@ Singleton {
 					property int radius: 4
 					property int margins: root.style.button.margins
 
-					property color bg: root.moreTransparency ? "#00000000" : root.style.primaryBg
+					// Non-hover bg shares hoverBg's hue (e0ffff), just at lower alpha, so
+					// hovering reads as a brightness/opacity shift rather than a hue jump.
+					property color bg: root.moreTransparency ? "#00000000" : "#10e0ffff"
 					property color hoverBg: "#20e0ffff"
 					property color outline: "#00ffffff"
 				}

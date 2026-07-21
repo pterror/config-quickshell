@@ -76,6 +76,10 @@ PanelWindow {
 							implicitWidth: Math.min(1600, root.screen.width - 160)
 							implicitHeight: Math.min(1100, root.screen.height - 160)
 							visible: true
+							// Keep the loader's active/loading toggle in sync when
+							// HyprlandFocusGrab closes this popup via an outside click
+							// (see PopupWindow.dismissed doc comment).
+							onDismissed: Qt.callLater(() => visualizerShowcaseLoader.active = false)
 
 							VisualizerShowcaseContent {
 								anchors.fill: parent

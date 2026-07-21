@@ -12,7 +12,18 @@ Q.PopupWindow {
 
 	id: root
 	property list<var> extraGrabWindows: []
-	onVisibleChanged: grab.active = visible
+	// Fired when the popup stops being visible for any reason, including
+	// HyprlandFocusGrab dismissing it via an outside click. Callers that
+	// gate a LazyLoader (or other toggle state) on this popup's presence
+	// must listen for this to stay in sync — otherwise the toggle believes
+	// the popup is still open after an outside-click dismiss, and the next
+	// trigger click "closes" an already-closed popup instead of reopening
+	// it.
+	signal dismissed()
+	onVisibleChanged: {
+		grab.active = visible
+		if (!visible) dismissed()
+	}
 
 	HyprlandFocusGrab {
 		id: grab; windows: [root].concat(extraGrabWindows); active: true

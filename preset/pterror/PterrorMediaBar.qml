@@ -92,6 +92,10 @@ PanelWindow {
 								anchor.rect.y: -mediaControls.height - Config._.style.popup.gap
 								extraGrabWindows: [root].concat(root.extraGrabWindows)
 								visible: true
+								// Keep the loader's active/loading toggle in sync when
+								// HyprlandFocusGrab closes this popup via an outside click
+								// (see PopupWindow.dismissed doc comment).
+								onDismissed: Qt.callLater(() => mediaControlsLoader.active = false)
 								MediaControls { id: mediaControls }
 							}
 						}
@@ -142,6 +146,10 @@ PanelWindow {
 								anchor.rect.x: volumeItem.mapToItem(rootRect, volumeItem.implicitWidth / 2, 0).x - volumeControls.width / 2
 								anchor.rect.y: -volumeControls.height - Config._.style.popup.gap
 								visible: true
+								// Keep the loader's active/loading toggle in sync when
+								// HyprlandFocusGrab closes this popup via an outside click
+								// (see PopupWindow.dismissed doc comment).
+								onDismissed: Qt.callLater(() => volumeControlsLoader.active = false)
 								VolumeControls { id: volumeControls }
 							}
 						}

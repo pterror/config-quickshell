@@ -69,12 +69,14 @@ Item {
 	// Light, low-chroma, very translucent tones (rather than the dark widget-wide
 	// glass tokens) — this showcase's own background and card fills read too dark
 	// against the light desaturated backdrop, so they're overridden locally here.
-	readonly property color glassBg: Qt.rgba(200 / 255, 200 / 255, 210 / 255, 0.15)
-	readonly property color glassBgHover: Qt.rgba(200 / 255, 200 / 255, 210 / 255, 0.22)
-	readonly property color glassBorder: Qt.rgba(1, 1, 1, 0.18)
-	readonly property color glassBorderLight: Qt.rgba(1, 1, 1, 0.28)
-	readonly property color glassBorderDark: Qt.rgba(0, 0, 0, 0.25)
-	readonly property color accent: Qt.rgba(59 / 255, 130 / 255, 246 / 255, 0.8)
+	// Same e0ffff pale-cyan hue as style.bar.bg/style.barItem.bg, so the cards read
+	// as part of the same glass family as the bars and buttons around them.
+	readonly property color glassBg: "#26e0ffff"
+	readonly property color glassBgHover: "#38e0ffff"
+	readonly property color glassBorder: "#2effffff"
+	readonly property color glassBorderLight: "#47ffffff"
+	readonly property color glassBorderDark: "#40000000"
+	readonly property color accent: "#cc3b82f6"
 	// Card corner radius: reuse the shared glass token rather than a magic number, so
 	// the showcase cards stay visually consistent with every other glass surface.
 	readonly property int cardRadius: Config._.style.glass.radius
@@ -252,7 +254,7 @@ Item {
 						Rectangle {
 							anchors.fill: parent
 							radius: content.cardRadius
-							color: card.pinned ? Qt.rgba(59 / 255, 130 / 255, 246 / 255, 0.12) : content.glassBg
+							color: card.pinned ? "#1f3b82f6" : content.glassBg
 							border.width: 1
 							border.color: card.pinned ? content.accent : content.glassBorder
 
@@ -373,7 +375,7 @@ Item {
 						Rectangle {
 							anchors.fill: parent
 							radius: content.cardRadius
-							color: card.pinned ? Qt.rgba(59 / 255, 130 / 255, 246 / 255, 0.12) : content.glassBg
+							color: card.pinned ? "#1f3b82f6" : content.glassBg
 							border.width: 1
 							border.color: card.pinned ? content.accent : content.glassBorder
 
@@ -459,10 +461,11 @@ Item {
 	// Light, low-chroma, very translucent fill — this sits behind everything else,
 	// so it also lets the popup's own rounded/translucent glass background
 	// (component/PopupWindow.qml) show through when this content is hosted as a
-	// popup rather than the standalone window.
+	// popup rather than the standalone window. Reuses style.bar.bg directly (rather
+	// than a duplicated local color) so this matches the bar's own glass tone.
 	Rectangle {
 		anchors.fill: parent
-		color: Qt.rgba(200 / 255, 200 / 255, 210 / 255, 0.15)
+		color: Config._.style.bar.bg
 	}
 
 	ColumnLayout {
