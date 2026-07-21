@@ -230,24 +230,43 @@ Singleton {
 		exec("j", ["clients"], json => { clientsData = JSON.parse(json); });
 	}
 
-	function recomputeWorkspaces() {
+	function recomputeWorkspaces(includeSpecial = false) {
 		const result = Array.from({ length: Config._.workspaceCount }, (_, i) => ({
-			id: i, x: 0, y: 0, width: 1920, height: 1080, clients: [],
+			id: i, x: 0, y: 0, width: 1920, height: 1080, clients: [], special: false,
 		}));
+		const byId = {};
+		for (const entry of result) byId[entry.id] = entry;
+
+		const specialResult = [];
 		for (const workspace of workspaces.values) {
-			if (!/^\d+$/.test(workspace.name)) continue;
+			const isSpecial = Config.isSpecialWorkspace(workspace.name);
+			if (isSpecial) {
+				if (!includeSpecial) continue;
+			} else if (!/^\d+$/.test(workspace.name)) {
+				continue;
+			}
 			const screen = Quickshell.screens.find(m => m.name === workspace.monitor.name);
-			result[workspace.id - 1] = {
+			const entry = {
 				id: workspace.id,
+				name: workspace.name,
 				x: screen?.x ?? 0,
 				y: screen?.y ?? 0,
 				width: screen?.width ?? 1920,
 				height: screen?.height ?? 1080,
 				clients: [],
+				special: isSpecial,
 			};
+			if (isSpecial) {
+				specialResult.push(entry);
+			} else {
+				result[workspace.id - 1] = entry;
+			}
+			byId[workspace.id] = entry;
 		}
+		specialResult.sort((a, b) => a.id - b.id);
+
 		for (const client of clientsData) {
-			const boundingBox = result[client.workspace.id - 1];
+			const boundingBox = byId[client.workspace.id];
 			if (!boundingBox) continue;
 			const info = {
 				address: client.address,
@@ -259,8 +278,8 @@ Singleton {
 				title: client.title,
 				toplevel: ToplevelManager.toplevels.values.find(value => `0x${value.Q.HyprlandToplevel?.address}` === client.address),
 			}
-			result[client.workspace.id - 1].clients.push(info);
+			boundingBox.clients.push(info);
 		}
-		return result;
+		return includeSpecial ? result.concat(specialResult) : result;
 	}
 }

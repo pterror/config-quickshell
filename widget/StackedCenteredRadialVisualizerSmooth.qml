@@ -12,31 +12,31 @@ VisualizerBase {
 	property int outerRadius: 480
 	property int innerRadius: 240
 	property int centerRadius: (outerRadius + innerRadius) / 2
-	property int centerOuterRadius: centerRadius + 8
-	property int centerInnerRadius: centerRadius - 8
-	property real outerScale: outerRadius - centerOuterRadius
-	property real innerScale: innerRadius - centerInnerRadius
+	property real outerScale: outerRadius - centerRadius
+	property real innerScale: centerRadius - innerRadius
 	property real rotationOffset: 0
-	property list<var> outerValues: []
-	property list<color> outerColors: []
-	property list<var> innerValues: []
-	property list<color> innerColors: []
-	property int outerCount: outerValues.length > 0 ? outerValues[0].length : 0
-	property int innerCount: innerValues.length > 0 ? innerValues[0].length : 0
+	property list<var> values: []
+	property list<color> colors: []
+	property int count: values.length > 0 ? values[0].length : 0
+
 	width: outerRadius * 2
 	height: outerRadius * 2
 
-	function cumulativeOf(list, layer, point) {
+	// Cumulative sum of layers [0..layer] at a given point. Layer -1 is the
+	// unstacked centerline (cumulative value 0), which is exactly centerRadius.
+	function cumulativeOf(layer, point) {
 		if (layer < 0) return 0
 		let sum = 0
-		for (let k = 0; k <= layer; k++) sum += list[k][point]
+		for (let k = 0; k <= layer; k++) sum += values[k][point]
 		return sum
 	}
 
-	// Ring growing outward from centerOuterRadius toward outerRadius, layer by layer.
+	// Shells growing outward from centerRadius toward outerRadius, layer by layer.
+	// Layer 0's inner edge sits exactly at centerRadius (cumulative(-1) === 0),
+	// so it meets the innermost inward shell below with no gap.
 	Repeater {
 		id: outerLayers
-		model: root.outerValues.length
+		model: root.values.length
 
 		Shape {
 			id: shape
@@ -60,12 +60,12 @@ VisualizerBase {
 
 			Connections {
 				target: root
-				function onOuterCountChanged() { shape.redrawPath() }
+				function onCountChanged() { shape.redrawPath() }
 			}
 
 			ShapePath {
 				id: path
-				fillColor: shape.index < root.outerColors.length ? root.outerColors[shape.index] : root.fillColor
+				fillColor: shape.index < root.colors.length ? root.colors[shape.index] : root.fillColor
 				strokeColor: root.strokeColor
 				strokeWidth: root.strokeWidth
 				startX: shape.startX
@@ -77,14 +77,14 @@ VisualizerBase {
 
 			Repeater {
 				id: curves
-				model: root.outerCount + 1
+				model: root.count + 1
 
 				Item {
 					required property int modelData
-					property real outerVal: root.cumulativeOf(root.outerValues, shape.index, modelData % root.outerCount)
-					property real innerVal: root.cumulativeOf(root.outerValues, shape.index - 1, modelData % root.outerCount)
-					property real xMultiplier: Math.cos(((modelData % root.outerCount) / root.outerCount - 0.25 - rotationOffset / 360) * 2 * Math.PI)
-					property real yMultiplier: Math.sin(((modelData % root.outerCount) / root.outerCount - 0.25 - rotationOffset / 360) * 2 * Math.PI)
+					property real outerVal: root.cumulativeOf(shape.index, modelData % root.count)
+					property real innerVal: root.cumulativeOf(shape.index - 1, modelData % root.count)
+					property real xMultiplier: Math.cos(((modelData % root.count) / root.count - 0.25 - rotationOffset / 360) * 2 * Math.PI)
+					property real yMultiplier: Math.sin(((modelData % root.count) / root.count - 0.25 - rotationOffset / 360) * 2 * Math.PI)
 					Behavior on outerVal {
 						SmoothedAnimation { duration: root.animationDuration; velocity: root.animationVelocity }
 					}
@@ -94,14 +94,14 @@ VisualizerBase {
 
 					PathCurve {
 						id: outerCurve
-						property real radius: root.centerOuterRadius + outerVal * root.outerScale
+						property real radius: root.centerRadius + outerVal * root.outerScale
 						x: root.width / 2 + radius * xMultiplier
 						y: root.height / 2 + radius * yMultiplier
 					}
 
 					PathCurve {
 						id: innerCurve
-						property real radius: root.centerOuterRadius + innerVal * root.outerScale
+						property real radius: root.centerRadius + innerVal * root.outerScale
 						x: root.width / 2 + radius * xMultiplier
 						y: root.height / 2 + radius * yMultiplier
 					}
@@ -118,10 +118,14 @@ VisualizerBase {
 		}
 	}
 
-	// Ring growing inward from centerInnerRadius toward innerRadius, layer by layer.
+	// Shells growing inward from centerRadius toward innerRadius, layer by layer.
+	// Uses the same values/colors as the outward shells above: each layer adds
+	// mass symmetrically on both sides of the centerRadius baseline, so the two
+	// stacks are mirror images driven by the same cumulative curve, not two
+	// independent stacks.
 	Repeater {
 		id: innerLayers
-		model: root.innerValues.length
+		model: root.values.length
 
 		Shape {
 			id: shape
@@ -145,12 +149,12 @@ VisualizerBase {
 
 			Connections {
 				target: root
-				function onInnerCountChanged() { shape.redrawPath() }
+				function onCountChanged() { shape.redrawPath() }
 			}
 
 			ShapePath {
 				id: path
-				fillColor: shape.index < root.innerColors.length ? root.innerColors[shape.index] : root.fillColor
+				fillColor: shape.index < root.colors.length ? root.colors[shape.index] : root.fillColor
 				strokeColor: root.strokeColor
 				strokeWidth: root.strokeWidth
 				startX: shape.startX
@@ -162,14 +166,14 @@ VisualizerBase {
 
 			Repeater {
 				id: curves
-				model: root.innerCount + 1
+				model: root.count + 1
 
 				Item {
 					required property int modelData
-					property real outerVal: root.cumulativeOf(root.innerValues, shape.index - 1, modelData % root.innerCount)
-					property real innerVal: root.cumulativeOf(root.innerValues, shape.index, modelData % root.innerCount)
-					property real xMultiplier: Math.cos(((modelData % root.innerCount) / root.innerCount - 0.25 - rotationOffset / 360) * 2 * Math.PI)
-					property real yMultiplier: Math.sin(((modelData % root.innerCount) / root.innerCount - 0.25 - rotationOffset / 360) * 2 * Math.PI)
+					property real outerVal: root.cumulativeOf(shape.index - 1, modelData % root.count)
+					property real innerVal: root.cumulativeOf(shape.index, modelData % root.count)
+					property real xMultiplier: Math.cos(((modelData % root.count) / root.count - 0.25 - rotationOffset / 360) * 2 * Math.PI)
+					property real yMultiplier: Math.sin(((modelData % root.count) / root.count - 0.25 - rotationOffset / 360) * 2 * Math.PI)
 					Behavior on outerVal {
 						SmoothedAnimation { duration: root.animationDuration; velocity: root.animationVelocity }
 					}
@@ -179,14 +183,14 @@ VisualizerBase {
 
 					PathCurve {
 						id: outerCurve
-						property real radius: root.centerInnerRadius + outerVal * root.innerScale
+						property real radius: root.centerRadius - outerVal * root.innerScale
 						x: root.width / 2 + radius * xMultiplier
 						y: root.height / 2 + radius * yMultiplier
 					}
 
 					PathCurve {
 						id: innerCurve
-						property real radius: root.centerInnerRadius + innerVal * root.innerScale
+						property real radius: root.centerRadius - innerVal * root.innerScale
 						x: root.width / 2 + radius * xMultiplier
 						y: root.height / 2 + radius * yMultiplier
 					}

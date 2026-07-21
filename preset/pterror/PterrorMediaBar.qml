@@ -1,5 +1,6 @@
 import QtQuick
 import QtQuick.Layouts
+import QtQuick.Effects
 import Quickshell
 import Quickshell.Wayland
 import Quickshell.Services.Mpris
@@ -21,6 +22,9 @@ PanelWindow {
 		}
 	}
 
+	// Frosted-glass bottom bar: translucent tint + hairline border + soft drop
+	// shadow (it floats inset from the screen edges, so unlike the top bar there's
+	// margin headroom for the shadow to render into). No backdrop blur.
 	Rectangle {
 		id: rootRect
 		anchors.fill: parent
@@ -30,6 +34,16 @@ PanelWindow {
 		radius: Config._.style.hBar.radius
 		border.color: Config._.style.bar.outline
 		border.width: Config._.style.hBar.border
+
+		layer.enabled: true
+		layer.effect: MultiEffect {
+			shadowEnabled: true
+			shadowColor: Config._.style.glass.shadowColor
+			shadowBlur: Config._.style.glass.shadowBlur
+			shadowVerticalOffset: Config._.style.glass.shadowVerticalOffset
+			shadowHorizontalOffset: Config._.style.glass.shadowHorizontalOffset
+			blurEnabled: false
+		}
 
 		RowLayout {
 			implicitHeight: parent.height

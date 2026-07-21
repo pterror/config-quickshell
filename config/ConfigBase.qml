@@ -149,7 +149,10 @@ Singleton {
 			property string name: "you"
 			property bool owo: false
 			property bool widgetsAcrossAllScreens: false
-			property real backgroundOpacity: 0.8
+			// Lower default alpha for a glassmorphism feel: panels read as translucent
+			// tinted glass rather than solid cards. Compositor-side blur (hyprland.conf
+			// layerrule on the shell:* namespaces) is what keeps content legible behind them.
+			property real backgroundOpacity: 0.55
 			property bool moreTransparency: false
 			property bool reducedMotion: false
 			property bool liveWindowPreviews: false
@@ -211,10 +214,18 @@ Singleton {
 
 			property JsonObject workspacesOverview: JsonObject {
 				property bool visible: false
+				property bool showSpecial: false
 			}
 
 			property JsonObject wLogout: JsonObject {
 				property bool visible: false
+			}
+
+			property JsonObject widgets: JsonObject {
+				property string mode: "overlay" // "overlay" or "background"
+				property bool visible: false
+				property var enabled: ({}) // { [widgetId]: bool }, absent === enabled
+				property var positions: ({}) // { [widgetId]: { x: real, y: real } }
 			}
 
 			property JsonObject crankableImage: JsonObject {
@@ -250,6 +261,27 @@ Singleton {
 				property color accentFg: "#a0ffaaaa"
 				property color highlightBg: "#30ffeef8"
 
+				// Glassmorphism tokens: frosted-glass surfaces are translucent tint (the
+				// bg colors above already carry alpha via withBgOpacity/backgroundOpacity)
+				// plus a subtle hairline border and a soft drop shadow. No backdrop blur —
+				// deliberately not used here (Wayland/compositor blur is out of scope and
+				// was explicitly declined).
+				property JsonObject glass: JsonObject {
+					property color border: "#26ffffff" // ~15% white hairline
+					property color borderHover: "#40ffffff"
+					property int borderWidth: 1
+					property int radius: 12
+
+					// MultiEffect (QtQuick.Effects) drop-shadow params for glass panels
+					// that have room to render one (popups, cards, OSDs). Full-bleed bars
+					// flush against a screen edge have no surface headroom for a shadow
+					// and skip it.
+					property color shadowColor: "#70000000"
+					property real shadowBlur: 0.6
+					property int shadowVerticalOffset: 3
+					property int shadowHorizontalOffset: 0
+				}
+
 				// fallback values for arbitrary rectangles
 				property JsonObject rectangle: JsonObject {
 					property int radius: 4
@@ -273,14 +305,14 @@ Singleton {
 				property JsonObject widget: JsonObject {
 					property int radius: 8
 					property int margins: 4
-					property int border: 0
+					property int border: root.style.glass.borderWidth
 					property int fontSize: 11
 
 					property color fg: root.style.primaryFg
 					property color bg: root.style.secondaryBg
 					property color accent: root.style.accentFg
 					property color hoverBg: "#38e0ffff"
-					property color outline: "#00ffffff"
+					property color outline: root.style.glass.border
 				}
 
 				property JsonObject button: JsonObject {
@@ -311,9 +343,9 @@ Singleton {
 				}
 
 				property JsonObject window: JsonObject {
-					property int radius: 8
+					property int radius: root.style.glass.radius
 					property int margins: 4
-					property int border: 0
+					property int border: root.style.glass.borderWidth
 					property int fontSize: 11
 
 					property color fg: root.style.widget.fg
@@ -340,12 +372,12 @@ Singleton {
 				}
 
 				property JsonObject bar: JsonObject {
-					property color bg: root.style.primaryBg
-					property color outline: "#00ffffff"
+					property color bg: "#18c8c8d0"
+					property color outline: root.style.glass.border
 				}
 
 				property JsonObject hBar: JsonObject {
-					property int radius: 0 // root.style.widget.radius
+					property int radius: root.style.glass.radius
 					property int margins: root.style.widget.margins
 					property int border: root.style.widget.border
 					// NOTE: Currently unused
@@ -406,6 +438,8 @@ Singleton {
 					property color accent: root.style.panel.accent
 					property color hoverBg: root.style.panel.hoverBg
 					property color outline: root.style.panel.outline
+					property color specialOutline: "#c0ffaa33"
+					property int specialBorder: 2
 				}
 
 				property JsonObject wLogout: JsonObject {

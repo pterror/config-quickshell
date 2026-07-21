@@ -23,6 +23,9 @@ Rectangle {
 	// External speed input (e.g. derived from CPU load) that biases the idle drift.
 	property real driftSpeed: 0
 	property real rotationOffset: rotationAnim.value
+	property bool modulateOpacity: false
+	property real minOpacity: 0.4
+	property real maxOpacity: 1.0
 	width: outerRadius * 2
 	height: outerRadius * 2
 
@@ -58,33 +61,45 @@ Rectangle {
 						}
 						return sum
 					}
+					property real opacityBase: 1
 					x: 0
 					y: cumulativeHeight
 					width: root.barWidth
 					radius: root.barRadius
 					color: root.colors[layerIndex] ?? "transparent"
+					opacity: opacityBase
 					height: (root.values[layerIndex]?.[barItem.modelData] ?? 0) * root.scale
+					Component.onCompleted: updateModulateOpacity()
 
 					Behavior on height {
 						SmoothedAnimation { duration: root.animationDuration; velocity: root.animationVelocity }
 					}
+					Behavior on opacityBase {
+						SmoothedAnimation { duration: root.animationDuration; velocity: root.animationVelocity }
+					}
+
+					function updateModulateOpacity() {
+						if (root.modulateOpacity) {
+							opacityBase = Qt.binding(() => (root.values[layerIndex]?.[barItem.modelData] ?? 0) * (root.maxOpacity - root.minOpacity) + root.minOpacity)
+						} else {
+							opacityBase = 1
+						}
+					}
+
+					Connections { target: root; function onModulateOpacityChanged() { segment.updateModulateOpacity() } }
 				}
 			}
 		}
 	}
 
+	// Constant-speed idle drift, controlled entirely by `driftSpeed` — no baked-in
+	// oscillation curve (that CPU-specific sine-wave idle motion lives in the CPU
+	// bars preset, not in this generic component).
 	MomentumAnimation {
 		id: rotationAnim
-		property real t: 0
-		property int curveLength: Config._.frameRate * 1
-		property list<real> opacityCurve: Array.from({ length: curveLength }, (_, i) => 0.8 + 0.2 * Math.sin(i * 2 * Math.PI / curveLength))
-		property list<real> curve: Array.from({ length: curveLength }, (_, i) => -1 -.5 * Math.sin(i * 2 * Math.PI / curveLength))
 		processValue: (x, frameTime) => {
 			const frameDelta = frameTime * Config._.frameRate
-			t = (t + frameDelta) % curveLength
-			const frac = t % 1
-			root.opacity = opacityCurve[Math.floor(t)] * frac + opacityCurve[Math.ceil(t) % curveLength] * (1 - frac)
-			return (x + 360 + (curve[Math.floor(t)] * frac + curve[Math.ceil(t) % curveLength] * (1 - frac)) - root.driftSpeed * frameDelta) % 360
+			return (x + 360 - root.driftSpeed * frameDelta) % 360
 		}
 	}
 

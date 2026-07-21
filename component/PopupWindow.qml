@@ -1,4 +1,5 @@
 import QtQuick
+import QtQuick.Effects
 import Quickshell as Q
 import Quickshell.Hyprland
 import qs
@@ -18,10 +19,28 @@ Q.PopupWindow {
 		onActiveChanged: root.visible = active
 	}
 
+	// Frosted-glass card: translucent tint + hairline border + soft drop shadow.
+	// No backdrop blur.
 	Rectangle {
 		id: container
 		color: Config._.style.window.bg
 		radius: Config._.style.window.radius
+		border.color: Config._.style.window.outline
+		border.width: Config._.style.window.border
 		anchors.fill: parent
+		// Clip content to the rounded rect — otherwise any child that fills the
+		// popup with its own square-cornered background (e.g. VisualizerShowcaseContent)
+		// paints straight over the rounding and hides the translucent glass tint.
+		clip: true
+
+		layer.enabled: true
+		layer.effect: MultiEffect {
+			shadowEnabled: true
+			shadowColor: Config._.style.glass.shadowColor
+			shadowBlur: Config._.style.glass.shadowBlur
+			shadowVerticalOffset: Config._.style.glass.shadowVerticalOffset
+			shadowHorizontalOffset: Config._.style.glass.shadowHorizontalOffset
+			blurEnabled: false
+		}
 	}
 }

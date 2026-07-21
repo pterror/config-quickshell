@@ -45,9 +45,9 @@ VisualizerBase {
 
 						Rectangle {
 							required property int index
-							property int layer: root.childAlignment === (Qt.AlignRight | Qt.AlignVCenter) ? (root.colors.length - 1 - index) : index
-							property real value: root.values[layer][barSlot.modelData]
-							color: root.colors[layer]
+							property int layerIndex: root.childAlignment === (Qt.AlignRight | Qt.AlignVCenter) ? (root.colors.length - 1 - index) : index
+							property real value: root.values[layerIndex][barSlot.modelData]
+							color: root.colors[layerIndex]
 							border.color: root.strokeColor
 							border.width: root.strokeWidth
 							implicitHeight: stack.height
@@ -61,7 +61,7 @@ VisualizerBase {
 
 							function updateModulateOpacity() {
 								if (root.modulateOpacity) {
-									opacity = Qt.binding(() => root.values[layer][barSlot.modelData] * (maxOpacity - minOpacity) + minOpacity)
+									opacity = Qt.binding(() => root.values[layerIndex][barSlot.modelData] * (maxOpacity - minOpacity) + minOpacity)
 								} else {
 									opacity = 1
 								}

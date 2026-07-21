@@ -46,9 +46,9 @@ VisualizerBase {
 
 						Rectangle {
 							required property int index
-							property int layer: root.childAlignment === Qt.AlignBottom ? (root.colors.length - 1 - index) : index
-							property real value: root.values[layer][barSlot.modelData]
-							color: root.colors[layer]
+							property int layerIndex: root.childAlignment === Qt.AlignBottom ? (root.colors.length - 1 - index) : index
+							property real value: root.values[layerIndex][barSlot.modelData]
+							color: root.colors[layerIndex]
 							border.color: root.strokeColor
 							border.width: root.strokeWidth
 							implicitHeight: value * content.height

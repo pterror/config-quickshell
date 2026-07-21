@@ -29,7 +29,7 @@ LazyLoader {
 		color: "transparent"
 		WlrLayershell.namespace: "shell:workspaces"
 		property list<var> workspacesData: []
-		property list<var> workspaces: Config.services.compositor.recomputeWorkspaces()
+		property list<var> workspaces: Config.services.compositor.recomputeWorkspaces(Config._.workspacesOverview.showSpecial)
 		implicitWidth: content.implicitWidth
 		implicitHeight: content.implicitHeight
 		onVisibleChanged: {
@@ -76,9 +76,11 @@ LazyLoader {
 						required property var modelData
 						width: Math.min(maxWidth, (1920 - 64) / columns)
 						workspaceId: modelData.id
+						workspaceName: modelData.name ?? ""
 						workspaceWidth: modelData.width
 						workspaceHeight: modelData.height
 						clients: modelData.clients
+						special: modelData.special ?? false
 					}
 				}
 			}

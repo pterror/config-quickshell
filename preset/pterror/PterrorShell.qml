@@ -3,6 +3,7 @@ import Quickshell.Io
 import Quickshell.Wayland
 import QtQuick
 import QtQuick.Layouts
+import QtQuick3D
 import qs.io
 import qs.component
 import qs.window
@@ -68,6 +69,14 @@ ShellRoot {
 				id: window
 				color: "transparent"
 				screen: modelData
+				// Ignore the bars' exclusive zones: they reserve screen space so
+				// tiled app windows leave room for them, but this background layer
+				// must still paint the full screen underneath — otherwise the strip
+				// they reserve goes unpainted by this layer, and since the bars
+				// (PterrorStatBar/PterrorMediaBar) are now translucent + rounded
+				// (config/ConfigBase.qml `style.glass`) rather than opaque + square,
+				// that gap shows through as a non-rounded dark rectangle behind them.
+				exclusionMode: ExclusionMode.Ignore
 				Component.onCompleted: {
 					if (this.WlrLayershell) {
 						this.WlrLayershell.layer = WlrLayer.Background
@@ -90,9 +99,10 @@ ShellRoot {
 				Viewer3D {
 					BitterMajesty {}
 					clearColor: "#a351a4"
-					cameraX: 0
-					cameraY: 35
-					cameraZ: 105
+					cameraX: -20
+					cameraY: 60
+					cameraZ: 100
+					panSpringRadius: 100
 					cameraRotation: Quaternion.fromEulerAngles(-15, -10, 0)
 					layer.enabled: Config.wallpapers.effect != null
 					layer.effect: Config.wallpapers.effect

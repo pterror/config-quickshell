@@ -43,12 +43,12 @@ VisualizerBase {
 
 				Rectangle {
 					required property int index
-					property int layer: index
-					property real value: root.values[layer][barSlot.modelData]
-					property real cumulative: root.cumulativeValue(layer, barSlot.modelData)
+					property int layerIndex: index
+					property real value: root.values[layerIndex][barSlot.modelData]
+					property real cumulative: root.cumulativeValue(layerIndex, barSlot.modelData)
 					property real opacityBase: 1
 					opacity: opacityBase
-					color: root.colors[layer]
+					color: root.colors[layerIndex]
 					border.color: root.strokeColor
 					border.width: root.strokeWidth
 					implicitHeight: value * root.scale
@@ -73,7 +73,7 @@ VisualizerBase {
 
 					function updateModulateOpacity() {
 						if (root.modulateOpacity) {
-							opacityBase = Qt.binding(() => root.values[layer][barSlot.modelData] * (maxOpacity - minOpacity) + minOpacity)
+							opacityBase = Qt.binding(() => root.values[layerIndex][barSlot.modelData] * (maxOpacity - minOpacity) + minOpacity)
 						} else {
 							opacityBase = 1
 						}
