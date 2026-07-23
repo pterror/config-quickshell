@@ -11,9 +11,16 @@ ProceduralTextureData {
 	property var heightSource: []
 	property var samplePositions: []
 	property bool animateHeights: false
+	property int heightMode: 1
+	property real constantValue: 0.75
 	property real animationPhase: 0
 	property real animationStep: 0.03
-	property int animationInterval: 16
+	property real amplitude: 1
+	property real speed: 1
+	property real frequencyA: 6.5
+	property real frequencyB: 4
+	property real twist: 2.3
+	property real bias: 0
 
 	width: textureWidth
 	height: textureHeight
@@ -21,6 +28,8 @@ ProceduralTextureData {
 	format: TextureData.R8
 
 	property var _heights: []
+	property var _buffer: null
+	property var _bytes: null
 
 	function normalizeHeights(source) {
 		if (!source)
@@ -40,24 +49,54 @@ ProceduralTextureData {
 			return Math.max(0, Math.min(1, value))
 		}
 		const p = samplePositions[index]
-		if (!p) {
-			const phase = animationPhase + index * 0.15
-			return 0.5 + 0.5 * Math.sin(phase) * Math.cos(phase * 0.37)
+		const x = p?.x ?? Math.sin(index * 1.73)
+		const y = p?.y ?? Math.cos(index * 1.19)
+		const z = p?.z ?? Math.sin(index * 0.61)
+		const phase = animationPhase * speed
+		const azimuth = Math.atan2(z, x)
+		let value = constantValue
+
+		switch (heightMode) {
+		case 0:
+			value = constantValue
+			break
+		case 1:
+			value = 0.5 + 0.5 * Math.sin(phase + x * frequencyA + z * frequencyB)
+			break
+		case 2:
+			value = 0.5 + 0.22 * Math.sin(phase * 1.1 + x * frequencyA + z * frequencyB)
+				+ 0.18 * Math.cos(phase * 0.8 + y * (frequencyA + 1.5) - x * twist)
+				+ 0.10 * Math.sin(phase * 1.7 + (x + y + z) * (frequencyB + 2.0))
+			break
+		case 3:
+			value = 0.5 + 0.5 * Math.sin(phase * 0.7 + y * frequencyA + bias * Math.PI)
+			break
+		case 4:
+			value = 0.5 + 0.5 * Math.sin(phase + azimuth * twist + y * frequencyA)
+			break
+		case 5:
+			value = 1.0 - Math.abs(Math.sin(phase * 1.4 + azimuth * frequencyB + y * frequencyA))
+			break
+		default:
+			value = constantValue
+			break
 		}
 
-		const waveA = Math.sin(animationPhase * 1.25 + p.x * 6.2 + p.z * 4.8)
-		const waveB = Math.cos(animationPhase * 0.9 + p.y * 7.4 - p.x * 3.1 + p.z * 2.7)
-		const band = Math.sin(animationPhase * 0.6 + Math.atan2(p.z, p.x) * 5.0 + p.y * 3.5)
-		const combined = 0.5 + 0.28 * waveA + 0.18 * waveB + 0.12 * band
-		return Math.max(0, Math.min(1, combined))
+		value = 0.5 + (value - 0.5) * amplitude + bias * 0.5
+		return Math.max(0, Math.min(1, value))
 	}
 
 	function rebuildTextureData() {
-		const buffer = new ArrayBuffer(textureWidth * textureHeight)
-		const bytes = new Uint8Array(buffer)
-		for (let i = 0; i < textureWidth * textureHeight; ++i)
-			bytes[i] = i < sampleCount ? Math.round(sampleHeight(i) * 255) : 0
-		textureData = buffer
+		const byteCount = textureWidth * textureHeight
+		if (!_buffer || _buffer.byteLength !== byteCount) {
+			_buffer = new ArrayBuffer(byteCount)
+			_bytes = new Uint8Array(_buffer)
+		}
+
+		for (let i = 0; i < byteCount; ++i)
+			_bytes[i] = i < sampleCount ? Math.round(sampleHeight(i) * 255) : 0
+
+		textureData = _buffer
 	}
 
 	function faceUv(index) {
@@ -73,11 +112,19 @@ ProceduralTextureData {
 		_heights = normalizeHeights(heightSource)
 		rebuildTextureData()
 	}
+	onHeightModeChanged: if (animateHeights || !_heights.length) rebuildTextureData()
+	onConstantValueChanged: if (animateHeights || !_heights.length) rebuildTextureData()
 	onSamplePositionsChanged: if (animateHeights || !_heights.length) rebuildTextureData()
 	onSampleCountChanged: rebuildTextureData()
 	onTextureWidthChanged: rebuildTextureData()
 	onTextureHeightChanged: rebuildTextureData()
 	onAnimationPhaseChanged: if (animateHeights || !_heights.length) rebuildTextureData()
+	onAmplitudeChanged: if (animateHeights || !_heights.length) rebuildTextureData()
+	onSpeedChanged: if (animateHeights || !_heights.length) rebuildTextureData()
+	onFrequencyAChanged: if (animateHeights || !_heights.length) rebuildTextureData()
+	onFrequencyBChanged: if (animateHeights || !_heights.length) rebuildTextureData()
+	onTwistChanged: if (animateHeights || !_heights.length) rebuildTextureData()
+	onBiasChanged: if (animateHeights || !_heights.length) rebuildTextureData()
 
 	Component.onCompleted: {
 		_heights = normalizeHeights(heightSource)
@@ -87,7 +134,7 @@ ProceduralTextureData {
 	Timer {
 		running: root.animateHeights && !root._heights.length
 		repeat: true
-		interval: root.animationInterval
+		interval: 16
 		onTriggered: root.animationPhase += root.animationStep
 	}
 }

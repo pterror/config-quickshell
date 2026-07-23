@@ -4,7 +4,6 @@ import QtQuick3D.Helpers
 
 View3D {
 	id: root
-	anchors.fill: parent
 	property alias clearColor: environment.clearColor
 	// Initial camera pose, in worldspace. This is ground truth: it's captured
 	// once in Component.onCompleted (as initialOffset/initialRotation below)
@@ -19,9 +18,11 @@ View3D {
 	property alias cameraRotation: camera.rotation
 
 	// Orbit controls: rotation orbits a worldspace pivot ("orbitTarget", the
-	// model origin by default) instead of spinning the camera in place, and
-	// right-drag pans that pivot instead of a WASD keyboard controller.
+	// model origin by default) instead of spinning the camera in place, while
+	// right-drag pans the camera in view-space without moving that pivot.
 	property vector3d orbitTarget: Qt.vector3d(0, 0, 0)
+	property real panOffsetRight: 0
+	property real panOffsetUp: 0
 	// -1 = derive from the initial camera position relative to orbitTarget.
 	property real orbitDistance: -1
 	property real minDistance: 1
@@ -38,6 +39,7 @@ View3D {
 	// plane: dragging N pixels moves the point under orbitTarget ~N pixels
 	// on screen. 1 = exact 1:1; keep as a knob for taste.
 	property real panSpeed: 1
+	property bool panEnabled: true
 	// World units per screen pixel at the orbit plane (the plane through
 	// orbitTarget, perpendicular to the view direction, at orbitDistance
 	// from the camera) — derived from the perspective projection so pan
@@ -53,20 +55,19 @@ View3D {
 	property real angularMomentum: 0.35
 	property real panMomentum: 0.35
 
-	// Rubber-band spring: gently pulls orbitTarget back toward orbitHome
-	// (captured at startup) the further it's been panned away. 0 disables
+	// Rubber-band spring: gently pulls the camera-local pan offsets back toward zero the further
+	// it's been panned away. 0 disables
 	// it. Modeled the same way as the analog clock's hand-release spring
 	// (widget/AnalogClock.qml) and MomentumAnimation's decay: a per-second
 	// retained fraction raised to frameTime, so it's framerate-independent
 	// and — because the pull is proportional to displacement — negligible
 	// near home and increasingly noticeable the further out you've panned.
 	property real panSpringPull: 0.15 // fraction of displacement-from-home pulled back per second
-	// Activation threshold: inside this radius of orbitHome, the spring is
+	// Activation threshold: inside this radius of zero pan offset, the spring is
 	// completely off (free panning); only once displacement exceeds it does
 	// the pull above start decaying orbitTarget back toward home.
 	property real panSpringRadius: 30 // world units
 	property real panSpringEpsilon: 0.1 // world units; below this (from home), snap to home instead of decaying forever
-	property vector3d orbitHome: Qt.vector3d(0, 0, 0) // captured from the initial orbitTarget in Component.onCompleted
 
 	property real yaw: 0
 	property real pitch: 0
@@ -148,12 +149,17 @@ View3D {
 		const scaledOffset = offsetLength > 0
 			? rotatedOffset.times(root.orbitDistance / offsetLength)
 			: rotatedOffset
-		camera.position = root.orbitTarget.plus(scaledOffset)
-		camera.rotation = deltaRotation.times(root.initialRotation)
+		const nextRotation = deltaRotation.times(root.initialRotation)
+		const right = nextRotation.times(Qt.vector3d(1, 0, 0))
+		const up = nextRotation.times(Qt.vector3d(0, 1, 0))
+		camera.position = root.orbitTarget
+			.plus(scaledOffset)
+			.plus(right.times(root.panOffsetRight))
+			.plus(up.times(root.panOffsetUp))
+		camera.rotation = nextRotation
 	}
 
 	Component.onCompleted: {
-		root.orbitHome = root.orbitTarget
 		// Capture the ground-truth initial pose exactly as set by
 		// cameraX/Y/Z/cameraRotation (via PterrorShell.qml). This is never
 		// touched again — see initialOffset/initialRotation's doc comment.
@@ -189,9 +195,9 @@ View3D {
 		running: true
 		onTriggered: {
 			const orbiting = yawMomentum.velocity !== 0 || pitchMomentum.velocity !== 0
-			const panning = panRightMomentum.velocity !== 0 || panUpMomentum.velocity !== 0
-			const homeDelta = root.orbitTarget.minus(root.orbitHome)
-			const springing = root.panSpringPull > 0 && homeDelta.length() > root.panSpringRadius
+			const panning = root.panEnabled && (panRightMomentum.velocity !== 0 || panUpMomentum.velocity !== 0)
+			const panDistance = Math.hypot(root.panOffsetRight, root.panOffsetUp)
+			const springing = root.panSpringPull > 0 && panDistance > root.panSpringRadius
 			if (!orbiting && !panning && !springing) return
 
 			if (orbiting) {
@@ -206,11 +212,8 @@ View3D {
 				const scale = root.panWorldPerPixel
 				const dRight = panRightMomentum.velocity * scale
 				const dUp = panUpMomentum.velocity * scale
-				root.orbitTarget = Qt.vector3d(
-					root.orbitTarget.x + right.x * dRight + up.x * dUp,
-					root.orbitTarget.y + right.y * dRight + up.y * dUp,
-					root.orbitTarget.z + right.z * dRight + up.z * dUp
-				)
+				root.panOffsetRight += dRight
+				root.panOffsetUp += dUp
 			}
 
 			// Rubber-band spring, applied last so it acts on this frame's
@@ -218,10 +221,12 @@ View3D {
 			// toward orbitHome — see panSpringPull's doc comment above.
 			if (springing) {
 				const retain = Math.pow(1 - root.panSpringPull, frameTime)
-				const pulled = root.orbitTarget.minus(root.orbitHome).times(retain)
-				root.orbitTarget = pulled.length() > root.panSpringEpsilon
-					? root.orbitHome.plus(pulled)
-					: root.orbitHome
+				root.panOffsetRight *= retain
+				root.panOffsetUp *= retain
+				if (Math.hypot(root.panOffsetRight, root.panOffsetUp) <= root.panSpringEpsilon) {
+					root.panOffsetRight = 0
+					root.panOffsetUp = 0
+				}
 			}
 
 			updateCamera()
@@ -244,6 +249,8 @@ View3D {
 			prevX = event.x
 			prevY = event.y
 			if (pressedButtons & Qt.RightButton) {
+				if (!root.panEnabled)
+					return
 				panRightMomentum.impulse(-dx)
 				panUpMomentum.impulse(dy)
 			} else if (pressedButtons & Qt.LeftButton) {

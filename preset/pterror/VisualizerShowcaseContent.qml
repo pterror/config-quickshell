@@ -3,13 +3,14 @@ import QtQuick.Layouts
 import qs.component
 import qs.widget
 import qs
+import "./showcase"
 
 // Plain Item so it can be hosted by either the standalone window (VisualizerShowcase.qml)
 // or a popup from PterrorStatBar.qml.
 //
-// Data is procedurally generated sine waves, not real audio/CPU, so the stacking and
-// animation can be eyeballed in isolation; two datasets are reused across widgets that
-// share a shape family so the numbers stay comparable across renderings.
+	// Data is procedurally generated sine waves, not real audio/CPU, so the stacking and
+	// animation can be eyeballed in isolation; datasets are reused across widgets that
+	// share a shape family so the numbers stay comparable across renderings.
 Item {
 	id: content
 
@@ -34,23 +35,20 @@ Item {
 
 	Timer { interval: 50; running: true; repeat: true; onTriggered: content.phase += 0.06 }
 
-	// Dataset A: drives every bar-shaped stacked visualizer (H/V bars, inwards/outwards
-	// radial bars). Three layers, amplitudes chosen so the stack never exceeds ~1.0.
+	// Dataset A: drives bar visualizers. Three layers, amplitudes chosen so the stack
+	// never exceeds ~1.0.
 	property list<var> layerA0: content.wave(content.barCount, 3, 0.0, 0.28, 0.05)
 	property list<var> layerA1: content.wave(content.barCount, 5, 1.3, 0.22, 0.04)
 	property list<var> layerA2: content.wave(content.barCount, 2, 2.6, 0.18, 0.03)
 	property var colorsA: ["#ff6b6b", "#4ecdc4", "#ffe66d"]
 
-	// Dataset B: drives every curve-shaped stacked visualizer (H/V smooth, inwards/outwards
-	// radial smooth). Same shape as A but a different point count for a smoother curve.
+	// Dataset B: drives smooth visualizers. Same shape as A but a different point count
+	// for a smoother curve.
 	property list<var> layerB0: content.wave(content.pointCount, 2, 0.0, 0.30, 0.05)
 	property list<var> layerB1: content.wave(content.pointCount, 4, 1.7, 0.22, 0.04)
 	property list<var> layerB2: content.wave(content.pointCount, 6, 3.1, 0.16, 0.03)
 	property var colorsB: ["#ff6b6b", "#4ecdc4", "#ffe66d"]
 
-	// Dataset C: the stacked layers of the centered radial smooth visualizer. Each layer
-	// adds mass symmetrically outward and inward around the centerRadius baseline (not two
-	// independent rings), so a single value/color list drives both directions at once.
 	property list<var> layerC0: content.wave(content.pointCount, 3, 0.4, 0.30, 0.04)
 	property list<var> layerC1: content.wave(content.pointCount, 5, 2.2, 0.22, 0.03)
 	property var colorsC: ["#ff6b6b", "#4ecdc4"]
@@ -59,6 +57,30 @@ Item {
 	// `input.count` (the actual per-bar values come from the `values` prop), so a plain
 	// object with a matching `count` avoids spawning a real Cava process.
 	property QtObject fakeInput: QtObject { property int count: content.barCount }
+	property QtObject fakeBarsInputA: QtObject {
+		property int count: content.barCount
+		property var values: content.layerA0
+	}
+	property QtObject fakeBarsInputB: QtObject {
+		property int count: content.barCount
+		property var values: content.layerA1
+	}
+	property QtObject fakeBarsInputC: QtObject {
+		property int count: content.barCount
+		property var values: content.layerA2
+	}
+	property QtObject fakeSmoothInputA: QtObject {
+		property int count: content.pointCount
+		property var values: content.layerB0
+	}
+	property QtObject fakeSmoothInputB: QtObject {
+		property int count: content.pointCount
+		property var values: content.layerB1
+	}
+	property QtObject fakeSmoothInputC: QtObject {
+		property int count: content.pointCount
+		property var values: content.layerC0
+	}
 
 	Shortcut { sequence: "Escape"; onActivated: content.closeRequested() }
 
@@ -86,11 +108,54 @@ Item {
 	// One Component per widget instance (each closes over the item-scoped datasets
 	// above), paired with display metadata in `visualizerDefs`. Each tab's grid is
 	// generated from a filtered slice of this array via Repeater.
-	// Each instance renders at `previewOpacity` rather than full opacity: these are
-	// glass showcase cards, not the real bar/media-bar visualizers, and at opacity 1
-	// the saturated fill colors read as flat and opaque against the frosted-glass
-	// card background instead of translucent/glassy.
-	readonly property real previewOpacity: 1.0
+
+	Component {
+		id: compBasicInwardsRadialBars
+		InwardsRadialVisualizerBars {
+			input: content.fakeBarsInputA
+			outerRadius: 118
+			innerRadius: 76
+			fillColor: "#ff6b6b"
+			opacity: 0.68
+		}
+	}
+	Component {
+		id: compBasicHBars
+		HVisualizerBars {
+			input: content.fakeBarsInputB
+			width: 280
+			height: 160
+			fillColor: "#4ecdc4"
+			modulateOpacity: true
+			minOpacity: 0.3
+			maxOpacity: 0.7
+		}
+	}
+	Component {
+		id: compBasicVBars
+		VVisualizerBars {
+			input: content.fakeBarsInputC
+			width: 160
+			height: 280
+			fillColor: "#ffe66d"
+			modulateOpacity: true
+			minOpacity: 0.3
+			maxOpacity: 0.7
+		}
+	}
+	Component {
+		id: compBasicOutwardsRadialBars
+		OutwardsRadialVisualizerBars {
+			input: content.fakeBarsInputB
+			outerRadius: 118
+			innerRadius: 76
+			fillColor: "#4ecdc4"
+			opacity: 0.68
+			modulateOpacity: true
+			minOpacity: 0.3
+			maxOpacity: 0.7
+		}
+	}
 
 	Component {
 		id: compInwardsRadialBars
@@ -100,7 +165,6 @@ Item {
 			innerRadius: 80
 			values: [content.layerA0, content.layerA1, content.layerA2]
 			colors: content.colorsA
-			opacity: content.previewOpacity
 			modulateOpacity: true
 			minOpacity: 0.3
 			maxOpacity: 0.7
@@ -114,7 +178,6 @@ Item {
 			height: 160
 			values: [content.layerA0, content.layerA1, content.layerA2]
 			colors: content.colorsA
-			opacity: content.previewOpacity
 			modulateOpacity: true
 			minOpacity: 0.3
 			maxOpacity: 0.7
@@ -128,7 +191,6 @@ Item {
 			height: 280
 			values: [content.layerA0, content.layerA1, content.layerA2]
 			colors: content.colorsA
-			opacity: content.previewOpacity
 			modulateOpacity: true
 			minOpacity: 0.3
 			maxOpacity: 0.7
@@ -142,10 +204,59 @@ Item {
 			innerRadius: 80
 			values: [content.layerA0, content.layerA1, content.layerA2]
 			colors: content.colorsA
-			opacity: content.previewOpacity
 			modulateOpacity: true
 			minOpacity: 0.3
 			maxOpacity: 0.7
+		}
+	}
+	Component {
+		id: compBasicHSmooth
+		HVisualizerSmooth {
+			width: 280
+			height: 160
+			fillColor: "#ff6b6b"
+			opacity: 0.72
+			input: content.fakeSmoothInputA
+		}
+	}
+	Component {
+		id: compBasicVSmooth
+		VVisualizerSmooth {
+			width: 160
+			height: 280
+			fillColor: "#4ecdc4"
+			opacity: 0.72
+			input: content.fakeSmoothInputB
+		}
+	}
+	Component {
+		id: compBasicInwardsRadialSmooth
+		InwardsRadialVisualizerSmooth {
+			outerRadius: 102
+			innerRadius: 68
+			fillColor: "#ffe66d"
+			opacity: 0.66
+			input: content.fakeSmoothInputA
+		}
+	}
+	Component {
+		id: compBasicOutwardsRadialSmooth
+		OutwardsRadialVisualizerSmooth {
+			outerRadius: 104
+			innerRadius: 68
+			fillColor: "#4ecdc4"
+			opacity: 0.66
+			input: content.fakeSmoothInputB
+		}
+	}
+	Component {
+		id: compBasicCenteredRadialSmooth
+		CenteredRadialVisualizerSmooth {
+			outerRadius: 110
+			innerRadius: 68
+			fillColor: "#ff6b6b"
+			opacity: 0.66
+			input: content.fakeSmoothInputC
 		}
 	}
 	Component {
@@ -155,7 +266,7 @@ Item {
 			height: 160
 			values: [content.layerB0, content.layerB1, content.layerB2]
 			colors: content.colorsB
-			opacity: content.previewOpacity
+			opacity: 0.72
 		}
 	}
 	Component {
@@ -165,297 +276,124 @@ Item {
 			height: 280
 			values: [content.layerB0, content.layerB1, content.layerB2]
 			colors: content.colorsB
-			opacity: content.previewOpacity
+			opacity: 0.72
 		}
 	}
 	Component {
 		id: compInwardsRadialSmooth
 		StackedInwardsRadialVisualizerSmooth {
-			outerRadius: 160
-			innerRadius: 85
+			outerRadius: 104
+			innerRadius: 68
 			values: [content.layerB0, content.layerB1, content.layerB2]
 			colors: content.colorsB
-			opacity: content.previewOpacity
+			opacity: 0.7
 		}
 	}
 	Component {
 		id: compOutwardsRadialSmooth
 		StackedOutwardsRadialVisualizerSmooth {
-			outerRadius: 170
-			innerRadius: 90
+			outerRadius: 106
+			innerRadius: 68
 			values: [content.layerB0, content.layerB1, content.layerB2]
 			colors: content.colorsB
-			opacity: content.previewOpacity
+			opacity: 0.7
 		}
 	}
 	Component {
 		id: compCenteredRadialSmooth
 		StackedCenteredRadialVisualizerSmooth {
-			outerRadius: 180
-			innerRadius: 90
+			outerRadius: 114
+			innerRadius: 68
 			values: [content.layerC0, content.layerC1]
 			colors: content.colorsC
-			opacity: content.previewOpacity
+			opacity: 0.7
 		}
 	}
 
 	property var visualizerDefs: [
-		{ title: "StackedInwardsRadialVisualizerBars", category: "bars", slotSize: 340, component: compInwardsRadialBars },
-		{ title: "StackedHVisualizerBars", category: "bars", slotSize: 280, component: compHBars },
-		{ title: "StackedVVisualizerBars", category: "bars", slotSize: 280, component: compVBars },
-		{ title: "StackedOutwardsRadialVisualizerBars", category: "bars", slotSize: 340, component: compOutwardsRadialBars },
-		{ title: "StackedHVisualizerSmooth", category: "smooth", slotSize: 280, component: compHSmooth },
-		{ title: "StackedVVisualizerSmooth", category: "smooth", slotSize: 280, component: compVSmooth },
-		{ title: "StackedInwardsRadialVisualizerSmooth", category: "smooth", slotSize: 360, component: compInwardsRadialSmooth },
-		{ title: "StackedOutwardsRadialVisualizerSmooth", category: "smooth", slotSize: 380, component: compOutwardsRadialSmooth },
-		{ title: "StackedCenteredRadialVisualizerSmooth", category: "smooth", slotSize: 400, component: compCenteredRadialSmooth },
+		{ title: "InwardsRadialVisualizerBars", category: "bars-basic", slotSize: 340, component: compBasicInwardsRadialBars },
+		{ title: "HVisualizerBars", category: "bars-basic", slotSize: 280, component: compBasicHBars },
+		{ title: "VVisualizerBars", category: "bars-basic", slotSize: 280, component: compBasicVBars },
+		{ title: "OutwardsRadialVisualizerBars", category: "bars-basic", slotSize: 340, component: compBasicOutwardsRadialBars },
+		{ title: "StackedInwardsRadialVisualizerBars", category: "bars-stacked", slotSize: 340, component: compInwardsRadialBars },
+		{ title: "StackedHVisualizerBars", category: "bars-stacked", slotSize: 280, component: compHBars },
+		{ title: "StackedVVisualizerBars", category: "bars-stacked", slotSize: 280, component: compVBars },
+		{ title: "StackedOutwardsRadialVisualizerBars", category: "bars-stacked", slotSize: 340, component: compOutwardsRadialBars },
+		{ title: "HVisualizerSmooth", category: "smooth-basic", slotSize: 280, component: compBasicHSmooth },
+		{ title: "VVisualizerSmooth", category: "smooth-basic", slotSize: 280, component: compBasicVSmooth },
+		{ title: "InwardsRadialVisualizerSmooth", category: "smooth-basic", slotSize: 300, component: compBasicInwardsRadialSmooth },
+		{ title: "OutwardsRadialVisualizerSmooth", category: "smooth-basic", slotSize: 300, component: compBasicOutwardsRadialSmooth },
+		{ title: "CenteredRadialVisualizerSmooth", category: "smooth-basic", slotSize: 320, component: compBasicCenteredRadialSmooth },
+		{ title: "StackedHVisualizerSmooth", category: "smooth-stacked", slotSize: 280, component: compHSmooth },
+		{ title: "StackedVVisualizerSmooth", category: "smooth-stacked", slotSize: 280, component: compVSmooth },
+		{ title: "StackedInwardsRadialVisualizerSmooth", category: "smooth-stacked", slotSize: 300, component: compInwardsRadialSmooth },
+		{ title: "StackedOutwardsRadialVisualizerSmooth", category: "smooth-stacked", slotSize: 300, component: compOutwardsRadialSmooth },
+		{ title: "StackedCenteredRadialVisualizerSmooth", category: "smooth-stacked", slotSize: 320, component: compCenteredRadialSmooth },
 	]
 
-	// --- per-tab grids -----------------------------------------------------
-	// Each tab is its own Component: a Flickable grid of glass cards over a
-	// category-filtered slice of `visualizerDefs`. The card delegate (with its
-	// scroll-based `inView` lazy-load) is duplicated per tab rather than factored
-	// into one shared Component, because it reads its own tab's Flickable by id —
-	// ids declared inside one top-level Component aren't visible from another.
 	Component {
-		id: compBarsTab
-		Flickable {
-			id: flickBars
-			clip: true
-			contentWidth: gridBars.implicitWidth
-			contentHeight: gridBars.implicitHeight
-			boundsBehavior: Flickable.StopAtBounds
-
-			GridLayout {
-				id: gridBars
-				columns: 3
-				rowSpacing: 56
-				columnSpacing: 56
-
-				Repeater {
-					model: content.visualizerDefs.filter(d => d.category === "bars")
-
-					// One glass card per visualizer definition. `inView` gates lazy
-					// instantiation; `pinned` (click-to-select) overrides it so a card
-					// the user is looking at doesn't unload if they keep scrolling.
-					Item {
-						id: card
-						required property var modelData
-						required property int index
-
-						implicitWidth: modelData.slotSize
-						implicitHeight: modelData.slotSize + 40
-
-						property bool pinned: false
-						readonly property real preloadMargin: 300
-						readonly property bool inView: (card.y + card.height > flickBars.contentY - card.preloadMargin)
-							&& (card.y < flickBars.contentY + flickBars.height + card.preloadMargin)
-						readonly property bool shouldLoad: card.inView || card.pinned
-
-						Rectangle {
-							anchors.fill: parent
-							radius: content.cardRadius
-							color: card.pinned ? "#1f3b82f6" : content.glassBg
-							border.width: 1
-							border.color: card.pinned ? content.accent : content.glassBorder
-
-							// Faint top-left sheen to hint at a beveled glass edge, since
-							// QML Rectangle borders are single-color (no per-side control).
-							Rectangle {
-								anchors.top: parent.top
-								anchors.left: parent.left
-								anchors.right: parent.right
-								height: 1
-								radius: parent.radius
-								color: content.glassBorderLight
-							}
-						}
-
-						MouseArea {
-							anchors.fill: parent
-							onClicked: card.pinned = !card.pinned
-						}
-
-						ColumnLayout {
-							anchors.fill: parent
-							anchors.margins: 12
-							spacing: 8
-
-							Text {
-								text: card.modelData.title
-								color: "white"
-								font.pixelSize: 13
-								Layout.alignment: Qt.AlignHCenter
-								horizontalAlignment: Text.AlignHCenter
-								Layout.fillWidth: true
-								wrapMode: Text.WordWrap
-							}
-
-							Item {
-								Layout.fillWidth: true
-								Layout.fillHeight: true
-								clip: true
-
-								Loader {
-									anchors.centerIn: parent
-									active: card.shouldLoad
-									sourceComponent: card.modelData.component
-								}
-
-								// Lightweight placeholder shown while the card is out of
-								// view and not yet loaded — keeps the grid slot occupied
-								// and makes the lazy-load boundary visible while testing.
-								Rectangle {
-									anchors.centerIn: parent
-									visible: !card.shouldLoad
-									width: 64
-									height: 64
-									radius: 32
-									color: "transparent"
-									border.width: 1
-									border.color: content.glassBorderLight
-
-									Text {
-										anchors.centerIn: parent
-										text: "…"
-										color: "#666666"
-										font.pixelSize: 20
-									}
-								}
-							}
-						}
-
-						// Rounded-border outline drawn above everything else in the card
-						// (including the visualizer content, which can render larger than
-						// its slot) so the card's rounded corners always stay visible
-						// instead of being covered by overflowing visualizer content.
-						Rectangle {
-							anchors.fill: parent
-							radius: content.cardRadius
-							color: "transparent"
-							border.width: 1
-							border.color: card.pinned ? content.accent : content.glassBorder
-						}
-					}
-				}
-			}
+		id: compBarsBasicTab
+		VisualizerGridTab {
+			category: "bars-basic"
+			visualizerDefs: content.visualizerDefs
+			glassBg: content.glassBg
+			glassBorder: content.glassBorder
+			glassBorderLight: content.glassBorderLight
+			accent: content.accent
+			cardRadius: content.cardRadius
 		}
 	}
 	Component {
-		id: compSmoothTab
-		Flickable {
-			id: flickSmooth
-			clip: true
-			contentWidth: gridSmooth.implicitWidth
-			contentHeight: gridSmooth.implicitHeight
-			boundsBehavior: Flickable.StopAtBounds
-
-			GridLayout {
-				id: gridSmooth
-				columns: 3
-				rowSpacing: 56
-				columnSpacing: 56
-
-				Repeater {
-					model: content.visualizerDefs.filter(d => d.category === "smooth")
-
-					Item {
-						id: card
-						required property var modelData
-						required property int index
-
-						implicitWidth: modelData.slotSize
-						implicitHeight: modelData.slotSize + 40
-
-						property bool pinned: false
-						readonly property real preloadMargin: 300
-						readonly property bool inView: (card.y + card.height > flickSmooth.contentY - card.preloadMargin)
-							&& (card.y < flickSmooth.contentY + flickSmooth.height + card.preloadMargin)
-						readonly property bool shouldLoad: card.inView || card.pinned
-
-						Rectangle {
-							anchors.fill: parent
-							radius: content.cardRadius
-							color: card.pinned ? "#1f3b82f6" : content.glassBg
-							border.width: 1
-							border.color: card.pinned ? content.accent : content.glassBorder
-
-							Rectangle {
-								anchors.top: parent.top
-								anchors.left: parent.left
-								anchors.right: parent.right
-								height: 1
-								radius: parent.radius
-								color: content.glassBorderLight
-							}
-						}
-
-						MouseArea {
-							anchors.fill: parent
-							onClicked: card.pinned = !card.pinned
-						}
-
-						ColumnLayout {
-							anchors.fill: parent
-							anchors.margins: 12
-							spacing: 8
-
-							Text {
-								text: card.modelData.title
-								color: "white"
-								font.pixelSize: 13
-								Layout.alignment: Qt.AlignHCenter
-								horizontalAlignment: Text.AlignHCenter
-								Layout.fillWidth: true
-								wrapMode: Text.WordWrap
-							}
-
-							Item {
-								Layout.fillWidth: true
-								Layout.fillHeight: true
-								clip: true
-
-								Loader {
-									anchors.centerIn: parent
-									active: card.shouldLoad
-									sourceComponent: card.modelData.component
-								}
-
-								Rectangle {
-									anchors.centerIn: parent
-									visible: !card.shouldLoad
-									width: 64
-									height: 64
-									radius: 32
-									color: "transparent"
-									border.width: 1
-									border.color: content.glassBorderLight
-
-									Text {
-										anchors.centerIn: parent
-										text: "…"
-										color: "#666666"
-										font.pixelSize: 20
-									}
-								}
-							}
-						}
-
-						// Rounded-border outline drawn above everything else in the card
-						// (including the visualizer content, which can render larger than
-						// its slot) so the card's rounded corners always stay visible
-						// instead of being covered by overflowing visualizer content.
-						Rectangle {
-							anchors.fill: parent
-							radius: content.cardRadius
-							color: "transparent"
-							border.width: 1
-							border.color: card.pinned ? content.accent : content.glassBorder
-						}
-					}
-				}
+		id: compBarsStackedTab
+		VisualizerGridTab {
+			category: "bars-stacked"
+			visualizerDefs: content.visualizerDefs
+				glassBg: content.glassBg
+				glassBorder: content.glassBorder
+				glassBorderLight: content.glassBorderLight
+				accent: content.accent
+				cardRadius: content.cardRadius
 			}
+	}
+	Component {
+		id: compSmoothBasicTab
+		VisualizerGridTab {
+			category: "smooth-basic"
+			visualizerDefs: content.visualizerDefs
+				glassBg: content.glassBg
+				glassBorder: content.glassBorder
+				glassBorderLight: content.glassBorderLight
+				accent: content.accent
+				cardRadius: content.cardRadius
+			}
+	}
+	Component {
+		id: compSmoothStackedTab
+		VisualizerGridTab {
+			category: "smooth-stacked"
+			visualizerDefs: content.visualizerDefs
+				glassBg: content.glassBg
+				glassBorder: content.glassBorder
+			glassBorderLight: content.glassBorderLight
+			accent: content.accent
+			cardRadius: content.cardRadius
 		}
+	}
+	Component {
+		id: compVisualizersTab
+		TabbedView {
+			anchors.fill: parent
+			tabs: [
+				{ label: "bars", component: compBarsBasicTab },
+				{ label: "bars stacked", component: compBarsStackedTab },
+				{ label: "smooth", component: compSmoothBasicTab },
+				{ label: "smooth stacked", component: compSmoothStackedTab },
+			]
+		}
+	}
+	Component {
+		id: compGlobeTab
+		GlobeLabTab {}
 	}
 
 	// --- background --------------------------------------------------------
@@ -486,8 +424,8 @@ Item {
 			Layout.fillWidth: true
 			Layout.fillHeight: true
 			tabs: [
-				{ label: "visualizers (bars)", component: compBarsTab },
-				{ label: "visualizers (smooth)", component: compSmoothTab },
+				{ label: "visualizers", component: compVisualizersTab },
+				{ label: "geodesic sphere preview", component: compGlobeTab },
 			]
 		}
 	}

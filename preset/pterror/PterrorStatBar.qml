@@ -63,7 +63,7 @@ PanelWindow {
 
 				Text {
 					id: visualizerText
-					text: "viz"
+					text: "showcase"
 
 					LazyLoader {
 						id: visualizerShowcaseLoader

@@ -9,6 +9,7 @@ Canvas {
 	property real debugWidth: textureWidth
 	property real debugHeight: textureHeight
 	property var heightSource: []
+	property var samplePositions: []
 	property bool animateHeights: false
 	property real animationPhase: 0
 	property real animationStep: 0.03
@@ -40,8 +41,18 @@ Canvas {
 			const value = Number(_heights[index % _heights.length]) || 0
 			return Math.max(0, Math.min(1, value))
 		}
-		const phase = animationPhase + index * 0.15
-		return 0.5 + 0.5 * Math.sin(phase) * Math.cos(phase * 0.37)
+		const p = samplePositions[index]
+		if (!p) {
+			const phase = animationPhase + index * 0.15
+			return 0.5 + 0.5 * Math.sin(phase) * Math.cos(phase * 0.37)
+		}
+
+		// Two traveling spherical wave fields plus a mild polar band term.
+		const waveA = Math.sin(animationPhase * 1.25 + p.x * 6.2 + p.z * 4.8)
+		const waveB = Math.cos(animationPhase * 0.9 + p.y * 7.4 - p.x * 3.1 + p.z * 2.7)
+		const band = Math.sin(animationPhase * 0.6 + Math.atan2(p.z, p.x) * 5.0 + p.y * 3.5)
+		const combined = 0.5 + 0.28 * waveA + 0.18 * waveB + 0.12 * band
+		return Math.max(0, Math.min(1, combined))
 	}
 
 	function syncBuffer() {
@@ -89,6 +100,7 @@ Canvas {
 		_heights = normalizeHeights(heightSource)
 		syncBuffer()
 	}
+	onSamplePositionsChanged: if (animateHeights || !_heights.length) syncBuffer()
 	onSampleCountChanged: syncBuffer()
 	onTextureWidthChanged: syncBuffer()
 	onTextureHeightChanged: syncBuffer()

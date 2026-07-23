@@ -20,9 +20,7 @@ Rectangle {
 	property real barWidth: (innerRadius * 2 * Math.PI) / Math.max(count, 1) - 4
 	property real animationDuration: 1000
 	property real animationVelocity: 0.0001
-	// External speed input (e.g. derived from CPU load) that biases the idle drift.
-	property real driftSpeed: 0
-	property real rotationOffset: rotationAnim.value
+	property real rotationOffset: 0
 	property bool modulateOpacity: false
 	property real minOpacity: 0.4
 	property real maxOpacity: 1.0
@@ -88,57 +86,6 @@ Rectangle {
 
 					Connections { target: root; function onModulateOpacityChanged() { segment.updateModulateOpacity() } }
 				}
-			}
-		}
-	}
-
-	// Constant-speed idle drift, controlled entirely by `driftSpeed` — no baked-in
-	// oscillation curve (that CPU-specific sine-wave idle motion lives in the CPU
-	// bars preset, not in this generic component).
-	MomentumAnimation {
-		id: rotationAnim
-		processValue: (x, frameTime) => {
-			const frameDelta = frameTime * Config._.frameRate
-			return (x + 360 - root.driftSpeed * frameDelta) % 360
-		}
-	}
-
-	MouseArea {
-		id: vizMouseArea
-		x: root.width / 2 - root.outerRadius
-		y: root.height / 2 - root.outerRadius
-		width: root.outerRadius * 2
-		height: root.outerRadius * 2
-		property real startAngle: 0
-		property real prevAngle: 0
-		property real endAngle: 0
-		onPressed: { updateAngle(true); rotationAnim.velocity = 0 }
-		onReleased: {
-			if (endAngle - startAngle > 180) startAngle += 360
-			else if (startAngle - endAngle > 180) startAngle -= 360
-			rotationAnim.impulse(endAngle - startAngle)
-		}
-		onPositionChanged: updateAngle()
-
-		FrameAnimation { running: true; onTriggered: vizMouseArea.startAngle = vizMouseArea.endAngle }
-
-		function updateAngle(initial) {
-			const x = mouseX - root.outerRadius
-			const y = mouseY - root.outerRadius
-			endAngle = Math.atan2(-y, x) * 180 / Math.PI - 90
-			if (initial) {
-				startAngle = endAngle
-				prevAngle = endAngle
-			} else {
-				rotationAnim.value += endAngle - prevAngle
-				prevAngle = endAngle
-			}
-		}
-
-		WheelHandler {
-			acceptedDevices: PointerDevice.Mouse | PointerDevice.TouchPad
-			onWheel: event => {
-				rotationAnim.impulse((event.angleDelta.x + event.angleDelta.y) / 4)
 			}
 		}
 	}

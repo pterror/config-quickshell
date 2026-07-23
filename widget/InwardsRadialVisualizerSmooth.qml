@@ -17,6 +17,7 @@ VisualizerBase {
 	width: outerRadius * 2
 	height: outerRadius * 2
 	inputDelegate: Cava { channels: "stereo" }
+	Component.onCompleted: redrawPath()
 
 	function redrawPath() {
 		path.pathElements = [
@@ -27,7 +28,7 @@ VisualizerBase {
 		]
 	}
 
-	Connections { target: input; function onCountChanged() { console.log(':0', input.count); redrawPath() } }
+	Connections { target: input; function onCountChanged() { redrawPath() } }
 
 	Shape {
 		id: shape
@@ -63,7 +64,6 @@ VisualizerBase {
 					property real yMultiplier: Math.sin(((modelData % input.count) / input.count - 0.25 - rotationOffset / 360) * 2 * Math.PI)
 					x: root.width / 2 + (root.outerRadius - height) * xMultiplier
 					y: root.height / 2 + (root.outerRadius - height) * yMultiplier
-					property var what: console.log('height', height, modelData, modelData % input.count)
 					Component.onCompleted: {
 						if (modelData === 0) { shape.startX = Qt.binding(() => x); shape.startY = Qt.binding(() => y) }
 					}

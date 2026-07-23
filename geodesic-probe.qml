@@ -34,5 +34,6 @@ Window {
 	GeodesicHeightTexture {
 		id: geodesicHeightTexture
 		animateHeights: true
+		heightMode: 1
 	}
 }

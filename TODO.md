@@ -5,3 +5,5 @@
   - [ ] snapping to edges, properties sidebar
   - [ ] maybe the settings window itself can be configurable too
 - [ ] desktop piano
+- [ ] visualizer experiments
+  - [ ] investigate shader/mask-based alpha gradients for smooth visualizers instead of per-segment QML geometry

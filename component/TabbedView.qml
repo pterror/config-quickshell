@@ -13,6 +13,7 @@ Rectangle {
 	required property list<var> tabs // [{ label: string, component: Component }]
 	property int currentIndex: 0
 	property int animationDuration: Config._.style.button.animationDuration
+	property int tabFontPixelSize: Math.max(15, Config._.style.button.fontSize + 2)
 
 	color: Config._.debugFlags.debugRectangles ? "#20ff0000" : "transparent"
 	border.color: Config._.debugFlags.debugRectangles ? "#80ff0000" : "transparent"
@@ -33,6 +34,8 @@ Rectangle {
 			Layout.fillWidth: true
 			spacing: 4
 
+			Item { Layout.fillWidth: true }
+
 			Repeater {
 				model: root.tabs
 
@@ -43,8 +46,8 @@ Rectangle {
 					readonly property bool selected: index === root.currentIndex
 					readonly property bool hovered: mouseArea.containsMouse
 
-					Layout.preferredWidth: label.implicitWidth + Config._.style.button.margins * 4
-					implicitHeight: label.implicitHeight + Config._.style.button.margins * 2
+					Layout.preferredWidth: label.implicitWidth + Config._.style.button.margins * 5
+					implicitHeight: label.implicitHeight + Config._.style.button.margins * 3
 					radius: Config._.style.button.radius
 					border.width: Config._.style.button.border
 					border.color: Config._.style.button.outline
@@ -59,7 +62,9 @@ Rectangle {
 						anchors.centerIn: parent
 						text: tabButton.modelData.label
 						color: Config._.style.button.fg
-						font.pixelSize: Config._.style.button.fontSize
+						font.family: Config._.font.family
+						font.pointSize: -1
+						font.pixelSize: root.tabFontPixelSize
 						font.bold: tabButton.selected
 					}
 

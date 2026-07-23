@@ -20,6 +20,7 @@ VisualizerBase {
 	width: outerRadius * 2
 	height: outerRadius * 2
 	inputDelegate: Cava { channels: "stereo" }
+	Component.onCompleted: redrawPath()
 
 	function redrawPath() {
 			path.pathElements = [

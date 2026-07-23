@@ -32,14 +32,17 @@ Singleton {
 
 	property font font: Qt.font({ family: root.font.family })
 
-	Variants {
-		model: Mpris.players.values
-		Connections {
-			property MprisPlayer modelData
-			target: modelData
-			function onTrackChanged() { root.mpris.currentPlayer = modelData }
+		Variants {
+			model: Mpris.players.values
+			Connections {
+				property MprisPlayer modelData
+				target: modelData
+				function onTrackChanged() {
+					if (modelData)
+						root.mpris.currentPlayer = modelData
+				}
+			}
 		}
-	}
 
 	Item {
 		ToolTip.toolTip.contentItem: Text {

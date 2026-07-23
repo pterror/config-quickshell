@@ -21,6 +21,7 @@ VisualizerBase {
 
 	ColumnLayout {
 		id: content
+		anchors.fill: parent
 		spacing: root.spacing
 		property real childSize: barHeight !== -1 ? barHeight : (height + spacing) / input.count - spacing
 

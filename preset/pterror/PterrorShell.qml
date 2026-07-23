@@ -1,9 +1,7 @@
 import Quickshell
-import Quickshell.Io
 import Quickshell.Wayland
 import QtQuick
 import QtQuick.Layouts
-import QtQuick3D
 import qs.io
 import qs.component
 import qs.window
@@ -84,11 +82,6 @@ ShellRoot {
 				}
 				anchors { top: true; bottom: true; left: true; right: true }
 
-				GeodesicHeightTexture {
-					id: geodesicHeightTexture
-					animateHeights: true
-				}
-
 				// Wallpaper {
 				// 	source: wallpaperRandomizer.wallpapers[modelData.name] ?? Config.imageUrl("dark_pixel.png")
 				// 	layer.enabled: Config.wallpapers.effect != null
@@ -102,32 +95,12 @@ ShellRoot {
 				// }
 
 				Viewer3D {
-					GeodesicFaceColumnsGpu {
-						radius: 22
-						frequency: 20
-						baseHeight: 0.3
-						heightScale: 10
-						columnColor: "#7bdff2"
-						animateHeights: true
-						heightTextureData: geodesicHeightTexture
-					}
-
-					// GeodesicFaceColumns {
-					// 	radius: 22
-					// 	frequency: 5
-					// 	baseHeight: 0.3
-					// 	heightScale: 10
-					// 	columnColor: "#ffd166"
-					// 	animateHeights: true
-					// }
-
-					// BitterMajesty {}
+					anchors.fill: parent
+					BitterMajesty {}
 					clearColor: "#a351a4"
-					cameraX: -20
-					cameraY: 60
-					cameraZ: 100
-					panSpringRadius: 100
-					cameraRotation: Quaternion.fromEulerAngles(-15, -10, 0)
+					cameraX: 0
+					cameraY: 35
+					cameraZ: 105
 					layer.enabled: Config.wallpapers.effect != null
 					layer.effect: Config.wallpapers.effect
 				}
