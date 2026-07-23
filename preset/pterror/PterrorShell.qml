@@ -97,34 +97,23 @@ ShellRoot {
 				// }
 
 				Viewer3D {
-					GeodesicHeightCanvas {
-						id: geodesicHeightCanvas
-						x: -10000
-						y: -10000
-						animateHeights: true
-					}
-
-					GeodesicColumns {
-						x: -40
+					GeodesicFaceColumnsGpu {
 						radius: 22
 						frequency: 5
-						baseHeight: 0.5
+						baseHeight: 0.3
 						heightScale: 10
-						columnRadius: 0.26
-						columnColor: "#ffd166"
-					}
-
-					GeodesicColumnsTextureInstanced {
-						x: 40
-						radius: 22
-						frequency: 5
-						baseHeight: 0.5
-						heightScale: 10
-						columnRadius: 0.26
 						columnColor: "#7bdff2"
-						heightCanvas: geodesicHeightCanvas
 						animateHeights: true
 					}
+
+					// GeodesicFaceColumns {
+					// 	radius: 22
+					// 	frequency: 5
+					// 	baseHeight: 0.3
+					// 	heightScale: 10
+					// 	columnColor: "#ffd166"
+					// 	animateHeights: true
+					// }
 
 					// BitterMajesty {}
 					clearColor: "#a351a4"

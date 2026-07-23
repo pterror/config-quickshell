@@ -24,20 +24,7 @@ Window {
 			brightness: 1
 		}
 
-		GeodesicHeightCanvas {
-			id: heightCanvas
-			x: -10000
-			y: -10000
-			animateHeights: true
-		}
-
-		GeodesicColumns {
-			x: -35
-		}
-
-		GeodesicColumnsTextureInstanced {
-			x: 35
-			heightCanvas: heightCanvas
+		GeodesicFaceColumnsGpu {
 			animateHeights: true
 		}
 	}

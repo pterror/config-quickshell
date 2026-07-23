@@ -2,6 +2,14 @@ function v(x, y, z) {
 	return { x, y, z }
 }
 
+function add(a, b) {
+	return v(a.x + b.x, a.y + b.y, a.z + b.z)
+}
+
+function sub(a, b) {
+	return v(a.x - b.x, a.y - b.y, a.z - b.z)
+}
+
 function mul(a, scalar) {
 	return v(a.x * scalar, a.y * scalar, a.z * scalar)
 }
@@ -31,6 +39,10 @@ export function toVector3d(a) {
 	return Qt.vector3d(a.x, a.y, a.z)
 }
 
+export function toVector4d(a) {
+	return Qt.vector4d(a.x, a.y, a.z, a.w)
+}
+
 function quantizeKey(p) {
 	return [
 		Math.round(p.x * 10000),
@@ -40,6 +52,10 @@ function quantizeKey(p) {
 }
 
 export function buildPoints(radius, frequency) {
+	return buildTriangles(radius, frequency).flat()
+}
+
+function icosahedronData() {
 	const t = (1 + Math.sqrt(5)) / 2
 	const vertices = [
 		v(-1, t, 0), v(1, t, 0), v(-1, -t, 0), v(1, -t, 0),
@@ -52,7 +68,20 @@ export function buildPoints(radius, frequency) {
 		[3, 9, 4], [3, 4, 2], [3, 2, 6], [3, 6, 8], [3, 8, 9],
 		[4, 9, 5], [2, 4, 11], [6, 2, 10], [8, 6, 7], [9, 8, 1]
 	]
-	const unique = new Map()
+	return { vertices, faces }
+}
+
+function facePoint(a, b, c, u, vCoord) {
+	const w = 1 - u - vCoord
+	return normalize(v(
+		a.x * w + b.x * u + c.x * vCoord,
+		a.y * w + b.y * u + c.y * vCoord,
+		a.z * w + b.z * u + c.z * vCoord
+	))
+}
+
+export function buildTriangles(radius, frequency) {
+	const { vertices, faces } = icosahedronData()
 	const result = []
 	const freq = Math.max(1, Math.floor(frequency))
 
@@ -60,25 +89,32 @@ export function buildPoints(radius, frequency) {
 		const a = vertices[face[0]]
 		const b = vertices[face[1]]
 		const c = vertices[face[2]]
-		for (let i = 0; i <= freq; ++i) {
-			for (let j = 0; j <= freq - i; ++j) {
-				const k = freq - i - j
-				const point = normalize(v(
-					(a.x * i + b.x * j + c.x * k) / freq,
-					(a.y * i + b.y * j + c.y * k) / freq,
-					(a.z * i + b.z * j + c.z * k) / freq
-				))
-				const projected = mul(point, radius)
-				const key = quantizeKey(projected)
-				if (!unique.has(key)) {
-					unique.set(key, true)
-					result.push(projected)
+		for (let i = 0; i < freq; ++i) {
+			for (let j = 0; j < freq - i; ++j) {
+				const p0 = mul(facePoint(a, b, c, i / freq, j / freq), radius)
+				const p1 = mul(facePoint(a, b, c, (i + 1) / freq, j / freq), radius)
+				const p2 = mul(facePoint(a, b, c, i / freq, (j + 1) / freq), radius)
+				result.push([p0, p1, p2])
+				if (j < freq - i - 1) {
+					const p3 = mul(facePoint(a, b, c, (i + 1) / freq, (j + 1) / freq), radius)
+					result.push([p1, p3, p2])
 				}
 			}
 		}
 	}
 
 	return result
+}
+
+export function triangleNormal(a, b, c) {
+	return normalize(cross(sub(b, a), sub(c, a)))
+}
+
+export function average(points) {
+	let sum = v(0, 0, 0)
+	for (const point of points)
+		sum = add(sum, point)
+	return mul(sum, 1 / Math.max(1, points.length))
 }
 
 export function rotationFromUp(normal) {
