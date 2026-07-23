@@ -19,6 +19,12 @@ Singleton {
 	}
 
 	GlobalShortcut {
+		name: "widgets:toggle"
+		description: "open and close the dashboard widgets overlay"
+		onPressed: Config._.widgets.visible = !Config._.widgets.visible
+	}
+
+	GlobalShortcut {
 		name: "media:play_pause"
 		description: "toggle the current media track between playing and paused"
 		onPressed: {

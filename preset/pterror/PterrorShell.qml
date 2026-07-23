@@ -16,6 +16,7 @@ ShellRoot {
 	WallpaperRandomizer { id: wallpaperRandomizer }
 	WorkspacesOverview { extraGrabWindows: [statBar, mediaBar] }
 	SystemdWLogout {}
+	WidgetOverlay { extraGrabWindows: [statBar, mediaBar] }
 
 	Cava { id: cava; count: 48 }
 

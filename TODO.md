@@ -4,6 +4,23 @@
   - [ ] live preview of components, plus drag n drop of components
   - [ ] snapping to edges, properties sidebar
   - [ ] maybe the settings window itself can be configurable too
+- [ ] proper settings screen
+  - [ ] widget manager: enable/disable widgets, reset positions, save layouts
+  - [ ] widget editor: drag, resize, snap, z-order, per-screen placement
+  - [ ] hotkey editor for shell actions
+- [ ] config/state split
+  - [ ] keep user preferences in config.json
+  - [ ] move ephemeral UI state out of config.json
+  - [ ] move widget positions/layout cache to a separate persisted state file
+  - [ ] decide which generated/runtime values should never be serialized
+- [ ] proper notifications support
+  - [ ] notification center/history
+  - [ ] actionable notifications
+  - [ ] per-app styling and grouping
+- [ ] widget/data backlog
+  - [ ] todos/tasks widget distinct from dated events
+  - [ ] calendar widget event markers and day agenda integration
+  - [ ] movable global launcher widget/layout presets
 - [ ] desktop piano
 - [ ] visualizer experiments
   - [ ] investigate shader/mask-based alpha gradients for smooth visualizers instead of per-segment QML geometry

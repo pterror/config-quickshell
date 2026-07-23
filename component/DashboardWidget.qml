@@ -20,7 +20,7 @@ Rectangle {
 
 	default property alias content: contentArea.children
 
-	readonly property var _savedPosition: Config._.widgets.positions[widgetId]
+	readonly property var _savedGeometry: Config._.widgets.positions[widgetId]
 	readonly property int _gridColumns: 4
 	readonly property int _gridSpacing: 16
 
@@ -45,28 +45,31 @@ Rectangle {
 
 	implicitWidth: 240
 	implicitHeight: 180
-	width: implicitWidth
-	height: implicitHeight
+	width: _savedGeometry?.width ?? implicitWidth
+	height: _savedGeometry?.height ?? implicitHeight
 
-	x: _savedPosition?.x ?? _gridSpacing + (index % _gridColumns) * (implicitWidth + _gridSpacing)
-	y: _savedPosition?.y ?? _gridSpacing + Math.floor(index / _gridColumns) * (implicitHeight + _gridSpacing)
+	x: _savedGeometry?.x ?? _gridSpacing + (index % _gridColumns) * (implicitWidth + _gridSpacing)
+	y: _savedGeometry?.y ?? _gridSpacing + Math.floor(index / _gridColumns) * (implicitHeight + _gridSpacing)
 
 	function savePosition() {
 		const positions = Object.assign({}, Config._.widgets.positions)
-		positions[widgetId] = { x: root.x, y: root.y }
+		positions[widgetId] = { x: root.x, y: root.y, width: root.width, height: root.height }
 		Config._.widgets.positions = positions
+		Config.writeConfig()
 	}
 
 	function hide() {
 		const enabled = Object.assign({}, Config._.widgets.enabled)
 		enabled[widgetId] = false
 		Config._.widgets.enabled = enabled
+		Config.writeConfig()
 	}
 
 	function show() {
 		const enabled = Object.assign({}, Config._.widgets.enabled)
 		enabled[widgetId] = true
 		Config._.widgets.enabled = enabled
+		Config.writeConfig()
 	}
 
 	ColumnLayout {
@@ -151,6 +154,7 @@ Rectangle {
 				root.width = Math.max(120, root.width + (event.x - startX))
 				root.height = Math.max(80, root.height + (event.y - startY))
 			}
+			onReleased: root.savePosition()
 		}
 	}
 }
