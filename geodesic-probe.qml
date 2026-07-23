@@ -25,6 +25,7 @@ Window {
 		}
 
 		GeodesicFaceColumnsGpu {
+			frequency: 10
 			animateHeights: true
 			heightCanvas: geodesicHeightCanvas
 		}

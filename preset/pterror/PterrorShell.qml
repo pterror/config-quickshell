@@ -106,7 +106,7 @@ ShellRoot {
 				Viewer3D {
 					GeodesicFaceColumnsGpu {
 						radius: 22
-						frequency: 5
+						frequency: 10
 						baseHeight: 0.3
 						heightScale: 10
 						columnColor: "#7bdff2"
