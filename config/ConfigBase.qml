@@ -384,8 +384,9 @@ Singleton {
 					// Same e0ffff pale-cyan hue as barItem, same alpha the old
 					// grayish-blue c8c8d0 tone used -- keeps the bar shell consistent
 					// with the buttons that sit on top of it.
-					property color bg: "#18e0ffff"
-					property color outline: root.style.glass.border
+					property color bg: "transparent"
+					property color outline: "#00ffffff"
+					property color shadow: "transparent"
 				}
 
 				property JsonObject hBar: JsonObject {

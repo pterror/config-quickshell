@@ -38,7 +38,7 @@ PanelWindow {
 		layer.enabled: true
 		layer.effect: MultiEffect {
 			shadowEnabled: true
-			shadowColor: Config._.style.glass.shadowColor
+			shadowColor: Config._.style.bar.shadow
 			shadowBlur: Config._.style.glass.shadowBlur
 			shadowVerticalOffset: Config._.style.glass.shadowVerticalOffset
 			shadowHorizontalOffset: Config._.style.glass.shadowHorizontalOffset
