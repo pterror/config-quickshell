@@ -6,6 +6,7 @@ import "../library/GeodesicSphere.mjs" as GeodesicSphere
 Node {
 	id: root
 
+	required property Item heightCanvas
 	property real radius: 24
 	property int frequency: 5
 	property real baseHeight: 0.35
@@ -15,40 +16,6 @@ Node {
 	property color sphereColor: "#1d3144"
 	property var heightSource: []
 	property bool animateHeights: false
-	property real animationPhase: 0
-
-	property var _heights: []
-	property var _vertexMeta: []
-
-	function normalizeHeights(source) {
-		if (!source)
-			return []
-		if (source instanceof ArrayBuffer)
-			return new Float32Array(source)
-		if (ArrayBuffer.isView(source))
-			return source
-		if (Array.isArray(source))
-			return source
-		return []
-	}
-
-	function sampleHeight(index) {
-		if (_heights.length) {
-			const value = Number(_heights[index % _heights.length]) || 0
-			return Math.max(0, value)
-		}
-		const phase = animationPhase + index * 0.11
-		return 0.5 + 0.5 * Math.sin(phase) * Math.cos(phase * 0.31)
-	}
-
-	function refreshColors() {
-		const colors = []
-		for (const meta of _vertexMeta) {
-			const h = sampleHeight(meta.faceIndex)
-			colors.push(Qt.vector4d(h, meta.outer ? 1 : 0, 0, 1))
-		}
-		mesh.colors = colors
-	}
 
 	readonly property var triangles: GeodesicSphere.buildTriangles(radius, frequency)
 
@@ -56,11 +23,12 @@ Node {
 		const positions = []
 		const normals = []
 		const colors = []
+		const uv0s = []
 		const indexes = []
 		let nextIndex = 0
-		const vertexMeta = []
 
 		function pushTriangle(a, b, c, normal, faceIndex, outerA, outerB, outerC) {
+			const lookupUv = root.heightCanvas.faceUv(faceIndex)
 			positions.push(
 				GeodesicSphere.toVector3d(a),
 				GeodesicSphere.toVector3d(b),
@@ -71,16 +39,15 @@ Node {
 				GeodesicSphere.toVector3d(normal),
 				GeodesicSphere.toVector3d(normal)
 			)
-			vertexMeta.push(
-				{ faceIndex, outer: outerA },
-				{ faceIndex, outer: outerB },
-				{ faceIndex, outer: outerC }
+			uv0s.push(
+				lookupUv,
+				lookupUv,
+				lookupUv
 			)
-			const h = sampleHeight(faceIndex)
 			colors.push(
-				Qt.vector4d(h, outerA ? 1 : 0, 0, 1),
-				Qt.vector4d(h, outerB ? 1 : 0, 0, 1),
-				Qt.vector4d(h, outerC ? 1 : 0, 0, 1)
+				Qt.vector4d(outerA ? 1 : 0, 0, 0, 1),
+				Qt.vector4d(outerB ? 1 : 0, 0, 0, 1),
+				Qt.vector4d(outerC ? 1 : 0, 0, 0, 1)
 			)
 			indexes.push(nextIndex, nextIndex + 1, nextIndex + 2)
 			nextIndex += 3
@@ -107,7 +74,9 @@ Node {
 				const a1 = tri[next]
 				const b0 = extruded[edge]
 				const b1 = extruded[next]
-				const sideNormal = GeodesicSphere.triangleNormal(a0, a1, b1)
+				const sideNormal = GeodesicSphere.triangleNormal(a0, b1, a1)
+				// Keep all stored positions on the base sphere; only the
+				// outer-flagged duplicates are displaced in the vertex shader.
 				pushTriangle(a0, a1, a1, sideNormal, i, false, false, true)
 				pushTriangle(a0, a1, a0, sideNormal, i, false, true, true)
 			}
@@ -116,21 +85,13 @@ Node {
 		mesh.positions = positions
 		mesh.normals = normals
 		mesh.colors = colors
+		mesh.uv0s = uv0s
 		mesh.indexes = indexes
-		_vertexMeta = vertexMeta
+		root.heightCanvas.sampleCount = triangles.length
 	}
 
 	onTrianglesChanged: rebuildMesh()
-	onHeightSourceChanged: {
-		_heights = normalizeHeights(heightSource)
-		refreshColors()
-	}
-	onAnimationPhaseChanged: if (animateHeights || !_heights.length) refreshColors()
-
-	Component.onCompleted: {
-		_heights = normalizeHeights(heightSource)
-		rebuildMesh()
-	}
+	Component.onCompleted: rebuildMesh()
 
 	Model {
 		visible: root.showCoreSphere
@@ -149,19 +110,27 @@ Node {
 			primitiveMode: ProceduralMesh.Triangles
 		}
 		materials: CustomMaterial {
+			alwaysDirty: true
 			property real uBaseHeight: root.baseHeight
 			property real uHeightScale: root.heightScale
 			property color uColor: root.columnColor
+				property TextureInput uHeightMap: TextureInput {
+					enabled: true
+					texture: Texture {
+						sourceItem: root.heightCanvas
+						minFilter: Texture.Nearest
+					magFilter: Texture.Nearest
+					mipFilter: Texture.None
+					generateMipmaps: false
+					tilingModeHorizontal: Texture.ClampToEdge
+					tilingModeVertical: Texture.ClampToEdge
+				}
+			}
 
 			shadingMode: CustomMaterial.Shaded
 			cullMode: Material.BackFaceCulling
 			vertexShader: "../shader/geodesic_face_gpu.vert"
 			fragmentShader: "../shader/geodesic_face_gpu.frag"
 		}
-	}
-
-	FrameAnimation {
-		running: root.animateHeights && !root._heights.length
-		onTriggered: root.animationPhase += frameTime * 0.75
 	}
 }

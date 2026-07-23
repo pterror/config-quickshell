@@ -84,6 +84,13 @@ ShellRoot {
 				}
 				anchors { top: true; bottom: true; left: true; right: true }
 
+				GeodesicHeightCanvas {
+					id: geodesicHeightCanvas
+					x: -10000
+					y: -10000
+					animateHeights: true
+				}
+
 				// Wallpaper {
 				// 	source: wallpaperRandomizer.wallpapers[modelData.name] ?? Config.imageUrl("dark_pixel.png")
 				// 	layer.enabled: Config.wallpapers.effect != null
@@ -104,6 +111,7 @@ ShellRoot {
 						heightScale: 10
 						columnColor: "#7bdff2"
 						animateHeights: true
+						heightCanvas: geodesicHeightCanvas
 					}
 
 					// GeodesicFaceColumns {

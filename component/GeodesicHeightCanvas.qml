@@ -4,6 +4,10 @@ Canvas {
 	id: root
 
 	property int sampleCount: 1
+	property int textureWidth: Math.max(1, Math.ceil(Math.sqrt(sampleCount)))
+	property int textureHeight: Math.max(1, Math.ceil(sampleCount / Math.max(1, textureWidth)))
+	property real debugWidth: textureWidth
+	property real debugHeight: textureHeight
 	property var heightSource: []
 	property bool animateHeights: false
 	property real animationPhase: 0
@@ -11,15 +15,12 @@ Canvas {
 	property int animationInterval: 16
 
 	visible: true
-	opacity: 0
-	width: Math.max(1, sampleCount)
-	height: 1
+	width: debugWidth
+	height: debugHeight
 	renderTarget: Canvas.Image
 	renderStrategy: Canvas.Immediate
 
 	property var _ctx: null
-	property var _imageData: null
-	property var _pixels: null
 	property var _heights: []
 
 	function normalizeHeights(source) {
@@ -49,24 +50,39 @@ Canvas {
 		_ctx = getContext("2d")
 		if (!_ctx)
 			return
-		if (!_imageData || _imageData.width !== width) {
-			_imageData = _ctx.createImageData(width, 1)
-			_pixels = _imageData.data
-		}
-		for (let i = 0; i < sampleCount; ++i) {
-			const pixelIndex = i * 4
-			const value = Math.round(sampleHeight(i) * 255)
-			_pixels[pixelIndex] = value
-			_pixels[pixelIndex + 1] = value
-			_pixels[pixelIndex + 2] = value
-			_pixels[pixelIndex + 3] = 255
-		}
 		requestPaint()
 	}
 
+	function faceUv(index) {
+		const x = index % root.textureWidth
+		const y = Math.floor(index / root.textureWidth)
+		return Qt.vector2d(
+			(x + 0.5) / Math.max(1, root.textureWidth),
+			(y + 0.5) / Math.max(1, root.textureHeight)
+		)
+	}
+
+	function sampleDebugPixel(index) {
+		if (index >= sampleCount)
+			return -1
+		return Math.round(sampleHeight(index) * 255)
+	}
+
 	onPaint: {
-		if (_ctx && _imageData)
-			_ctx.putImageData(_imageData, 0, 0)
+		if (!_ctx)
+			return
+		_ctx.reset()
+		_ctx.clearRect(0, 0, width, height)
+		const cellWidth = width / Math.max(1, textureWidth)
+		const cellHeight = height / Math.max(1, textureHeight)
+		for (let i = 0; i < textureWidth * textureHeight; ++i) {
+			const inRange = i < sampleCount
+			const value = inRange ? Math.round(sampleHeight(i) * 255) : 0
+			const x = i % textureWidth
+			const y = Math.floor(i / textureWidth)
+			_ctx.fillStyle = `rgba(${value}, ${value}, ${value}, ${inRange ? 1 : 0})`
+			_ctx.fillRect(x * cellWidth, y * cellHeight, cellWidth, cellHeight)
+		}
 	}
 
 	onHeightSourceChanged: {
@@ -74,6 +90,8 @@ Canvas {
 		syncBuffer()
 	}
 	onSampleCountChanged: syncBuffer()
+	onTextureWidthChanged: syncBuffer()
+	onTextureHeightChanged: syncBuffer()
 	onAnimationPhaseChanged: if (animateHeights || !_heights.length) syncBuffer()
 	onAvailableChanged: if (available) syncBuffer()
 
