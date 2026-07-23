@@ -84,10 +84,8 @@ ShellRoot {
 				}
 				anchors { top: true; bottom: true; left: true; right: true }
 
-				GeodesicHeightCanvas {
-					id: geodesicHeightCanvas
-					x: -10000
-					y: -10000
+				GeodesicHeightTexture {
+					id: geodesicHeightTexture
 					animateHeights: true
 				}
 
@@ -106,12 +104,12 @@ ShellRoot {
 				Viewer3D {
 					GeodesicFaceColumnsGpu {
 						radius: 22
-						frequency: 10
+						frequency: 20
 						baseHeight: 0.3
 						heightScale: 10
 						columnColor: "#7bdff2"
 						animateHeights: true
-						heightCanvas: geodesicHeightCanvas
+						heightTextureData: geodesicHeightTexture
 					}
 
 					// GeodesicFaceColumns {

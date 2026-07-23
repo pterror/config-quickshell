@@ -25,16 +25,14 @@ Window {
 		}
 
 		GeodesicFaceColumnsGpu {
-			frequency: 10
+			frequency: 20
 			animateHeights: true
-			heightCanvas: geodesicHeightCanvas
+			heightTextureData: geodesicHeightTexture
 		}
 	}
 
-	GeodesicHeightCanvas {
-		id: geodesicHeightCanvas
-		x: -10000
-		y: -10000
+	GeodesicHeightTexture {
+		id: geodesicHeightTexture
 		animateHeights: true
 	}
 }

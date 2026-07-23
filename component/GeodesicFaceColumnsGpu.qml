@@ -6,7 +6,7 @@ import "../library/GeodesicSphere.mjs" as GeodesicSphere
 Node {
 	id: root
 
-	required property Item heightCanvas
+	required property QtObject heightTextureData
 	property real radius: 24
 	property int frequency: 5
 	property real baseHeight: 0.35
@@ -18,6 +18,9 @@ Node {
 	property bool animateHeights: false
 
 	readonly property var triangles: GeodesicSphere.buildTriangles(radius, frequency)
+	readonly property var faceCenters: triangles.map(triangle =>
+		GeodesicSphere.normalize(GeodesicSphere.average(triangle))
+	)
 
 	function rebuildMesh() {
 		const positions = []
@@ -28,7 +31,7 @@ Node {
 		let nextIndex = 0
 
 		function pushTriangle(a, b, c, normal, faceIndex, outerA, outerB, outerC) {
-			const lookupUv = root.heightCanvas.faceUv(faceIndex)
+			const lookupUv = root.heightTextureData.faceUv(faceIndex)
 			positions.push(
 				GeodesicSphere.toVector3d(a),
 				GeodesicSphere.toVector3d(b),
@@ -87,7 +90,8 @@ Node {
 		mesh.colors = colors
 		mesh.uv0s = uv0s
 		mesh.indexes = indexes
-		root.heightCanvas.sampleCount = triangles.length
+		root.heightTextureData.sampleCount = triangles.length
+		root.heightTextureData.samplePositions = faceCenters
 	}
 
 	onTrianglesChanged: rebuildMesh()
@@ -110,15 +114,14 @@ Node {
 			primitiveMode: ProceduralMesh.Triangles
 		}
 		materials: CustomMaterial {
-			alwaysDirty: true
 			property real uBaseHeight: root.baseHeight
 			property real uHeightScale: root.heightScale
 			property color uColor: root.columnColor
-				property TextureInput uHeightMap: TextureInput {
-					enabled: true
-					texture: Texture {
-						sourceItem: root.heightCanvas
-						minFilter: Texture.Nearest
+			property TextureInput uHeightMap: TextureInput {
+				enabled: true
+				texture: Texture {
+					textureData: root.heightTextureData
+					minFilter: Texture.Nearest
 					magFilter: Texture.Nearest
 					mipFilter: Texture.None
 					generateMipmaps: false
