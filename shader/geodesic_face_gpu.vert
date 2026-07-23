@@ -30,8 +30,16 @@ float proceduralHeight(vec3 dir)
         value = 0.5 + 0.5 * sin(phase * 0.7 + dir.y * uFrequencyA + uBias * PI);
     } else if (uHeightMode < 4.5) {
         value = 0.5 + 0.5 * sin(phase + atan(dir.z, dir.x) * uTwist + dir.y * uFrequencyA);
-    } else {
+    } else if (uHeightMode < 5.5) {
         value = 1.0 - abs(sin(phase * 1.4 + atan(dir.z, dir.x) * uFrequencyB + dir.y * uFrequencyA));
+    } else if (uHeightMode < 6.5) {
+        float craterA = sin(phase * 0.45 + dir.x * uFrequencyA);
+        float craterB = cos(phase * 0.35 + dir.z * (uFrequencyB + 1.5));
+        value = pow(0.5 + 0.5 * craterA * craterB, 2.2);
+    } else {
+        float ripple = sin(phase * 1.2 + length(dir.xz) * (uFrequencyA + uFrequencyB));
+        float mesh = sin(phase * 0.7 + dir.x * uFrequencyA) * sin(phase * 0.9 + dir.z * uFrequencyB);
+        value = 0.5 + 0.3 * ripple + 0.2 * mesh;
     }
 
     value = 0.5 + (value - 0.5) * uAmplitude + uBias * 0.5;

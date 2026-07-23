@@ -1,8 +1,5 @@
 import QtQuick
 import QtQuick.Effects
-// aliased: this file lives in `component/`, which also has sibling `ColumnLayout.qml` /
-// `RowLayout.qml` wrapper components — the bare names would collide with those instead of
-// resolving to the real QtQuick.Layouts types (same collision `SpinBox.qml` sidesteps).
 import QtQuick.Layouts as QL
 import qs
 

@@ -10,6 +10,7 @@ VisualizerBase {
 	id: root
 	property var barsOnBottom: null
 	property var childAlignment: barsOnBottom ?? anchors.bottom === parent.bottom ? Qt.AlignBottom : Qt.AlignTop
+	property int margins: 0
 	property int spacing: Config._.style.visualizer.gap
 	property int barWidth: -1
 	property int effectiveBars: input.count === -1 ? Math.floor((width + spacing) / (barWidth + spacing)) : input.count
@@ -22,6 +23,7 @@ VisualizerBase {
 	RowLayout {
 		id: content
 		anchors.fill: parent
+		anchors.margins: root.margins
 		spacing: root.spacing
 		property real childSize: barWidth !== -1 ? barWidth : (width + spacing) / input.count - spacing
 

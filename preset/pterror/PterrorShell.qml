@@ -162,12 +162,14 @@ ShellRoot {
 				HVisualizerBars {
 					input: cava
 					anchors.top: parent.top; anchors.left: parent.left; anchors.right: parent.right
+					margins: Config._.style.hBar.margins
 					modulateOpacity: true
 				}
 
 				HVisualizerBars {
 					input: cava
 					anchors.bottom: parent.bottom; anchors.left: parent.left; anchors.right: parent.right
+					margins: Config._.style.hBar.margins
 					modulateOpacity: true
 				}
 

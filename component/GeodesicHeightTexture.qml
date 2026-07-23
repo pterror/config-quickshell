@@ -77,6 +77,18 @@ ProceduralTextureData {
 		case 5:
 			value = 1.0 - Math.abs(Math.sin(phase * 1.4 + azimuth * frequencyB + y * frequencyA))
 			break
+		case 6: {
+			const craterA = Math.sin(phase * 0.45 + x * frequencyA)
+			const craterB = Math.cos(phase * 0.35 + z * (frequencyB + 1.5))
+			value = Math.pow(0.5 + 0.5 * craterA * craterB, 2.2)
+			break
+		}
+		case 7: {
+			const ripple = Math.sin(phase * 1.2 + Math.sqrt(x * x + z * z) * (frequencyA + frequencyB))
+			const mesh = Math.sin(phase * 0.7 + x * frequencyA) * Math.sin(phase * 0.9 + z * frequencyB)
+			value = 0.5 + 0.3 * ripple + 0.2 * mesh
+			break
+		}
 		default:
 			value = constantValue
 			break

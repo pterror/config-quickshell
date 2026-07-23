@@ -238,43 +238,47 @@ PanelWindow {
 				}
 			}
 
-			RowLayout {
-				Rectangle {
-					implicitWidth: wifiImage.width
+				RowLayout {
+					Rectangle {
+						implicitWidth: wifiImage.width
 					implicitHeight: wifiImage.height
 					color: "transparent"
-					Image {
-						id: wifiImage
-						width: 16
-						height: 16
-						anchors.verticalCenter: parent.verticalCenter
-						opacity: Config._.iconOpacity
-						source: !Config.services.network.connected ? Config.iconUrl("flat/wifi_disconnected.svg") :
-							Config.services.network.strength < 33 ? Config.iconUrl("flat/wifi_low.svg") :
-							Config.services.network.strength < 67 ? Config.iconUrl("flat/wifi_medium.svg") :
-							Config.iconUrl("flat/wifi_high.svg")
+						Image {
+							id: wifiImage
+							width: 16
+							height: 16
+							anchors.verticalCenter: parent.verticalCenter
+							opacity: Config._.iconOpacity
+							source: !NetworkManager.connected ? Config.iconUrl("flat/wifi_disconnected.svg") :
+								NetworkManager.strength < 33 ? Config.iconUrl("flat/wifi_low.svg") :
+								NetworkManager.strength < 67 ? Config.iconUrl("flat/wifi_medium.svg") :
+								Config.iconUrl("flat/wifi_high.svg")
+						}
 					}
-				}
-				Text { text: Config.services.network.network }
+				Text { text: NetworkManager.network }
 			}
 
 			RowLayout {
 				Layout.fillHeight: true
-				implicitWidth: 48
+				implicitWidth: 72
 
 				Text {
-					color: Config._.style.network.downloadFg
-					text: NetworkInfo.uploadSecText
-				}
-			}
-
-			RowLayout {
-				Layout.fillHeight: true
-				implicitWidth: 48
-
-				Text {
+					width: parent.implicitWidth
 					color: Config._.style.network.uploadFg
+					text: NetworkInfo.uploadSecText
+					horizontalAlignment: Text.AlignRight
+				}
+			}
+
+			RowLayout {
+				Layout.fillHeight: true
+				implicitWidth: 72
+
+				Text {
+					width: parent.implicitWidth
+					color: Config._.style.network.downloadFg
 					text: NetworkInfo.downloadSecText
+					horizontalAlignment: Text.AlignRight
 				}
 			}
 		}

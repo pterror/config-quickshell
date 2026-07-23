@@ -10,6 +10,7 @@ VisualizerBase {
 	id: root
 	property var barsOnRight: null
 	property var childAlignment: (barsOnRight ?? anchors.right === parent.right) ? Qt.AlignRight | Qt.AlignVCenter : Qt.AlignLeft | Qt.AlignVCenter
+	property int margins: 0
 	property int spacing: Config._.style.visualizer.gap
 	property int barHeight: -1
 	property int effectiveBars: input.count === -1 ? Math.floor((height + spacing) / (barHeight + spacing)) : input.count
@@ -22,6 +23,7 @@ VisualizerBase {
 	ColumnLayout {
 		id: content
 		anchors.fill: parent
+		anchors.margins: root.margins
 		spacing: root.spacing
 		property real childSize: barHeight !== -1 ? barHeight : (height + spacing) / input.count - spacing
 

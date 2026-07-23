@@ -8,9 +8,12 @@ import qs
 Singleton {
 	property bool connected: ethernetConnected || wifiConnected
 	property string network: ethernetNetwork.trim() || wifiNetwork.trim()
+	property string interface_: ethernetConnected ? ethernetInterface : (wifiConnected ? wifiInterface : (ethernetInterface || wifiInterface))
 	property int strength: wifiStrength
+	property string ethernetInterface: ""
 	property string ethernetNetwork: ""
 	property bool ethernetConnected: ethernetNetwork !== ""
+	property string wifiInterface: ""
 	property string wifiNetwork: ""
 	property bool wifiConnected: wifiNetwork !== ""
 	property int wifiStrength: 0
@@ -60,15 +63,17 @@ Singleton {
 				if (Config._.debug) {
 					console.log("NetworkManager [device:stdin]: " + data)
 				}
-				const [, _device, type, state, connection] = data.match(/^(.+?) +(.+?) +(.+?) +(.+?)$/) ?? []
+				const [, device, type, state, connection] = data.match(/^(.+?) +(.+?) +(.+?) +(.+?)$/) ?? []
 				switch (type) {
 					case "TYPE": { break }
 					case "wifi": {
+						wifiInterface = device
 						wifiConnected = state === "connected"
 						wifiNetwork = wifiConnected ? connection : ""
 						break
 					}
 					case "ethernet": {
+						ethernetInterface = device
 						ethernetConnected = state === "connected"
 						ethernetNetwork = ethernetConnected ? connection : ""
 					}

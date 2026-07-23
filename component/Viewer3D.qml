@@ -255,7 +255,7 @@ View3D {
 				panUpMomentum.impulse(dy)
 			} else if (pressedButtons & Qt.LeftButton) {
 				yawMomentum.impulse(-dx * root.yawSpeed)
-				pitchMomentum.impulse(dy * root.pitchSpeed)
+				pitchMomentum.impulse(-dy * root.pitchSpeed)
 			}
 		}
 		onWheel: event => {

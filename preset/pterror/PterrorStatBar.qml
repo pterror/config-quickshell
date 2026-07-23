@@ -14,13 +14,34 @@ import qs
 
 PanelWindow {
 	id: root
+	property string activeWindowTitle: ""
+	readonly property var compositor: Config.services.compositor
 	anchors { left: true; right: true; top: true }
 	implicitHeight: 32 // TODO[broken]: Config._.style.hBar.height
 	color: "transparent"
 	Component.onCompleted: {
+		activeWindowTitle = compositor?.activeWindow?.title ?? ""
 		if (this.WlrLayershell) {
 			this.WlrLayershell.layer = WlrLayer.Bottom
 			this.WlrLayershell.namespace = "shell:bar"
+		}
+	}
+
+	Connections {
+		target: root.compositor?.activeToplevel ?? root.compositor?.activeWindow ?? null
+		function onTitleChanged() {
+			root.activeWindowTitle = root.compositor?.activeToplevel?.title
+				?? root.compositor?.activeWindow?.title
+				?? ""
+		}
+	}
+
+	Connections {
+		target: root.compositor ?? null
+		function onActiveToplevelChanged() {
+			root.activeWindowTitle = root.compositor?.activeToplevel?.title
+				?? root.compositor?.activeWindow?.title
+				?? ""
 		}
 	}
 
@@ -33,8 +54,10 @@ PanelWindow {
 		border.width: Config._.style.hBar.border
 
 		RowLayout {
-			implicitHeight: parent.height
+			height: parent.height
 			anchors.left: parent.left
+			anchors.leftMargin: Config._.style.hBar.margins
+			anchors.verticalCenter: parent.verticalCenter
 
 			Text {
 				function n(n) { return String(n).padStart(2, "0") }
@@ -43,15 +66,19 @@ PanelWindow {
 		}
 
 		RowLayout {
-			implicitHeight: parent.height
+			height: parent.height
 			anchors.centerIn: parent
 
-			Text { text: Config.services.compositor.activeWindow.title.normalize("NFKC").toLowerCase() }
+			Text {
+				text: root.activeWindowTitle.normalize("NFKC").toLowerCase()
+			}
 		}
 
 		RowLayout {
-			implicitHeight: parent.height
+			height: parent.height
 			anchors.right: parent.right
+			anchors.rightMargin: Config._.style.hBar.margins
+			anchors.verticalCenter: parent.verticalCenter
 
 			TrayStatus { anchorWindow: root; anchorItem: barRect; extraGrabWindows: [root] }
 

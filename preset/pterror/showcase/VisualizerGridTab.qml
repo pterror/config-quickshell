@@ -71,8 +71,6 @@ Flickable {
 					Text {
 						text: card.modelData.title
 						color: "white"
-						font.pointSize: -1
-						font.pixelSize: 13
 						Layout.alignment: Qt.AlignHCenter
 						horizontalAlignment: Text.AlignHCenter
 						Layout.fillWidth: true
@@ -104,8 +102,6 @@ Flickable {
 								anchors.centerIn: parent
 								text: "…"
 								color: "#666666"
-								font.pointSize: -1
-								font.pixelSize: 20
 							}
 						}
 					}

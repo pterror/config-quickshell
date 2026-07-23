@@ -1,5 +1,6 @@
 import QtQuick
 import QtQuick.Layouts
+import qs.component
 import qs
 
 // Tab strip up top, selected tab's content below, crossfaded on switch.
@@ -13,7 +14,6 @@ Rectangle {
 	required property list<var> tabs // [{ label: string, component: Component }]
 	property int currentIndex: 0
 	property int animationDuration: Config._.style.button.animationDuration
-	property int tabFontPixelSize: Math.max(15, Config._.style.button.fontSize + 2)
 
 	color: Config._.debugFlags.debugRectangles ? "#20ff0000" : "transparent"
 	border.color: Config._.debugFlags.debugRectangles ? "#80ff0000" : "transparent"
@@ -62,9 +62,6 @@ Rectangle {
 						anchors.centerIn: parent
 						text: tabButton.modelData.label
 						color: Config._.style.button.fg
-						font.family: Config._.font.family
-						font.pointSize: -1
-						font.pixelSize: root.tabFontPixelSize
 						font.bold: tabButton.selected
 					}
 

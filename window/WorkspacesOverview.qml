@@ -29,17 +29,17 @@ LazyLoader {
 		color: "transparent"
 		WlrLayershell.namespace: "shell:workspaces"
 		property list<var> workspacesData: []
-		property list<var> workspaces: Config.services.compositor.recomputeWorkspaces(Config._.workspacesOverview.showSpecial)
+		property list<var> workspaces: WindowIndex.recomputeWorkspaces(Config._.workspacesOverview.showSpecial)
 		implicitWidth: content.implicitWidth
 		implicitHeight: content.implicitHeight
 		onVisibleChanged: {
 			if (!visible) return
 			grab.active = true
-			Config.services.compositor.refetchClients()
+			WindowIndex.refetchClients()
 		}
 
 		// `onVisibleChanged` does not fire on reload
-		PersistentProperties { onLoaded: Config.services.compositor.refetchClients() }
+		PersistentProperties { onLoaded: WindowIndex.refetchClients() }
 
 		Connections {
 			target: Config._.workspacesOverview

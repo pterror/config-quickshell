@@ -8,7 +8,7 @@ Singleton {
   function search(query: string): list<var> {
     const regexes = Strings.regExpEscape(query).split(" ").map(term => new RegExp(term, "i"));
     const isMatch = s => regexes.every(regex => regex.test(s));
-    return Config.services.compositor.clientsData
+    return WindowIndex.clientsData
       .filter(item => isMatch(item.title) || isMatch(item.class))
       .map(item => ({
         icon: Applications.guessIcon(item.class),
@@ -16,7 +16,7 @@ Singleton {
         subtitle: item.initialTitle,
         source: qsTr("Tray"),
         execute: () => {
-          Config.services.compositor.focusWindow("address:" + item.address)
+          WindowIndex.focusWindow(item.address)
         },
       }));
   }

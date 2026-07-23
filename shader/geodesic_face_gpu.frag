@@ -28,10 +28,18 @@ void MAIN()
     } else if (uColorMode < 4.5) {
         float bands = floor(t * max(1.0, uBanding)) / max(1.0, uBanding - 0.0001);
         baseColor = mix(uColor.rgb, uAccentColor.rgb, bands);
-    } else {
+    } else if (uColorMode < 5.5) {
         float polar = clamp(0.5 + 0.5 * vFaceDir.y, 0.0, 1.0);
         baseColor = mix(uSecondaryColor.rgb, uAccentColor.rgb, polar);
         baseColor = mix(baseColor, uColor.rgb, t * uColorMix);
+    } else if (uColorMode < 6.5) {
+        float prism = 0.5 + 0.5 * sin(vFaceDir.x * uBanding + uTime * uSpeed + t * 8.0);
+        vec3 prismA = mix(uColor.rgb, uSecondaryColor.rgb, prism);
+        baseColor = mix(prismA, uAccentColor.rgb, 0.5 + 0.5 * sin(vFaceDir.z * uBanding - uTime * uSpeed));
+    } else {
+        float stripes = 0.5 + 0.5 * sin((vFaceDir.x + vFaceDir.y) * uBanding + uTime * uSpeed * 0.7);
+        vec3 warm = mix(uColor.rgb, uSecondaryColor.rgb, stripes);
+        baseColor = mix(warm, uAccentColor.rgb, smoothstep(0.2, 0.9, t));
     }
 
     float glow = mix(0.92, 1.15 + uGlowAmount, t);

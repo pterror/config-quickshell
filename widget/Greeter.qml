@@ -14,10 +14,9 @@ Rectangle {
 
 	ColumnLayout {
 		id: content
+		anchors.fill: parent
 		anchors.horizontalCenter: parent.horizontalCenter
-		radius: Config._.style.panel.radius
-		margins: Config._.style.panel.margins
-		// color: Config._.style.panel.bg
+		anchors.margins: Config._.style.panel.margins
 		spacing: 8
 
 		onImplicitWidthChanged: root.width = Math.max(root.width, implicitWidth)

@@ -138,7 +138,7 @@ Singleton {
 			function toggleMicMute() { setMicMuted(!micMuted) }
 		}
 		property var network: NetworkManager
-		property var compositor: Hyprland
+		property var compositor: Compositor
 	}
 
 	FileView {

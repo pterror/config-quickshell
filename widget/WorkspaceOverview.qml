@@ -88,7 +88,7 @@ Widget {
 				anchors.fill: parent
 				cursorShape: Qt.PointingHandCursor
 				onClicked: {
-					Config.services.compositor.focusWindow("address:" + modelData.address)
+					WindowIndex.focusWindow(modelData.address)
 					Config._.workspacesOverview.visible = false
 				}
 			}

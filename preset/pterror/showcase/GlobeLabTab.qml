@@ -17,7 +17,9 @@ Item {
 		"interference",
 		"latitude bands",
 		"spiral",
-		"pulse"
+		"pulse",
+		"craters",
+		"ripple mesh"
 	]
 	readonly property var colorModeNames: [
 		"grayscale",
@@ -25,7 +27,9 @@ Item {
 		"heatmap",
 		"aurora",
 		"contour",
-		"polar"
+		"polar",
+		"prism",
+		"sunset bands"
 	]
 	readonly property var paletteDefs: [
 		{ label: "ice", primary: "#7bdff2", secondary: "#b2f7ef", accent: "#eff7f6" },
@@ -57,7 +61,7 @@ Item {
 	property real roughness: 0.82
 	property real specularAmount: 0.12
 	property real glow: 0.2
-	property real orbitPhase: 0
+	property real globeRotationDegrees: 0
 	property int shellPid: 0
 	property int clockTicksPerSecond: 100
 	property real processCpuSingleCorePercent: 0
@@ -157,7 +161,7 @@ Item {
 		interval: 16
 		running: root.autoOrbit
 		repeat: true
-		onTriggered: root.orbitPhase += 0.008
+		onTriggered: root.globeRotationDegrees = (root.globeRotationDegrees + 0.46) % 360
 	}
 
 	component SectionCard: Rectangle {
@@ -180,8 +184,6 @@ Item {
 			Text {
 				text: sectionCard.title
 				color: "white"
-				font.pointSize: -1
-				font.pixelSize: 14
 				font.bold: true
 			}
 		}
@@ -206,15 +208,11 @@ Item {
 			Text {
 				text: metricTile.label
 				color: "#bfe8f7ff"
-				font.pointSize: -1
-				font.pixelSize: 12
 			}
 
 			Text {
 				text: metricTile.value
 				color: "white"
-				font.pointSize: -1
-				font.pixelSize: 20
 				font.bold: true
 			}
 		}
@@ -242,8 +240,6 @@ Item {
 				Text {
 					text: labeledSlider.label
 					color: "white"
-					font.pointSize: -1
-					font.pixelSize: 13
 				}
 
 				Item { Layout.fillWidth: true }
@@ -251,12 +247,11 @@ Item {
 				Text {
 					text: Number(labeledSlider.value).toFixed(labeledSlider.decimals)
 					color: "#cbe7f0"
-					font.pointSize: -1
-					font.pixelSize: 12
 				}
 			}
 
 			Controls.Slider {
+				id: slider
 				Layout.fillWidth: true
 				from: labeledSlider.from
 				to: labeledSlider.to
@@ -264,6 +259,33 @@ Item {
 				value: labeledSlider.value
 				onMoved: labeledSlider.valueEdited(value)
 				onValueChanged: if (!pressed) labeledSlider.valueEdited(value)
+				background: Rectangle {
+					x: slider.leftPadding
+					y: slider.topPadding + slider.availableHeight / 2 - height / 2
+					width: slider.availableWidth
+					height: 6
+					radius: 3
+					color: "#1cffffff"
+					border.width: 1
+					border.color: "#26ffffff"
+
+					Rectangle {
+						width: slider.visualPosition * parent.width
+						height: parent.height
+						radius: parent.radius
+						color: "#70b2f7ef"
+					}
+				}
+				handle: Rectangle {
+					x: slider.leftPadding + slider.visualPosition * (slider.availableWidth - width)
+					y: slider.topPadding + slider.availableHeight / 2 - height / 2
+					width: 16
+					height: 16
+					radius: 8
+					color: slider.pressed ? "#eff7f6" : "#b2f7ef"
+					border.width: 1
+					border.color: "#30ffffff"
+				}
 			}
 		}
 	}
@@ -279,15 +301,113 @@ Item {
 		Text {
 			text: labeledCombo.label
 			color: "white"
-			font.pointSize: -1
-			font.pixelSize: 13
 		}
 
 		Controls.ComboBox {
+			id: combo
 			Layout.fillWidth: true
 			model: labeledCombo.model
 			currentIndex: labeledCombo.currentIndex
 			onActivated: labeledCombo.indexEdited(currentIndex)
+			implicitHeight: 38
+			contentItem: Text {
+				leftPadding: 12
+				rightPadding: 30
+				text: combo.displayText
+				color: "#eff7f6"
+				verticalAlignment: Text.AlignVCenter
+				elide: Text.ElideRight
+			}
+			indicator: Text {
+				x: combo.width - width - 12
+				y: combo.height / 2 - height / 2
+				text: "▾"
+				color: "#cbe7f0"
+			}
+			background: Rectangle {
+				radius: Config._.style.glass.radius
+				color: "#14000000"
+				border.width: 1
+				border.color: combo.hovered ? "#50b2f7ef" : "#24ffffff"
+			}
+			popup: Controls.Popup {
+				y: combo.height + 4
+				width: combo.width
+				padding: 4
+				contentItem: ListView {
+					clip: true
+					implicitHeight: contentHeight
+					model: combo.popup.visible ? combo.delegateModel : null
+					currentIndex: combo.highlightedIndex
+				}
+				background: Rectangle {
+					radius: Config._.style.glass.radius
+					color: "#18131d26"
+					border.width: 1
+					border.color: "#2effffff"
+				}
+			}
+			delegate: Controls.ItemDelegate {
+				required property var modelData
+				required property int index
+				width: combo.width - 8
+				contentItem: Text {
+					text: parent.modelData
+					color: "#eff7f6"
+					verticalAlignment: Text.AlignVCenter
+				}
+				background: Rectangle {
+					radius: Config._.style.glass.radius
+					color: parent.highlighted ? "#2a7bdff2" : "transparent"
+				}
+			}
+		}
+	}
+
+	component LabeledSwitch: RowLayout {
+		id: labeledSwitch
+		property string label: ""
+		property bool checked: false
+		signal toggled(bool checked)
+		Layout.fillWidth: true
+
+		Text {
+			text: labeledSwitch.label
+			color: "white"
+		}
+
+		Item { Layout.fillWidth: true }
+
+		Controls.Switch {
+			id: themedSwitch
+			Layout.alignment: Qt.AlignVCenter
+			checked: labeledSwitch.checked
+			implicitWidth: 42
+			implicitHeight: 24
+			padding: 0
+			leftPadding: 0
+			rightPadding: 0
+			topPadding: 0
+			bottomPadding: 0
+			onToggled: labeledSwitch.toggled(checked)
+			indicator: Rectangle {
+				implicitWidth: 42
+				implicitHeight: 24
+				radius: 12
+				color: themedSwitch.checked ? "#5bb2f7ef" : "#18000000"
+				border.width: 1
+				border.color: themedSwitch.checked ? "#80eff7f6" : "#30ffffff"
+
+				Rectangle {
+					x: 3 + themedSwitch.visualPosition * (parent.width - width - 6)
+					y: 3
+					width: 18
+					height: 18
+					radius: 9
+					color: "#eff7f6"
+				}
+			}
+			contentItem: Item {}
 		}
 	}
 
@@ -320,8 +440,6 @@ Item {
 						Text {
 							text: "geodesic sphere preview"
 							color: "white"
-							font.pointSize: -1
-							font.pixelSize: 24
 							font.bold: true
 						}
 
@@ -330,8 +448,6 @@ Item {
 						Text {
 							text: `${root.modeNames[root.renderMode]}  |  f=${root.frequency}  |  ${root.faceCount} faces`
 							color: "#d2eff8"
-							font.pointSize: -1
-							font.pixelSize: 13
 						}
 					}
 
@@ -361,7 +477,7 @@ Item {
 
 						GeodesicFaceColumnsGpu {
 							id: globe
-							eulerRotation.y: root.autoOrbit ? root.orbitPhase * 180 / Math.PI : 0
+							eulerRotation.y: root.globeRotationDegrees
 							radius: root.radius
 							frequency: root.frequency
 							baseHeight: root.baseHeight
@@ -393,6 +509,7 @@ Item {
 			}
 
 			Flickable {
+				id: controlsFlickable
 				Layout.preferredWidth: 460
 				Layout.fillHeight: true
 				clip: true
@@ -402,7 +519,7 @@ Item {
 
 				ColumnLayout {
 					id: controlsColumn
-					width: parent.width
+					width: controlsFlickable.width
 					spacing: 14
 
 					SectionCard {
@@ -440,85 +557,76 @@ Item {
 							onIndexEdited: function(index) { root.paletteIndex = index }
 						}
 
-						RowLayout {
-							Layout.fillWidth: true
-
-							Text { text: "animate"; color: "white"; font.pointSize: -1; font.pixelSize: 13 }
-							Item { Layout.fillWidth: true }
-							Controls.Switch {
-								checked: root.animate
-								onToggled: root.animate = checked
-							}
+						LabeledSwitch {
+							label: "animate"
+							checked: root.animate
+							onToggled: function(checked) { root.animate = checked }
 						}
 
-						RowLayout {
-							Layout.fillWidth: true
-
-							Text { text: "show core sphere"; color: "white"; font.pointSize: -1; font.pixelSize: 13 }
-							Item { Layout.fillWidth: true }
-							Controls.Switch {
-								checked: root.showCoreSphere
-								onToggled: root.showCoreSphere = checked
-							}
+						LabeledSwitch {
+							label: "show core sphere"
+							checked: root.showCoreSphere
+							onToggled: function(checked) { root.showCoreSphere = checked }
 						}
 
-						RowLayout {
-							Layout.fillWidth: true
-
-							Text { text: "auto orbit"; color: "white"; font.pointSize: -1; font.pixelSize: 13 }
-							Item { Layout.fillWidth: true }
-							Controls.Switch {
-								checked: root.autoOrbit
-								onToggled: root.autoOrbit = checked
-							}
+						LabeledSwitch {
+							label: "auto orbit"
+							checked: root.autoOrbit
+							onToggled: function(checked) { root.autoOrbit = checked }
 						}
 					}
 
 					SectionCard {
 						title: "geometry"
 
-							Flow {
-								width: parent.width
-								spacing: 10
+						GridLayout {
+							Layout.fillWidth: true
+							columns: 2
+							columnSpacing: 10
+							rowSpacing: 8
 
-								LabeledSlider {
-									label: "frequency"
-									from: 1
-									to: 20
+							LabeledSlider {
+								Layout.fillWidth: true
+								label: "frequency"
+								from: 1
+								to: 20
 								stepSize: 1
 								decimals: 0
 								value: root.frequency
-									onValueEdited: function(value) { root.frequency = Math.round(value) }
+								onValueEdited: function(value) { root.frequency = Math.round(value) }
 							}
 
-								LabeledSlider {
-									label: "radius"
-									from: 8
+							LabeledSlider {
+								Layout.fillWidth: true
+								label: "radius"
+								from: 8
 								to: 40
 								stepSize: 0.5
 								decimals: 1
 								value: root.radius
-									onValueEdited: function(value) { root.radius = value }
+								onValueEdited: function(value) { root.radius = value }
 							}
 
-								LabeledSlider {
-									label: "base height"
+							LabeledSlider {
+								Layout.fillWidth: true
+								label: "base height"
 								from: 0
 								to: 2
 								stepSize: 0.05
 								decimals: 2
 								value: root.baseHeight
-									onValueEdited: function(value) { root.baseHeight = value }
+								onValueEdited: function(value) { root.baseHeight = value }
 							}
 
-								LabeledSlider {
-									label: "height scale"
+							LabeledSlider {
+								Layout.fillWidth: true
+								label: "height scale"
 								from: 0
 								to: 18
 								stepSize: 0.25
 								decimals: 2
 								value: root.heightScale
-									onValueEdited: function(value) { root.heightScale = value }
+								onValueEdited: function(value) { root.heightScale = value }
 							}
 						}
 					}
@@ -526,12 +634,15 @@ Item {
 					SectionCard {
 						title: "height shader"
 
-						Flow {
-							width: parent.width
-							spacing: 10
+						GridLayout {
+							Layout.fillWidth: true
+							columns: 2
+							columnSpacing: 10
+							rowSpacing: 8
 
-								LabeledSlider {
-									label: "amplitude"
+							LabeledSlider {
+								Layout.fillWidth: true
+								label: "amplitude"
 								from: 0
 								to: 2
 								stepSize: 0.05
@@ -539,8 +650,9 @@ Item {
 								onValueEdited: function(value) { root.amplitude = value }
 							}
 
-								LabeledSlider {
-									label: "speed"
+							LabeledSlider {
+								Layout.fillWidth: true
+								label: "speed"
 								from: 0
 								to: 4
 								stepSize: 0.05
@@ -548,8 +660,9 @@ Item {
 								onValueEdited: function(value) { root.speed = value }
 							}
 
-								LabeledSlider {
-									label: "freq a"
+							LabeledSlider {
+								Layout.fillWidth: true
+								label: "freq a"
 								from: 0
 								to: 14
 								stepSize: 0.1
@@ -557,8 +670,9 @@ Item {
 								onValueEdited: function(value) { root.frequencyA = value }
 							}
 
-								LabeledSlider {
-									label: "freq b"
+							LabeledSlider {
+								Layout.fillWidth: true
+								label: "freq b"
 								from: 0
 								to: 14
 								stepSize: 0.1
@@ -566,8 +680,9 @@ Item {
 								onValueEdited: function(value) { root.frequencyB = value }
 							}
 
-								LabeledSlider {
-									label: "twist"
+							LabeledSlider {
+								Layout.fillWidth: true
+								label: "twist"
 								from: 0
 								to: 8
 								stepSize: 0.05
@@ -575,8 +690,9 @@ Item {
 								onValueEdited: function(value) { root.twist = value }
 							}
 
-								LabeledSlider {
-									label: "bias"
+							LabeledSlider {
+								Layout.fillWidth: true
+								label: "bias"
 								from: -1
 								to: 1
 								stepSize: 0.05
@@ -589,12 +705,15 @@ Item {
 					SectionCard {
 						title: "surface / color"
 
-						Flow {
-							width: parent.width
-							spacing: 10
+						GridLayout {
+							Layout.fillWidth: true
+							columns: 2
+							columnSpacing: 10
+							rowSpacing: 8
 
-								LabeledSlider {
-									label: "banding"
+							LabeledSlider {
+								Layout.fillWidth: true
+								label: "banding"
 								from: 1
 								to: 18
 								stepSize: 0.25
@@ -602,8 +721,9 @@ Item {
 								onValueEdited: function(value) { root.banding = value }
 							}
 
-								LabeledSlider {
-									label: "color mix"
+							LabeledSlider {
+								Layout.fillWidth: true
+								label: "color mix"
 								from: 0
 								to: 1
 								stepSize: 0.02
@@ -611,8 +731,9 @@ Item {
 								onValueEdited: function(value) { root.colorMix = value }
 							}
 
-								LabeledSlider {
-									label: "roughness"
+							LabeledSlider {
+								Layout.fillWidth: true
+								label: "roughness"
 								from: 0
 								to: 1
 								stepSize: 0.02
@@ -620,8 +741,9 @@ Item {
 								onValueEdited: function(value) { root.roughness = value }
 							}
 
-								LabeledSlider {
-									label: "specular"
+							LabeledSlider {
+								Layout.fillWidth: true
+								label: "specular"
 								from: 0
 								to: 1
 								stepSize: 0.02
@@ -629,8 +751,9 @@ Item {
 								onValueEdited: function(value) { root.specularAmount = value }
 							}
 
-								LabeledSlider {
-									label: "glow"
+							LabeledSlider {
+								Layout.fillWidth: true
+								label: "glow"
 								from: 0
 								to: 1
 								stepSize: 0.02
@@ -647,8 +770,6 @@ Item {
 							Layout.fillWidth: true
 							wrapMode: Text.WordWrap
 							color: "#d8eef6"
-							font.pointSize: -1
-							font.pixelSize: 13
 							text: root.renderMode === 1
 								? `cpu mode uploads an R8 texture each frame: ~${root.metricText(root.uploadKiBPerFrame, 1)} KiB/frame, ~${root.metricText(root.uploadMiBPerSecond, 2)} MiB/s at 60 fps.`
 								: "shader mode keeps the mesh static and generates heights/colors entirely in the material; CPU work should mostly be scene bookkeeping."
@@ -658,8 +779,6 @@ Item {
 							Layout.fillWidth: true
 							wrapMode: Text.WordWrap
 							color: "#d8eef6"
-							font.pointSize: -1
-							font.pixelSize: 13
 							text: `process metrics target pid ${root.shellPid || "?"} and report quickshell CPU as a percentage of one logical core plus resident memory from /proc.`
 						}
 					}
