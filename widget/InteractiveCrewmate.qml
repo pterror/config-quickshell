@@ -38,7 +38,11 @@ Crewmate {
 		}
 	}
 
-	MediaPlayer { id: audio; source: Config.soundUrl(sound); audioOutput: AudioOutput {} }
+	MediaPlayer {
+		id: audio
+		source: sound ? Config.soundUrl(sound) : ""
+		audioOutput: AudioOutput {}
+	}
 
 	scale: mouseArea.pressed ? 0.9 : 1.0
 	Behavior on scale { SmoothedAnimation { velocity: 2 } }
@@ -76,7 +80,7 @@ Crewmate {
 				id: videoPlayer
 				anchors.fill: parent
 				loops: 1
-				source: Config._.videoUrl(video)
+				source: video ? Config.videoUrl(video) : ""
 				fillMode: VideoOutput.PreserveAspectFit
 				onStopped: videoLock.locked = false
 

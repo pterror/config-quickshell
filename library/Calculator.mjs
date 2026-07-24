@@ -24,6 +24,9 @@ export const calculate = (s) => {
 		i += 1;
 	};
 
+	/** @returns {number} */
+	const parseExpr = () => parseBitwise();
+
 	const parseFactor = () => {
 		const token = peek();
 		if (/\d|^0[obx]/i.test(token)) {
@@ -141,8 +144,6 @@ export const calculate = (s) => {
 			}
 		}
 	};
-
-	const parseExpr = parseBitwise;
 
 	return parseExpr();
 };

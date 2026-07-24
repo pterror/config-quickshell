@@ -1,6 +1,5 @@
 import QtQuick
 import QtQuick.Layouts
-import QtQuick.Controls as Controls
 import Quickshell
 import Quickshell.Io
 import qs.component
@@ -63,7 +62,6 @@ Item {
 	property real glow: 0.2
 	property real globeRotationDegrees: 0
 	property int shellPid: 0
-	property int clockTicksPerSecond: 100
 	property real processCpuSingleCorePercent: 0
 	property real processRssMiB: 0
 	property real _lastProcTicks: 0
@@ -98,24 +96,23 @@ Item {
 		return firstLine[1].trim().split(/\s+/).reduce((sum, part) => sum + Number(part || 0), 0)
 	}
 
-	function updateProcessMetrics() {
+	function updateProcessMetrics(procStatText, procStatusText, cpuStatText) {
 		if (!shellPid)
 			return
-		const procTicks = extractProcTicks(procStatFile.text())
-		const totalTicks = extractTotalTicks(cpuStatFile.text())
+		const procTicks = extractProcTicks(procStatText)
+		const totalTicks = extractTotalTicks(cpuStatText)
 		const procDelta = procTicks - _lastProcTicks
 		const totalDelta = totalTicks - _lastTotalTicks
 		if (_lastProcTicks > 0 && _lastTotalTicks > 0 && totalDelta > 0)
 			processCpuSingleCorePercent = Math.max(0, (procDelta / totalDelta) * CPUInfo.cpuCount * 100)
 		_lastProcTicks = procTicks
 		_lastTotalTicks = totalTicks
-		const rssMatch = procStatusFile.text().match(/VmRSS:\s+(\d+)/)
+		const rssMatch = procStatusText.match(/VmRSS:\s+(\d+)/)
 		processRssMiB = Number(rssMatch?.[1] ?? 0) / 1024
 	}
 
 	Component.onCompleted: {
 		pidProcess.running = true
-		clockTickProcess.running = true
 	}
 
 	Process {
@@ -131,16 +128,27 @@ Item {
 	}
 
 	Process {
-		id: clockTickProcess
-		command: ["getconf", "CLK_TCK"]
+		id: metricSampleProcess
+		command: root.shellPid ? [
+			"bash",
+			"-lc",
+			`cat /proc/${root.shellPid}/stat; printf '\\n__STATUS__\\n'; cat /proc/${root.shellPid}/status; printf '\\n__CPU__\\n'; head -n 1 /proc/stat`
+		] : []
 		stdout: SplitParser {
-			onRead: data => root.clockTicksPerSecond = Number(String(data).trim()) || 100
+			splitMarker: ""
+			onRead: data => {
+				const text = String(data)
+				const parts = text.split("\n__STATUS__\n")
+				if (parts.length !== 2)
+					return
+				const procStatText = parts[0]
+				const statusAndCpu = parts[1].split("\n__CPU__\n")
+				if (statusAndCpu.length !== 2)
+					return
+				root.updateProcessMetrics(procStatText, statusAndCpu[0], statusAndCpu[1])
+			}
 		}
 	}
-
-	FileView { id: procStatFile; watchChanges: false }
-	FileView { id: procStatusFile; watchChanges: false }
-	FileView { id: cpuStatFile; path: "/proc/stat"; watchChanges: false }
 
 	Timer {
 		interval: 1000
@@ -150,10 +158,7 @@ Item {
 		onTriggered: {
 			if (!root.shellPid)
 				return
-			procStatFile.reload()
-			procStatusFile.reload()
-			cpuStatFile.reload()
-			root.updateProcessMetrics()
+			metricSampleProcess.running = true
 		}
 	}
 
@@ -218,15 +223,16 @@ Item {
 		}
 	}
 
-	component LabeledSlider: Item {
-		id: labeledSlider
+		component LabeledSlider: Item {
+			id: labeledSlider
 		property string label: ""
 		property real from: 0
 		property real to: 1
-		property real stepSize: 0.1
-		property int decimals: 2
-		property real value: 0
-		signal valueEdited(real value)
+			property real stepSize: 0.1
+			property int decimals: 2
+			property real value: 0
+			property bool pressed: slider.pressed
+			signal valueEdited(real value)
 		implicitWidth: 176
 		implicitHeight: 82
 
@@ -250,41 +256,15 @@ Item {
 				}
 			}
 
-			Controls.Slider {
-				id: slider
-				Layout.fillWidth: true
-				from: labeledSlider.from
-				to: labeledSlider.to
-				stepSize: labeledSlider.stepSize
-				value: labeledSlider.value
-				onMoved: labeledSlider.valueEdited(value)
-				onValueChanged: if (!pressed) labeledSlider.valueEdited(value)
-				background: Rectangle {
-					x: slider.leftPadding
-					y: slider.topPadding + slider.availableHeight / 2 - height / 2
-					width: slider.availableWidth
-					height: 6
-					radius: 3
-					color: "#1cffffff"
-					border.width: 1
-					border.color: "#26ffffff"
-
-					Rectangle {
-						width: slider.visualPosition * parent.width
-						height: parent.height
-						radius: parent.radius
-						color: "#70b2f7ef"
-					}
-				}
-				handle: Rectangle {
-					x: slider.leftPadding + slider.visualPosition * (slider.availableWidth - width)
-					y: slider.topPadding + slider.availableHeight / 2 - height / 2
-					width: 16
-					height: 16
-					radius: 8
-					color: slider.pressed ? "#eff7f6" : "#b2f7ef"
-					border.width: 1
-					border.color: "#30ffffff"
+				Slider {
+					id: slider
+					Layout.fillWidth: true
+					Layout.alignment: Qt.AlignVCenter
+					from: labeledSlider.from
+					to: labeledSlider.to
+					stepSize: labeledSlider.stepSize
+					value: labeledSlider.value
+					onMoved: labeledSlider.valueEdited(value)
 				}
 			}
 		}
@@ -303,66 +283,14 @@ Item {
 			color: "white"
 		}
 
-		Controls.ComboBox {
-			id: combo
-			Layout.fillWidth: true
-			model: labeledCombo.model
-			currentIndex: labeledCombo.currentIndex
-			onActivated: labeledCombo.indexEdited(currentIndex)
-			implicitHeight: 38
-			contentItem: Text {
-				leftPadding: 12
-				rightPadding: 30
-				text: combo.displayText
-				color: "#eff7f6"
-				verticalAlignment: Text.AlignVCenter
-				elide: Text.ElideRight
-			}
-			indicator: Text {
-				x: combo.width - width - 12
-				y: combo.height / 2 - height / 2
-				text: "▾"
-				color: "#cbe7f0"
-			}
-			background: Rectangle {
-				radius: Config._.style.glass.radius
-				color: "#14000000"
-				border.width: 1
-				border.color: combo.hovered ? "#50b2f7ef" : "#24ffffff"
-			}
-			popup: Controls.Popup {
-				y: combo.height + 4
-				width: combo.width
-				padding: 4
-				contentItem: ListView {
-					clip: true
-					implicitHeight: contentHeight
-					model: combo.popup.visible ? combo.delegateModel : null
-					currentIndex: combo.highlightedIndex
-				}
-				background: Rectangle {
-					radius: Config._.style.glass.radius
-					color: "#18131d26"
-					border.width: 1
-					border.color: "#2effffff"
-				}
-			}
-			delegate: Controls.ItemDelegate {
-				required property var modelData
-				required property int index
-				width: combo.width - 8
-				contentItem: Text {
-					text: parent.modelData
-					color: "#eff7f6"
-					verticalAlignment: Text.AlignVCenter
-				}
-				background: Rectangle {
-					radius: Config._.style.glass.radius
-					color: parent.highlighted ? "#2a7bdff2" : "transparent"
-				}
+			ComboBox {
+				id: combo
+				Layout.fillWidth: true
+				model: labeledCombo.model
+				currentIndex: labeledCombo.currentIndex
+				onActivated: labeledCombo.indexEdited(currentIndex)
 			}
 		}
-	}
 
 	component LabeledSwitch: RowLayout {
 		id: labeledSwitch
@@ -378,38 +306,13 @@ Item {
 
 		Item { Layout.fillWidth: true }
 
-		Controls.Switch {
-			id: themedSwitch
-			Layout.alignment: Qt.AlignVCenter
-			checked: labeledSwitch.checked
-			implicitWidth: 42
-			implicitHeight: 24
-			padding: 0
-			leftPadding: 0
-			rightPadding: 0
-			topPadding: 0
-			bottomPadding: 0
-			onToggled: labeledSwitch.toggled(checked)
-			indicator: Rectangle {
-				implicitWidth: 42
-				implicitHeight: 24
-				radius: 12
-				color: themedSwitch.checked ? "#5bb2f7ef" : "#18000000"
-				border.width: 1
-				border.color: themedSwitch.checked ? "#80eff7f6" : "#30ffffff"
-
-				Rectangle {
-					x: 3 + themedSwitch.visualPosition * (parent.width - width - 6)
-					y: 3
-					width: 18
-					height: 18
-					radius: 9
-					color: "#eff7f6"
-				}
+			Switch {
+				id: themedSwitch
+				Layout.alignment: Qt.AlignVCenter
+				checked: labeledSwitch.checked
+				onToggled: labeledSwitch.toggled(checked)
 			}
-			contentItem: Item {}
 		}
-	}
 
 	Rectangle {
 		anchors.fill: parent
@@ -508,30 +411,40 @@ Item {
 				}
 			}
 
-			Flickable {
-				id: controlsFlickable
+			Rectangle {
 				Layout.preferredWidth: 460
 				Layout.fillHeight: true
-				clip: true
-				contentWidth: width
-				contentHeight: controlsColumn.implicitHeight
-				boundsBehavior: Flickable.StopAtBounds
+				radius: Config._.style.glass.radius
+				color: "#0f000000"
+				border.width: 1
+				border.color: "#20ffffff"
+				z: 10
 
-				ColumnLayout {
-					id: controlsColumn
-					width: controlsFlickable.width
-					spacing: 14
+				Flickable {
+					id: controlsFlickable
+					anchors.fill: parent
+					anchors.margins: 8
+					clip: true
+					contentWidth: width
+					contentHeight: controlsColumn.implicitHeight
+					boundsBehavior: Flickable.StopAtBounds
+					acceptedButtons: Qt.NoButton
 
-					SectionCard {
-						title: "render path"
+					ColumnLayout {
+						id: controlsColumn
+						width: controlsFlickable.width
+						spacing: 14
 
-						LabeledCombo {
-							Layout.fillWidth: true
-							label: "mode"
-							model: root.modeNames
-							currentIndex: root.renderMode
-							onIndexEdited: function(index) { root.renderMode = index }
-						}
+						SectionCard {
+							title: "render path"
+
+							LabeledCombo {
+								Layout.fillWidth: true
+								label: "mode"
+								model: root.modeNames
+								currentIndex: root.renderMode
+								onIndexEdited: function(index) { root.renderMode = index }
+							}
 
 						LabeledCombo {
 							Layout.fillWidth: true
@@ -576,210 +489,226 @@ Item {
 						}
 					}
 
-					SectionCard {
-						title: "geometry"
+						SectionCard {
+							title: "geometry"
 
-						GridLayout {
-							Layout.fillWidth: true
-							columns: 2
-							columnSpacing: 10
-							rowSpacing: 8
-
-							LabeledSlider {
+							GridLayout {
 								Layout.fillWidth: true
-								label: "frequency"
-								from: 1
-								to: 20
-								stepSize: 1
-								decimals: 0
-								value: root.frequency
-								onValueEdited: function(value) { root.frequency = Math.round(value) }
-							}
+								columns: 2
+								columnSpacing: 10
+								rowSpacing: 8
 
-							LabeledSlider {
-								Layout.fillWidth: true
-								label: "radius"
-								from: 8
-								to: 40
-								stepSize: 0.5
-								decimals: 1
-								value: root.radius
-								onValueEdited: function(value) { root.radius = value }
-							}
+								LabeledSlider {
+									id: frequencySlider
+									Layout.fillWidth: true
+									label: "frequency"
+									from: 1
+									to: 64
+									stepSize: 1
+									decimals: 0
+									value: root.frequency
+									onValueEdited: function(value) { root.frequency = Math.round(value) }
+								}
 
-							LabeledSlider {
-								Layout.fillWidth: true
-								label: "base height"
-								from: 0
-								to: 2
-								stepSize: 0.05
-								decimals: 2
-								value: root.baseHeight
-								onValueEdited: function(value) { root.baseHeight = value }
-							}
+								LabeledSlider {
+									id: radiusSlider
+									Layout.fillWidth: true
+									label: "radius"
+									from: 8
+									to: 40
+									stepSize: 0.5
+									decimals: 1
+									value: root.radius
+									onValueEdited: function(value) { root.radius = value }
+								}
 
-							LabeledSlider {
-								Layout.fillWidth: true
-								label: "height scale"
-								from: 0
-								to: 18
-								stepSize: 0.25
-								decimals: 2
-								value: root.heightScale
-								onValueEdited: function(value) { root.heightScale = value }
-							}
-						}
-					}
+								LabeledSlider {
+									id: baseHeightSlider
+									Layout.fillWidth: true
+									label: "base height"
+									from: 0
+									to: 2
+									stepSize: 0.05
+									decimals: 2
+									value: root.baseHeight
+									onValueEdited: function(value) { root.baseHeight = value }
+								}
 
-					SectionCard {
-						title: "height shader"
-
-						GridLayout {
-							Layout.fillWidth: true
-							columns: 2
-							columnSpacing: 10
-							rowSpacing: 8
-
-							LabeledSlider {
-								Layout.fillWidth: true
-								label: "amplitude"
-								from: 0
-								to: 2
-								stepSize: 0.05
-								value: root.amplitude
-								onValueEdited: function(value) { root.amplitude = value }
-							}
-
-							LabeledSlider {
-								Layout.fillWidth: true
-								label: "speed"
-								from: 0
-								to: 4
-								stepSize: 0.05
-								value: root.speed
-								onValueEdited: function(value) { root.speed = value }
-							}
-
-							LabeledSlider {
-								Layout.fillWidth: true
-								label: "freq a"
-								from: 0
-								to: 14
-								stepSize: 0.1
-								value: root.frequencyA
-								onValueEdited: function(value) { root.frequencyA = value }
-							}
-
-							LabeledSlider {
-								Layout.fillWidth: true
-								label: "freq b"
-								from: 0
-								to: 14
-								stepSize: 0.1
-								value: root.frequencyB
-								onValueEdited: function(value) { root.frequencyB = value }
-							}
-
-							LabeledSlider {
-								Layout.fillWidth: true
-								label: "twist"
-								from: 0
-								to: 8
-								stepSize: 0.05
-								value: root.twist
-								onValueEdited: function(value) { root.twist = value }
-							}
-
-							LabeledSlider {
-								Layout.fillWidth: true
-								label: "bias"
-								from: -1
-								to: 1
-								stepSize: 0.05
-								value: root.bias
-								onValueEdited: function(value) { root.bias = value }
+								LabeledSlider {
+									id: heightScaleSlider
+									Layout.fillWidth: true
+									label: "height scale"
+									from: 0
+									to: 18
+									stepSize: 0.25
+									decimals: 2
+									value: root.heightScale
+									onValueEdited: function(value) { root.heightScale = value }
+								}
 							}
 						}
-					}
 
-					SectionCard {
-						title: "surface / color"
+						SectionCard {
+							title: "height shader"
 
-						GridLayout {
-							Layout.fillWidth: true
-							columns: 2
-							columnSpacing: 10
-							rowSpacing: 8
-
-							LabeledSlider {
+							GridLayout {
 								Layout.fillWidth: true
-								label: "banding"
-								from: 1
-								to: 18
-								stepSize: 0.25
-								value: root.banding
-								onValueEdited: function(value) { root.banding = value }
-							}
+								columns: 2
+								columnSpacing: 10
+								rowSpacing: 8
 
-							LabeledSlider {
-								Layout.fillWidth: true
-								label: "color mix"
-								from: 0
-								to: 1
-								stepSize: 0.02
-								value: root.colorMix
-								onValueEdited: function(value) { root.colorMix = value }
-							}
+								LabeledSlider {
+									id: amplitudeSlider
+									Layout.fillWidth: true
+									label: "amplitude"
+									from: 0
+									to: 2
+									stepSize: 0.05
+									value: root.amplitude
+									onValueEdited: function(value) { root.amplitude = value }
+								}
 
-							LabeledSlider {
-								Layout.fillWidth: true
-								label: "roughness"
-								from: 0
-								to: 1
-								stepSize: 0.02
-								value: root.roughness
-								onValueEdited: function(value) { root.roughness = value }
-							}
+								LabeledSlider {
+									id: speedSlider
+									Layout.fillWidth: true
+									label: "speed"
+									from: 0
+									to: 4
+									stepSize: 0.05
+									value: root.speed
+									onValueEdited: function(value) { root.speed = value }
+								}
 
-							LabeledSlider {
-								Layout.fillWidth: true
-								label: "specular"
-								from: 0
-								to: 1
-								stepSize: 0.02
-								value: root.specularAmount
-								onValueEdited: function(value) { root.specularAmount = value }
-							}
+								LabeledSlider {
+									id: frequencyASlider
+									Layout.fillWidth: true
+									label: "freq a"
+									from: 0
+									to: 14
+									stepSize: 0.1
+									value: root.frequencyA
+									onValueEdited: function(value) { root.frequencyA = value }
+								}
 
-							LabeledSlider {
-								Layout.fillWidth: true
-								label: "glow"
-								from: 0
-								to: 1
-								stepSize: 0.02
-								value: root.glow
-								onValueEdited: function(value) { root.glow = value }
+								LabeledSlider {
+									id: frequencyBSlider
+									Layout.fillWidth: true
+									label: "freq b"
+									from: 0
+									to: 14
+									stepSize: 0.1
+									value: root.frequencyB
+									onValueEdited: function(value) { root.frequencyB = value }
+								}
+
+								LabeledSlider {
+									id: twistSlider
+									Layout.fillWidth: true
+									label: "twist"
+									from: 0
+									to: 8
+									stepSize: 0.05
+									value: root.twist
+									onValueEdited: function(value) { root.twist = value }
+								}
+
+								LabeledSlider {
+									id: biasSlider
+									Layout.fillWidth: true
+									label: "bias"
+									from: -1
+									to: 1
+									stepSize: 0.05
+									value: root.bias
+									onValueEdited: function(value) { root.bias = value }
+								}
 							}
 						}
-					}
 
-					SectionCard {
-						title: "perf notes"
+						SectionCard {
+							title: "surface / color"
 
-						Text {
-							Layout.fillWidth: true
-							wrapMode: Text.WordWrap
-							color: "#d8eef6"
-							text: root.renderMode === 1
-								? `cpu mode uploads an R8 texture each frame: ~${root.metricText(root.uploadKiBPerFrame, 1)} KiB/frame, ~${root.metricText(root.uploadMiBPerSecond, 2)} MiB/s at 60 fps.`
-								: "shader mode keeps the mesh static and generates heights/colors entirely in the material; CPU work should mostly be scene bookkeeping."
+							GridLayout {
+								Layout.fillWidth: true
+								columns: 2
+								columnSpacing: 10
+								rowSpacing: 8
+
+								LabeledSlider {
+									id: bandingSlider
+									Layout.fillWidth: true
+									label: "banding"
+									from: 1
+									to: 18
+									stepSize: 0.25
+									value: root.banding
+									onValueEdited: function(value) { root.banding = value }
+								}
+
+								LabeledSlider {
+									id: colorMixSlider
+									Layout.fillWidth: true
+									label: "color mix"
+									from: 0
+									to: 1
+									stepSize: 0.02
+									value: root.colorMix
+									onValueEdited: function(value) { root.colorMix = value }
+								}
+
+								LabeledSlider {
+									id: roughnessSlider
+									Layout.fillWidth: true
+									label: "roughness"
+									from: 0
+									to: 1
+									stepSize: 0.02
+									value: root.roughness
+									onValueEdited: function(value) { root.roughness = value }
+								}
+
+								LabeledSlider {
+									id: specularSlider
+									Layout.fillWidth: true
+									label: "specular"
+									from: 0
+									to: 1
+									stepSize: 0.02
+									value: root.specularAmount
+									onValueEdited: function(value) { root.specularAmount = value }
+								}
+
+								LabeledSlider {
+									id: glowSlider
+									Layout.fillWidth: true
+									label: "glow"
+									from: 0
+									to: 1
+									stepSize: 0.02
+									value: root.glow
+									onValueEdited: function(value) { root.glow = value }
+								}
+							}
 						}
 
-						Text {
-							Layout.fillWidth: true
-							wrapMode: Text.WordWrap
-							color: "#d8eef6"
-							text: `process metrics target pid ${root.shellPid || "?"} and report quickshell CPU as a percentage of one logical core plus resident memory from /proc.`
+						SectionCard {
+							title: "perf notes"
+
+							Text {
+								Layout.fillWidth: true
+								wrapMode: Text.WordWrap
+								color: "#d8eef6"
+								text: root.renderMode === 1
+									? `cpu mode uploads an R8 texture each frame: ~${root.metricText(root.uploadKiBPerFrame, 1)} KiB/frame, ~${root.metricText(root.uploadMiBPerSecond, 2)} MiB/s at 60 fps.`
+									: "shader mode keeps the mesh static and generates heights/colors entirely in the material; CPU work should mostly be scene bookkeeping."
+							}
+
+							Text {
+								Layout.fillWidth: true
+								wrapMode: Text.WordWrap
+								color: "#d8eef6"
+								text: `process metrics target pid ${root.shellPid || "?"} and report quickshell CPU as a percentage of one logical core plus resident memory from /proc.`
+							}
 						}
 					}
 				}

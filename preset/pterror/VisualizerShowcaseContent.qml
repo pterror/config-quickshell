@@ -392,8 +392,8 @@ Item {
 		}
 	}
 	Component {
-		id: compGlobeTab
-		GlobeLabTab {}
+		id: compGeodesicSpherePreviewTab
+		GeodesicSpherePreviewTab {}
 	}
 
 	// --- background --------------------------------------------------------
@@ -425,7 +425,7 @@ Item {
 			Layout.fillHeight: true
 			tabs: [
 				{ label: "visualizers", component: compVisualizersTab },
-				{ label: "geodesic sphere preview", component: compGlobeTab },
+				{ label: "geodesic sphere preview", component: compGeodesicSpherePreviewTab },
 			]
 		}
 	}
