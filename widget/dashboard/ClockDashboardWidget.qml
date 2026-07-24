@@ -7,15 +7,15 @@ import qs
 // dropped into this directory is picked up automatically. `widgetId`/`index` are assigned
 // by the overlay after load — don't set them here.
 DashboardWidget {
-	title: "Clock"
-	implicitWidth: 220
-	implicitHeight: 120
+	contentMargins: 4
+	implicitWidth: 188
+	implicitHeight: 72
 
 	Text {
 		anchors.centerIn: parent
 		color: Config._.style.panel.fg
 		font.family: Config._.font.family
-		font.pointSize: 28
+		font.pointSize: 22
 		text: Config.formatTime(Time.time, Locale.ShortFormat)
 	}
 }

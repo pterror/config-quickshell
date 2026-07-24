@@ -1,6 +1,6 @@
 pragma Singleton
 
-import QtQuick
+import Quickshell
 
 // TODO: unit conversion ("10 km in mi")
 Singleton {

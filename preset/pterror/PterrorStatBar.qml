@@ -2,6 +2,7 @@ import QtQuick
 import QtQuick.Layouts
 import Quickshell
 import Quickshell.Wayland
+import "../../library/Widgets.mjs" as Widgets
 import qs.io
 import qs.component
 import qs.widget
@@ -114,6 +115,28 @@ PanelWindow {
 							}
 						}
 					}
+				}
+			}
+
+			HoverItem {
+				active: Config._.widgets.visible
+				onClicked: Widgets.toggleOverlay(Config)
+
+				Text {
+					text: "widgets"
+				}
+			}
+
+			HoverItem {
+				onClicked: Widgets.openWidget(Config, "WidgetPaletteWidget", {
+					editMode: false,
+					reuseExisting: true,
+					x: Math.max(16, root.width - 380 - 24),
+					y: root.height + 16,
+				})
+
+				Text {
+					text: "+"
 				}
 			}
 

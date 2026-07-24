@@ -1,5 +1,6 @@
 pragma Singleton
 
+import Quickshell
 import Quickshell.Services.SystemTray
 import "root:/library/Strings.mjs" as Strings
 import "root:/library/Applications.mjs" as Applications

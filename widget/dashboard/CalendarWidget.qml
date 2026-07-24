@@ -8,7 +8,6 @@ import qs
 // viewed month) is highlighted whenever it falls within the visible grid.
 DashboardWidget {
 	id: root
-	title: "Calendar"
 	implicitWidth: 260
 	implicitHeight: 260
 

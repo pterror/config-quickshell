@@ -1,30 +1,35 @@
 import QtQuick
 import QtQuick.Effects
-import QtQuick.Layouts as QL
+import QtQuick.Layouts
 import qs
 
 // Base card for a widget hosted in `window/WidgetOverlay.qml`; `widget/dashboard/*.qml`
 // widgets extend this and fill the default slot.
 //
-// `widgetId` and `index` default to placeholders and are assigned by the overlay's
+// `instanceId`/`widgetType` and `index` default to placeholders and are assigned by the overlay's
 // Loader after instantiation — dynamically-discovered `.qml` files can't receive
 // required properties through `Loader.source`.
 Rectangle {
 	id: root
 
-	property string widgetId: ""
-	property string title: ""
+	property string instanceId: ""
+	property string widgetType: ""
 	property bool resizable: false
+	property bool draggable: false
+	property bool closable: false
+	property int contentMargins: Config._.style.panel.margins
 	// fallback grid slot used only until the widget has a persisted/dragged position
 	property int index: 0
 
-	default property alias content: contentArea.children
+	default property alias content: contentArea.data
 
-	readonly property var _savedGeometry: Config._.widgets.positions[widgetId]
+	readonly property var _instance: Config.widgetInstance(instanceId) ?? ({})
+	readonly property var _savedGeometry: _instance
 	readonly property int _gridColumns: 4
 	readonly property int _gridSpacing: 16
-
-	visible: Config._.widgets.enabled[widgetId] !== false
+	readonly property bool editing: Config._.widgets.editMode
+	readonly property bool canDrag: root.editing || root.draggable
+	readonly property bool canClose: root.editing || root.closable
 
 	// Frosted-glass widget card: translucent tint + hairline border + soft drop
 	// shadow (the desktop canvas behind it gives plenty of headroom).
@@ -52,88 +57,82 @@ Rectangle {
 	y: _savedGeometry?.y ?? _gridSpacing + Math.floor(index / _gridColumns) * (implicitHeight + _gridSpacing)
 
 	function savePosition() {
-		const positions = Object.assign({}, Config._.widgets.positions)
-		positions[widgetId] = { x: root.x, y: root.y, width: root.width, height: root.height }
-		Config._.widgets.positions = positions
-		Config.writeConfig()
+		Config.updateWidgetInstance(instanceId, { x: root.x, y: root.y, width: root.width, height: root.height })
 	}
 
 	function hide() {
-		const enabled = Object.assign({}, Config._.widgets.enabled)
-		enabled[widgetId] = false
-		Config._.widgets.enabled = enabled
-		Config.writeConfig()
+		Config.removeWidgetInstance(instanceId)
 	}
 
-	function show() {
-		const enabled = Object.assign({}, Config._.widgets.enabled)
-		enabled[widgetId] = true
-		Config._.widgets.enabled = enabled
-		Config.writeConfig()
-	}
-
-	ColumnLayout {
-		id: layout
+	Item {
+		id: contentArea
 		anchors.fill: parent
-		anchors.margins: Config._.style.panel.margins
-		spacing: Config._.style.widget.margins
+		anchors.margins: root.contentMargins
+		clip: true
+	}
 
-		RowLayout {
-			id: header
-			Layout.fillWidth: true
-			visible: root.title !== ""
+	Timer {
+		id: geometrySaveDebounce
+		interval: 120
+		repeat: false
+		onTriggered: root.savePosition()
+	}
 
-			Text {
-				Layout.fillWidth: true
-				text: root.title
-				color: Config._.style.panel.fg
-				font.family: Config._.font.family
-				font.pointSize: Config._.style.widget.fontSize
-				font.bold: true
-				elide: Text.ElideRight
-			}
+	MouseArea {
+		id: dragMouseArea
+		enabled: root.canDrag
+		anchors.fill: parent
+		z: -1
+		hoverEnabled: true
+		property real startX: 0
+		property real startY: 0
+		cursorShape: pressed ? Qt.ClosedHandCursor : (containsMouse ? Qt.OpenHandCursor : Qt.ArrowCursor)
+		onPressed: event => {
+			startX = event.x
+			startY = event.y
+		}
+		onReleased: root.savePosition()
+		onPositionChanged: event => {
+			if (!pressed)
+				return
+			root.x += event.x - startX
+			root.y += event.y - startY
+			geometrySaveDebounce.restart()
+		}
+	}
 
-			Text {
-				text: "×"
-				color: closeMouseArea.containsMouse ? Config._.style.panel.accent : Config._.style.panel.fg
-				font.pointSize: Config._.style.widget.fontSize + 2
+	Rectangle {
+		visible: root.canClose
+		implicitWidth: closeLabel.implicitWidth + 10
+		implicitHeight: closeLabel.implicitHeight + 4
+		radius: width / 2
+		anchors.right: parent.right
+		anchors.top: parent.top
+		anchors.margins: 6
+		color: closeMouseArea.containsMouse ? Config._.style.barItem.hoverBg : "transparent"
 
-				MouseArea {
-					id: closeMouseArea
-					anchors.fill: parent
-					anchors.margins: -4
-					hoverEnabled: true
-					cursorShape: Qt.PointingHandCursor
-					onClicked: root.hide()
-				}
-			}
-
-			MouseArea {
-				id: dragMouseArea
-				anchors.fill: parent
-				z: -1 // let the close button take priority
-				property real startX: 0
-				property real startY: 0
-				cursorShape: Qt.OpenHandCursor
-				onPressed: event => { startX = event.x; startY = event.y; cursorShape = Qt.ClosedHandCursor }
-				onReleased: { cursorShape = Qt.OpenHandCursor; root.savePosition() }
-				onPositionChanged: event => {
-					root.x += event.x - startX
-					root.y += event.y - startY
-				}
-			}
+		Text {
+			id: closeLabel
+			anchors.centerIn: parent
+			text: "×"
+			color: Config._.style.panel.fg
+			font.bold: true
+			font.pointSize: Config._.style.widget.fontSize + 1
 		}
 
-		Item {
-			id: contentArea
-			Layout.fillWidth: true
-			Layout.fillHeight: true
+		MouseArea {
+			id: closeMouseArea
+			enabled: root.canClose
+			anchors.fill: parent
+			hoverEnabled: true
+			cursorShape: Qt.PointingHandCursor
+			onClicked: root.hide()
 		}
 	}
 
 	Rectangle {
 		id: resizeHandle
-		visible: root.resizable
+		visible: root.resizable && root.editing
 		width: 12; height: 12
 		anchors.right: parent.right
 		anchors.bottom: parent.bottom
@@ -143,16 +142,18 @@ Rectangle {
 
 		MouseArea {
 			id: resizeMouseArea
+			enabled: root.editing
 			anchors.fill: parent
 			anchors.margins: -4
 			hoverEnabled: true
-			cursorShape: Qt.SizeFDiagCursor
+			cursorShape: root.editing ? Qt.SizeFDiagCursor : Qt.ArrowCursor
 			property real startX: 0
 			property real startY: 0
 			onPressed: event => { startX = event.x; startY = event.y }
 			onPositionChanged: event => {
 				root.width = Math.max(120, root.width + (event.x - startX))
 				root.height = Math.max(80, root.height + (event.y - startY))
+				geometrySaveDebounce.restart()
 			}
 			onReleased: root.savePosition()
 		}

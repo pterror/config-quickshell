@@ -8,7 +8,6 @@ import qs
 // Sticky notes. Each note is free-form text, persisted as a list to notes.json.
 DashboardWidget {
 	id: root
-	title: "Notes"
 	resizable: true
 	implicitWidth: 260
 	implicitHeight: 260

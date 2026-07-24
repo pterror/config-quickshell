@@ -7,9 +7,9 @@ import qs
 // reaches zero.
 DashboardWidget {
 	id: root
-	title: "Timer"
-	implicitWidth: 240
-	implicitHeight: 180
+	contentMargins: 4
+	implicitWidth: 192
+	implicitHeight: root.running || root.remainingMs > 0 ? 64 : 88
 
 	property int inputHours: 0
 	property int inputMinutes: 5
@@ -78,8 +78,11 @@ DashboardWidget {
 	}
 
 	ColumnLayout {
-		anchors.fill: parent
-		spacing: Config._.style.widget.margins
+		width: parent.width
+		anchors.top: parent.top
+		anchors.left: parent.left
+		anchors.right: parent.right
+		spacing: 2
 
 		Text {
 			id: display
@@ -87,102 +90,54 @@ DashboardWidget {
 			text: root.formatMs(root.remainingMs)
 			color: Config._.style.panel.fg
 			font.family: Config._.font.family
-			font.pointSize: 26
+			font.pointSize: 19
 			font.bold: true
 		}
 
 		RowLayout {
 			Layout.alignment: Qt.AlignHCenter
 			visible: !root.running && root.remainingMs <= 0
-			spacing: 2
+			spacing: 1
 
 			TimerNumberField {
 				value: root.inputHours
 				max: 99
+				implicitWidth: 28
+				implicitHeight: 20
 				onValueEdited: v => root.inputHours = v
 			}
-			Text { text: ":"; color: Config._.style.panel.fg; font.pointSize: Config._.style.widget.fontSize + 4 }
+			Text { text: ":"; color: Config._.style.panel.fg; font.pointSize: Config._.style.widget.fontSize + 2 }
 			TimerNumberField {
 				value: root.inputMinutes
 				max: 59
+				implicitWidth: 28
+				implicitHeight: 20
 				onValueEdited: v => root.inputMinutes = v
 			}
-			Text { text: ":"; color: Config._.style.panel.fg; font.pointSize: Config._.style.widget.fontSize + 4 }
+			Text { text: ":"; color: Config._.style.panel.fg; font.pointSize: Config._.style.widget.fontSize + 2 }
 			TimerNumberField {
 				value: root.inputSeconds
 				max: 59
+				implicitWidth: 28
+				implicitHeight: 20
 				onValueEdited: v => root.inputSeconds = v
 			}
 		}
 
 		RowLayout {
 			Layout.alignment: Qt.AlignHCenter
-			spacing: Config._.style.widget.margins
+			spacing: 3
 
 			TimerButton {
 				text: root.running ? "Pause" : "Start"
+				implicitHeight: 24
 				onClicked: root.running ? root.pause() : root.start()
 			}
 			TimerButton {
 				text: "Reset"
+				implicitHeight: 24
 				onClicked: root.reset()
 			}
 		}
-	}
-}
-
-component TimerNumberField: Rectangle {
-	id: field
-	property int value: 0
-	property int max: 99
-	signal valueEdited(int v)
-
-	implicitWidth: 32
-	implicitHeight: 24
-	radius: Config._.style.widget.radius
-	color: Config._.style.widget.bg
-	border.color: Config._.style.widget.outline
-	border.width: Config._.style.widget.border
-
-	TextInput {
-		anchors.fill: parent
-		horizontalAlignment: Text.AlignHCenter
-		verticalAlignment: Text.AlignVCenter
-		color: Config._.style.widget.fg
-		font.family: Config._.font.family
-		font.pointSize: Config._.style.widget.fontSize
-		text: String(field.value).padStart(2, "0")
-		validator: IntValidator { bottom: 0; top: field.max }
-		selectByMouse: true
-		onEditingFinished: field.valueEdited(Math.min(field.max, Math.max(0, Number(text) || 0)))
-	}
-}
-
-component TimerButton: Rectangle {
-	id: button
-	property alias text: label.text
-	signal clicked()
-
-	implicitWidth: label.implicitWidth + Config._.style.button.margins * 4
-	implicitHeight: label.implicitHeight + Config._.style.button.margins * 2
-	radius: Config._.style.button.radius
-	color: buttonArea.containsMouse ? Config._.style.button.hoverBg : Config._.style.button.bg
-	border.color: Config._.style.button.outline
-	border.width: Config._.style.button.border
-
-	Text {
-		id: label
-		anchors.centerIn: parent
-		color: Config._.style.button.fg
-		font.family: Config._.font.family
-		font.pointSize: Config._.style.widget.fontSize
-	}
-
-	MouseArea {
-		id: buttonArea
-		anchors.fill: parent
-		hoverEnabled: true
-		cursorShape: Qt.PointingHandCursor
-		onClicked: button.clicked()
 	}
 }

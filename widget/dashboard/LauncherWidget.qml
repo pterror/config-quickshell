@@ -10,7 +10,6 @@ import qs
 // inline calculator provider all show up in one ranked list. Click a result to run it.
 DashboardWidget {
 	id: root
-	title: "Launcher"
 	resizable: true
 	implicitWidth: 280
 	implicitHeight: 320

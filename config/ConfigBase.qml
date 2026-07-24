@@ -5,18 +5,201 @@ import Quickshell
 import Quickshell.Io
 import Quickshell.Services.Mpris
 import Quickshell.Services.Pipewire
+import "../widget/dashboard"
 import qs.io
 
 Singleton {
+	id: config
 	property JsonAdapter _: root
 
 	property real _MIN_MS: 60000
 	property real _HOUR_MS: 3600000
 	property real _DAY_MS: 86400000
+	property int _WIDGET_GRID_COLUMNS: 4
+	property int _WIDGET_GRID_SPACING: 16
 
 	function writeConfig() {
 		file.writeAdapter()
 	}
+
+	function _widgetInstancesArray() {
+		const instances = root.widgets.instances
+		if (instances === undefined || instances === null)
+			return []
+		if (Array.isArray(instances))
+			return instances.slice()
+
+		const length = Number(instances.length)
+		if (Number.isInteger(length) && length >= 0) {
+			const next = []
+			for (let i = 0; i < length; ++i)
+				next.push(instances[i])
+			return next
+		}
+
+		try {
+			const roundTripped = JSON.parse(JSON.stringify(instances))
+			return Array.isArray(roundTripped) ? roundTripped : []
+		} catch (e) {
+			return []
+		}
+	}
+
+	function widgetInstance(instanceId) {
+		return _widgetInstancesArray().find(instance => instance.id === instanceId) ?? null
+	}
+
+	function widgetTypeCount(widgetType) {
+		return _widgetInstancesArray().filter(instance => instance.type === widgetType).length
+	}
+
+	function widgetDefaultGeometry(widgetType) {
+		const definition = widgetDefinition(widgetType) ?? {}
+		return {
+			width: definition.defaultWidth ?? 240,
+			height: definition.defaultHeight ?? 180,
+		}
+	}
+
+	function widgetGeometry(instance, index = -1, instances = null) {
+		const list = instances ?? _widgetInstancesArray()
+		const resolvedIndex = index >= 0 ? index : Math.max(0, list.findIndex(candidate => candidate.id === instance.id))
+		const fallback = widgetDefaultGeometry(instance.type)
+		const width = instance.width ?? fallback.width
+		const height = instance.height ?? fallback.height
+		return {
+			x: instance.x ?? _WIDGET_GRID_SPACING + (resolvedIndex % _WIDGET_GRID_COLUMNS) * (width + _WIDGET_GRID_SPACING),
+			y: instance.y ?? _WIDGET_GRID_SPACING + Math.floor(resolvedIndex / _WIDGET_GRID_COLUMNS) * (height + _WIDGET_GRID_SPACING),
+			width,
+			height,
+		}
+	}
+
+	function addWidgetInstance(widgetType, initialState = {}) {
+		const next = _widgetInstancesArray()
+		const instance = Object.assign({
+			id: `${widgetType}:${Date.now()}:${next.length}`,
+			type: widgetType,
+		}, initialState)
+		next.push(instance)
+		root.widgets.instances = next
+		root.widgets.visible = true
+		writeConfig()
+		return instance.id
+	}
+
+	function updateWidgetInstance(instanceId, patch) {
+		const next = _widgetInstancesArray()
+		const index = next.findIndex(instance => instance.id === instanceId)
+		if (index === -1) return
+		next[index] = Object.assign({}, next[index], patch)
+		root.widgets.instances = next
+		writeConfig()
+	}
+
+	function removeWidgetInstance(instanceId) {
+		const next = _widgetInstancesArray().filter(instance => instance.id !== instanceId)
+		root.widgets.instances = next
+		writeConfig()
+	}
+
+	function removeLastWidgetInstanceOfType(widgetType) {
+		const next = _widgetInstancesArray()
+		for (let i = next.length - 1; i >= 0; --i) {
+			if (next[i].type !== widgetType) continue
+			next.splice(i, 1)
+			root.widgets.instances = next
+			writeConfig()
+			return
+		}
+	}
+
+	function removeAllWidgetInstancesOfType(widgetType) {
+		const next = _widgetInstancesArray().filter(instance => instance.type !== widgetType)
+		root.widgets.instances = next
+		writeConfig()
+	}
+
+	function resetWidgetLayout() {
+		const next = _widgetInstancesArray().map(instance => ({
+			id: instance.id,
+			type: instance.type,
+		}))
+		root.widgets.instances = next
+		writeConfig()
+	}
+
+	function widgetDefinition(widgetType) {
+		return config.widgetRegistry[widgetType] ?? null
+	}
+
+	readonly property var widgetRegistry: ({
+		WidgetPaletteWidget: {
+			label: "Widget Manager",
+			component: widgetPaletteWidgetComponent,
+			internal: true,
+			defaultWidth: 380,
+			defaultHeight: 320,
+		},
+		ClockDashboardWidget: {
+			label: "Clock",
+			component: clockDashboardWidgetComponent,
+			defaultWidth: 220,
+			defaultHeight: 120,
+		},
+		CalendarWidget: {
+			label: "Calendar",
+			component: calendarWidgetComponent,
+			defaultWidth: 260,
+			defaultHeight: 260,
+		},
+		EventsWidget: {
+			label: "Events",
+			component: eventsWidgetComponent,
+			defaultWidth: 280,
+			defaultHeight: 280,
+		},
+		NotesWidget: {
+			label: "Notes",
+			component: notesWidgetComponent,
+			defaultWidth: 260,
+			defaultHeight: 260,
+		},
+		LauncherWidget: {
+			label: "Launcher",
+			component: launcherWidgetComponent,
+			defaultWidth: 280,
+			defaultHeight: 320,
+		},
+		CalculatorWidget: {
+			label: "Calculator",
+			component: calculatorWidgetComponent,
+			defaultWidth: 260,
+			defaultHeight: 360,
+		},
+		StopwatchWidget: {
+			label: "Stopwatch",
+			component: stopwatchWidgetComponent,
+			defaultWidth: 240,
+			defaultHeight: 220,
+		},
+		TimerWidget: {
+			label: "Timer",
+			component: timerWidgetComponent,
+			defaultWidth: 240,
+			defaultHeight: 180,
+		},
+	})
+
+	Component { id: clockDashboardWidgetComponent; ClockDashboardWidget {} }
+	Component { id: widgetPaletteWidgetComponent; WidgetPaletteWidget {} }
+	Component { id: calendarWidgetComponent; CalendarWidget {} }
+	Component { id: eventsWidgetComponent; EventsWidget {} }
+	Component { id: notesWidgetComponent; NotesWidget {} }
+	Component { id: launcherWidgetComponent; LauncherWidget {} }
+	Component { id: calculatorWidgetComponent; CalculatorWidget {} }
+	Component { id: stopwatchWidgetComponent; StopwatchWidget {} }
+	Component { id: timerWidgetComponent; TimerWidget {} }
 
 	property QtObject screens: QtObject {
 		property ShellScreen primary: getScreen(root.screens.primary) ?? Quickshell.screens[0]
@@ -31,18 +214,6 @@ Singleton {
 	}
 
 	property font font: Qt.font({ family: root.font.family })
-
-		Variants {
-			model: Mpris.players.values
-			Connections {
-				property MprisPlayer modelData
-				target: modelData
-				function onTrackChanged() {
-					if (modelData)
-						root.mpris.currentPlayer = modelData
-				}
-			}
-		}
 
 	Item {
 		ToolTip.toolTip.contentItem: Text {
@@ -227,8 +398,8 @@ Singleton {
 			property JsonObject widgets: JsonObject {
 				property string mode: "overlay" // "overlay" or "background"
 				property bool visible: false
-				property var enabled: ({}) // { [widgetId]: bool }, absent === enabled
-				property var positions: ({}) // { [widgetId]: { x: real, y: real } }
+				property bool editMode: false
+				property var instances: []
 			}
 
 			property JsonObject crankableImage: JsonObject {

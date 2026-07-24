@@ -10,7 +10,6 @@ import qs
 // soonest-first; past events are visually dimmed with a one-click "done" to clear them.
 DashboardWidget {
 	id: root
-	title: "Events"
 	resizable: true
 	implicitWidth: 280
 	implicitHeight: 280

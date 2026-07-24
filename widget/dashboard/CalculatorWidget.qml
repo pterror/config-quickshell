@@ -9,10 +9,9 @@ import qs
 // recent calculations, click one to recall its expression.
 DashboardWidget {
 	id: root
-	title: "Calculator"
 	resizable: true
 	implicitWidth: 260
-	implicitHeight: 360
+	implicitHeight: 332
 
 	property string expression: ""
 	property string resultText: ""
@@ -20,6 +19,13 @@ DashboardWidget {
 	property bool scientific: false
 	property bool sciNotation: false
 	property list<var> history: [] // [{ expr: string, result: real }]
+	readonly property string displayText: {
+		if (root.hasError) return "Error"
+		if (root.resultText.length > 0) return root.resultText
+		if (root.expression.length > 0) return root.expression
+		return "0"
+	}
+	readonly property string expressionPreview: root.hasError ? root.expression : (root.resultText.length > 0 ? root.expression : "")
 
 	readonly property string livePreview: {
 		if (root.expression.trim().length === 0) return ""
@@ -66,7 +72,15 @@ DashboardWidget {
 	}
 
 	function append(token: string) {
-		if (root.hasError) { root.expression = ""; root.hasError = false }
+		if (root.hasError) {
+			root.expression = ""
+			root.resultText = ""
+			root.hasError = false
+		}
+		if (root.resultText.length > 0 && /^[0-9.]$/.test(token)) {
+			root.expression = ""
+			root.resultText = ""
+		}
 		root.expression += token
 	}
 
@@ -100,13 +114,22 @@ DashboardWidget {
 		root.hasError = false
 	}
 
+	function buttonText(entry: var): string {
+		switch (entry.label) {
+		case "/": return "÷"
+		case "*": return "×"
+		case "-": return "−"
+		default: return entry.label
+		}
+	}
+
 	ColumnLayout {
 		anchors.fill: parent
 		spacing: Config._.style.widget.margins
 
 		Rectangle {
 			Layout.fillWidth: true
-			implicitHeight: 56
+			implicitHeight: 78
 			radius: Config._.style.widget.radius
 			color: Config._.style.widget.bg
 			border.color: Config._.style.widget.outline
@@ -114,29 +137,30 @@ DashboardWidget {
 
 			ColumnLayout {
 				anchors.fill: parent
-				anchors.margins: 6
-				spacing: 0
+				anchors.margins: 8
+				spacing: 2
 
 				Text {
 					Layout.fillWidth: true
 					horizontalAlignment: Text.AlignRight
-					color: Config._.style.panel.accent
+					color: Config._.style.widget.outline
 					font.family: Config._.font.family
 					font.pointSize: Config._.style.widget.fontSize - 1
-					text: root.hasError ? "" : (root.resultText.length > 0 ? root.resultText : root.livePreview)
+					elide: Text.ElideLeft
+					text: root.expressionPreview.length > 0
+						? root.expressionPreview
+						: (!root.hasError ? root.livePreview : "")
 				}
 
-				TextInput {
-					id: exprInput
+				Text {
 					Layout.fillWidth: true
 					horizontalAlignment: Text.AlignRight
 					color: root.hasError ? "#ff8080" : Config._.style.widget.fg
 					font.family: Config._.font.family
-					font.pointSize: Config._.style.widget.fontSize + 4
-					text: root.expression
-					selectByMouse: true
-					onTextEdited: root.expression = text
-					Keys.onReturnPressed: root.evaluate()
+					font.pointSize: Config._.style.widget.fontSize + 8
+					font.bold: true
+					elide: Text.ElideLeft
+					text: root.displayText
 				}
 			}
 		}
@@ -144,13 +168,13 @@ DashboardWidget {
 		RowLayout {
 			Layout.fillWidth: true
 
-			CalcToggle {
-				text: "Sci"
+			CalculatorToggle {
+				text: root.scientific ? "basic" : "scientific"
 				active: root.scientific
 				onClicked: root.scientific = !root.scientific
 			}
-			CalcToggle {
-				text: "Exp"
+			CalculatorToggle {
+				text: "exp"
 				active: root.sciNotation
 				onClicked: root.sciNotation = !root.sciNotation
 			}
@@ -177,11 +201,12 @@ DashboardWidget {
 					{ label: "π", insert: "π" },
 					{ label: "e", insert: "𝑒" },
 				]
-				CalcButton {
+				CalculatorButton {
 					required property var modelData
 					Layout.fillWidth: true
 					Layout.preferredHeight: 28
 					text: modelData.label
+					operatorButton: true
 					onClicked: root.append(modelData.insert)
 				}
 			}
@@ -199,7 +224,7 @@ DashboardWidget {
 					{ label: "C", action: "clear" },
 					{ label: "(", action: "insert", value: "(" },
 					{ label: ")", action: "insert", value: ")" },
-					{ label: "⌫", action: "backspace" },
+					{ label: "DEL", action: "backspace" },
 					{ label: "7", action: "insert", value: "7" },
 					{ label: "8", action: "insert", value: "8" },
 					{ label: "9", action: "insert", value: "9" },
@@ -217,12 +242,13 @@ DashboardWidget {
 					{ label: "=", action: "evaluate" },
 					{ label: "+", action: "insert", value: "+" },
 				]
-				CalcButton {
+				CalculatorButton {
 					required property var modelData
 					Layout.fillWidth: true
 					Layout.fillHeight: true
-					text: modelData.label
+					text: root.buttonText(modelData)
 					emphasize: modelData.action === "evaluate"
+					operatorButton: ["/", "*", "-", "+"].includes(modelData.label)
 					onClicked: {
 						switch (modelData.action) {
 						case "clear": root.clear(); break
@@ -237,7 +263,7 @@ DashboardWidget {
 
 		ListView {
 			Layout.fillWidth: true
-			Layout.preferredHeight: 56
+			Layout.preferredHeight: root.history.length > 0 ? 44 : 0
 			clip: true
 			visible: root.history.length > 0
 			model: root.history
@@ -246,7 +272,7 @@ DashboardWidget {
 				id: historyRow
 				required property var modelData
 				width: ListView.view.width
-				height: 20
+				height: 22
 				color: historyArea.containsMouse ? Config._.style.widget.hoverBg : "transparent"
 
 				RowLayout {
@@ -278,65 +304,5 @@ DashboardWidget {
 				}
 			}
 		}
-	}
-}
-
-component CalcButton: Rectangle {
-	id: button
-	property alias text: label.text
-	property bool emphasize: false
-	signal clicked()
-
-	radius: Config._.style.button.radius
-	color: emphasize
-		? Config._.style.panel.accent
-		: (buttonArea.containsMouse ? Config._.style.button.hoverBg : Config._.style.button.bg)
-	border.color: Config._.style.button.outline
-	border.width: Config._.style.button.border
-
-	Text {
-		id: label
-		anchors.centerIn: parent
-		color: Config._.style.button.fg
-		font.family: Config._.font.family
-		font.pointSize: Config._.style.widget.fontSize
-	}
-
-	MouseArea {
-		id: buttonArea
-		anchors.fill: parent
-		hoverEnabled: true
-		cursorShape: Qt.PointingHandCursor
-		onClicked: button.clicked()
-	}
-}
-
-component CalcToggle: Rectangle {
-	id: toggle
-	property alias text: label.text
-	property bool active: false
-	signal clicked()
-
-	implicitWidth: label.implicitWidth + Config._.style.button.margins * 4
-	implicitHeight: label.implicitHeight + Config._.style.button.margins * 2
-	radius: Config._.style.button.radius
-	color: active ? Config._.style.panel.accent : (toggleArea.containsMouse ? Config._.style.button.hoverBg : Config._.style.button.bg)
-	border.color: Config._.style.button.outline
-	border.width: Config._.style.button.border
-
-	Text {
-		id: label
-		anchors.centerIn: parent
-		color: Config._.style.button.fg
-		font.family: Config._.font.family
-		font.pointSize: Config._.style.widget.fontSize
-	}
-
-	MouseArea {
-		id: toggleArea
-		anchors.fill: parent
-		hoverEnabled: true
-		cursorShape: Qt.PointingHandCursor
-		onClicked: toggle.clicked()
 	}
 }

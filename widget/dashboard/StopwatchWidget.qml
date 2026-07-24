@@ -6,10 +6,13 @@ import qs
 // Stopwatch with millisecond display and lap times.
 DashboardWidget {
 	id: root
-	title: "Stopwatch"
 	resizable: true
+	contentMargins: 4
 	implicitWidth: 240
-	implicitHeight: 220
+	readonly property int visibleLapRows: Math.min(root.laps.length, 4)
+	readonly property int preferredHeight: 92 + (visibleLapRows > 0 ? visibleLapRows * 20 + 4 : 0)
+	property int _lastPreferredHeight: preferredHeight
+	implicitHeight: preferredHeight
 
 	property real startTime: 0
 	property real accumulatedMs: 0
@@ -39,6 +42,14 @@ DashboardWidget {
 		laps = [elapsedMs].concat(laps)
 	}
 
+	onPreferredHeightChanged: {
+		if (root.height <= _lastPreferredHeight + 1 || root.height < preferredHeight) {
+			root.height = preferredHeight
+			root.savePosition()
+		}
+		_lastPreferredHeight = preferredHeight
+	}
+
 	function formatMs(ms: real): string {
 		const total = Math.max(0, ms)
 		const m = Math.floor(total / 60000)
@@ -56,21 +67,25 @@ DashboardWidget {
 	}
 
 	ColumnLayout {
-		anchors.fill: parent
-		spacing: Config._.style.widget.margins
+		id: content
+		width: parent.width
+		anchors.top: parent.top
+		anchors.left: parent.left
+		anchors.right: parent.right
+		spacing: 4
 
 		Text {
 			Layout.alignment: Qt.AlignHCenter
 			text: root.formatMs(root.elapsedMs)
 			color: Config._.style.panel.fg
 			font.family: Config._.font.family
-			font.pointSize: 24
+			font.pointSize: 21
 			font.bold: true
 		}
 
 		RowLayout {
 			Layout.alignment: Qt.AlignHCenter
-			spacing: Config._.style.widget.margins
+			spacing: 4
 
 			StopwatchButton {
 				text: root.running ? "Stop" : "Start"
@@ -90,9 +105,10 @@ DashboardWidget {
 
 		ListView {
 			Layout.fillWidth: true
-			Layout.fillHeight: true
+			Layout.preferredHeight: root.visibleLapRows * 20
 			clip: true
 			model: root.laps
+			visible: root.laps.length > 0
 
 			delegate: RowLayout {
 				id: lapRow
@@ -115,37 +131,5 @@ DashboardWidget {
 				}
 			}
 		}
-	}
-}
-
-component StopwatchButton: Rectangle {
-	id: button
-	property alias text: label.text
-	property bool enabled: true
-	signal clicked()
-
-	implicitWidth: label.implicitWidth + Config._.style.button.margins * 4
-	implicitHeight: label.implicitHeight + Config._.style.button.margins * 2
-	opacity: enabled ? 1 : 0.4
-	radius: Config._.style.button.radius
-	color: buttonArea.containsMouse ? Config._.style.button.hoverBg : Config._.style.button.bg
-	border.color: Config._.style.button.outline
-	border.width: Config._.style.button.border
-
-	Text {
-		id: label
-		anchors.centerIn: parent
-		color: Config._.style.button.fg
-		font.family: Config._.font.family
-		font.pointSize: Config._.style.widget.fontSize
-	}
-
-	MouseArea {
-		id: buttonArea
-		anchors.fill: parent
-		enabled: button.enabled
-		hoverEnabled: true
-		cursorShape: Qt.PointingHandCursor
-		onClicked: button.clicked()
 	}
 }

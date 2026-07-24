@@ -1,5 +1,6 @@
 pragma Singleton
 
+import Quickshell
 import "root:/library/Calculator.mjs" as Calculator
 
 Singleton {
