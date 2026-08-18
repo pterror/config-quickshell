@@ -25,6 +25,12 @@ Singleton {
 	}
 
 	GlobalShortcut {
+		name: "motion:toggle_reduced_motion"
+		description: "toggle reduced motion (disables decorative animations like the CPU visualizer spin)"
+		onPressed: Config._.reducedMotion = !Config._.reducedMotion
+	}
+
+	GlobalShortcut {
 		name: "media:play_pause"
 		description: "toggle the current media track between playing and paused"
 		onPressed: {

@@ -154,7 +154,7 @@ ShellRoot {
 					Region { item: clock; shape: RegionShape.Ellipse }
 					Region { item: amogus }
 					Region { item: fidgetSpinner; shape: RegionShape.Ellipse }
-					Region { item: bouncingMaskedShader }
+					// Region { item: bouncingMaskedShader }
 				}
 				anchors.left: true; anchors.right: true; anchors.top: true; anchors.bottom: true
 				color: "transparent"
@@ -174,7 +174,80 @@ ShellRoot {
 					modulateOpacity: true
 				}
 
-				CPUBars { id: cpuBars }
+				InwardsRadialVisualizerBars {
+					id: cpuBars
+					input: CPUInfo
+					outerRadius: 220
+					innerRadius: 120
+					rotationOffset: cpuVizAnimLoader.item?.value ?? 0
+					anchors.horizontalCenter: parent.horizontalCenter
+					anchors.verticalCenter: parent.verticalCenter
+
+					Loader {
+						id: cpuVizAnimLoader
+						active: !Config._.reducedMotion
+						sourceComponent: MomentumAnimation {
+							id: cpuVizAnim
+							property real t: 0
+							property int curveLength: Config._.frameRate * 1
+							property real speedFromCpuUsage: (1 - CPUInfo.idleSec / CPUInfo.totalSec) / 0.1
+							property list<real> opacityCurve: Array.from({ length: curveLength }, (_, i) => 0.8 + 0.2 * Math.sin(i * 2 * Math.PI / curveLength))
+							property list<real> curve: Array.from({ length: curveLength }, (_, i) => -1 - 0.5 * Math.sin(i * 2 * Math.PI / curveLength))
+							processValue: (x, frameTime) => {
+								const frameDelta = frameTime * Config._.frameRate
+								t = (t + frameDelta) % curveLength
+								const frac = t % 1
+								cpuBars.opacity = opacityCurve[Math.floor(t)] * frac + opacityCurve[Math.ceil(t) % curveLength] * (1 - frac)
+								return (x + 360 + (curve[Math.floor(t)] * frac + curve[Math.ceil(t) % curveLength] * (1 - frac)) - speedFromCpuUsage * frameDelta) % 360
+							}
+						}
+						onActiveChanged: if (!active) cpuBars.opacity = 1
+					}
+
+					Loader {
+						id: cpuVizMouseAreaLoader
+						active: !Config._.reducedMotion
+						sourceComponent: MouseArea {
+							id: cpuVizMouseArea
+							x: cpuBars.width / 2 - cpuBars.outerRadius
+							y: cpuBars.height / 2 - cpuBars.outerRadius
+							width: cpuBars.outerRadius * 2
+							height: cpuBars.outerRadius * 2
+							property real startAngle: 0
+							property real prevAngle: 0
+							property real endAngle: 0
+							onPressed: { updateAngle(true); cpuVizAnimLoader.item.velocity = 0 }
+							onReleased: {
+								if (endAngle - startAngle > 180) startAngle += 360
+								else if (startAngle - endAngle > 180) startAngle -= 360
+								cpuVizAnimLoader.item.impulse(endAngle - startAngle)
+							}
+							onPositionChanged: updateAngle()
+
+							FrameAnimation { running: true; onTriggered: cpuVizMouseArea.startAngle = cpuVizMouseArea.endAngle }
+
+							function updateAngle(initial) {
+								const x = mouseX - cpuBars.outerRadius
+								const y = mouseY - cpuBars.outerRadius
+								endAngle = Math.atan2(-y, x) * 180 / Math.PI - 90
+								if (initial) {
+									startAngle = endAngle
+									prevAngle = endAngle
+								} else {
+									cpuVizAnimLoader.item.value += endAngle - prevAngle
+									prevAngle = endAngle
+								}
+							}
+
+							WheelHandler {
+								acceptedDevices: PointerDevice.Mouse | PointerDevice.TouchPad
+								onWheel: event => {
+									cpuVizAnimLoader.item.impulse((event.angleDelta.x + event.angleDelta.y) / 4)
+								}
+							}
+						}
+					}
+				}
 
 				// TimeZonesDisplay {}
 
@@ -220,26 +293,31 @@ ShellRoot {
 					anchors.topMargin: 64
 				}
 
-				BouncingMaskedShader {
-					visible: Screen.name === Config.screens.primary.name
-					id: bouncingMaskedShader
-					moving: !bouncingMaskedShaderMouseArea.containsPress
-				}
+				Loader {
+					id: bouncingMaskedShaderLoader
+					anchors.fill: parent
+					active: !Config._.reducedMotion
+					sourceComponent: BouncingMaskedShader {
+						visible: Screen.name === Config.screens.primary.name
+						id: bouncingMaskedShader
+						moving: !bouncingMaskedShaderMouseArea.containsPress
 
-				MouseArea {
-					id: bouncingMaskedShaderMouseArea
-					property int startX: 0
-					property int startY: 0
-					anchors.fill: bouncingMaskedShader
-					cursorShape: Qt.PointingHandCursor
-					onPressed: event => { startX = event.x; startY = event.y }
-					onPositionChanged: event => {
-						const dx = event.x - startX
-						const dy = event.y - startY
-						bouncingMaskedShader.x += dx
-						bouncingMaskedShader.y += dy
-						bouncingMaskedShader.impulse(Math.hypot(dy, dx) * 10)
-						bouncingMaskedShader.angle = Math.atan2(dy, dx) * 180 / Math.PI
+						MouseArea {
+							id: bouncingMaskedShaderMouseArea
+							property int startX: 0
+							property int startY: 0
+							anchors.fill: bouncingMaskedShader
+							cursorShape: Qt.PointingHandCursor
+							onPressed: event => { startX = event.x; startY = event.y }
+							onPositionChanged: event => {
+								const dx = event.x - startX
+								const dy = event.y - startY
+								bouncingMaskedShader.x += dx
+								bouncingMaskedShader.y += dy
+								bouncingMaskedShader.impulse(Math.hypot(dy, dx) * 10)
+								bouncingMaskedShader.angle = Math.atan2(dy, dx) * 180 / Math.PI
+							}
+						}
 					}
 				}
 			}
