@@ -24,3 +24,10 @@
 - [ ] desktop piano
 - [ ] visualizer experiments
   - [ ] investigate shader/mask-based alpha gradients for smooth visualizers instead of per-segment QML geometry
+- [ ] qti Quick3D plugin
+  - [ ] `BufferInstancing`: raw-buffer-backed `QQuick3DInstancing` for large dynamic instance tables from QML
+  - [ ] `ConstructiveGeometry`: editable mesh owner with arbitrary mesh import/export and C++ runtime ops exposed to QML
+  - [ ] first constructive ops: `computeNormals`, `weld`, `subdivideTriangles`, `inflate/deflate`, `spherize`
+  - [ ] selection model: start with whole-mesh + buffer/mask driven targeting, then promote reusable selection components later
+  - [ ] keep primitive seeds minimal; prioritize arbitrary mesh import over hardcoded primitive proliferation
+  - [ ] defer booleans until the core mesh pipeline is stable

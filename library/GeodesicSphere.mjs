@@ -43,67 +43,94 @@ export function toVector4d(a) {
 	return Qt.vector4d(a.x, a.y, a.z, a.w)
 }
 
-function quantizeKey(p) {
-	return [
-		Math.round(p.x * 10000),
-		Math.round(p.y * 10000),
-		Math.round(p.z * 10000)
-	].join(":")
-}
-
-export function buildPoints(radius, frequency) {
-	return buildTriangles(radius, frequency).flat()
-}
-
-function icosahedronData() {
+const ICOSA_DATA = (() => {
 	const t = (1 + Math.sqrt(5)) / 2
-	const vertices = [
-		v(-1, t, 0), v(1, t, 0), v(-1, -t, 0), v(1, -t, 0),
-		v(0, -1, t), v(0, 1, t), v(0, -1, -t), v(0, 1, -t),
-		v(t, 0, -1), v(t, 0, 1), v(-t, 0, -1), v(-t, 0, 1)
-	].map(normalize)
-	const faces = [
-		[0, 11, 5], [0, 5, 1], [0, 1, 7], [0, 7, 10], [0, 10, 11],
-		[1, 5, 9], [5, 11, 4], [11, 10, 2], [10, 7, 6], [7, 1, 8],
-		[3, 9, 4], [3, 4, 2], [3, 2, 6], [3, 6, 8], [3, 8, 9],
-		[4, 9, 5], [2, 4, 11], [6, 2, 10], [8, 6, 7], [9, 8, 1]
-	]
-	return { vertices, faces }
-}
+	return {
+		vertices: [
+			v(-1, t, 0), v(1, t, 0), v(-1, -t, 0), v(1, -t, 0),
+			v(0, -1, t), v(0, 1, t), v(0, -1, -t), v(0, 1, -t),
+			v(t, 0, -1), v(t, 0, 1), v(-t, 0, -1), v(-t, 0, 1)
+		].map(normalize),
+		faces: [
+			[0, 11, 5], [0, 5, 1], [0, 1, 7], [0, 7, 10], [0, 10, 11],
+			[1, 5, 9], [5, 11, 4], [11, 10, 2], [10, 7, 6], [7, 1, 8],
+			[3, 9, 4], [3, 4, 2], [3, 2, 6], [3, 6, 8], [3, 8, 9],
+			[4, 9, 5], [2, 4, 11], [6, 2, 10], [8, 6, 7], [9, 8, 1]
+		]
+	}
+})()
 
-function facePoint(a, b, c, u, vCoord) {
+function facePoint(a, b, c, u, vCoord, radius) {
 	const w = 1 - u - vCoord
-	return normalize(v(
+	return mul(normalize(v(
 		a.x * w + b.x * u + c.x * vCoord,
 		a.y * w + b.y * u + c.y * vCoord,
 		a.z * w + b.z * u + c.z * vCoord
-	))
+	)), radius)
 }
 
-export function buildTriangles(radius, frequency) {
-	const { vertices, faces } = icosahedronData()
-	const result = []
-	const freq = Math.max(1, Math.floor(frequency))
+function faceVertices(faceIndex) {
+	const face = ICOSA_DATA.faces[faceIndex]
+	return [
+		ICOSA_DATA.vertices[face[0]],
+		ICOSA_DATA.vertices[face[1]],
+		ICOSA_DATA.vertices[face[2]]
+	]
+}
 
-	for (const face of faces) {
-		const a = vertices[face[0]]
-		const b = vertices[face[1]]
-		const c = vertices[face[2]]
-		for (let i = 0; i < freq; ++i) {
-			for (let j = 0; j < freq - i; ++j) {
-				const p0 = mul(facePoint(a, b, c, i / freq, j / freq), radius)
-				const p1 = mul(facePoint(a, b, c, (i + 1) / freq, j / freq), radius)
-				const p2 = mul(facePoint(a, b, c, i / freq, (j + 1) / freq), radius)
-				result.push([p0, p1, p2])
-				if (j < freq - i - 1) {
-					const p3 = mul(facePoint(a, b, c, (i + 1) / freq, (j + 1) / freq), radius)
-					result.push([p1, p3, p2])
+export function faceTriangleCount(frequency) {
+	const freq = Math.max(1, Math.floor(frequency))
+	return 20 * freq * freq
+}
+
+export function pointCount(frequency) {
+	return faceTriangleCount(frequency) * 3
+}
+
+export function sampleFacePoint(faceIndex, frequency, row, column, radius) {
+	const freq = Math.max(1, Math.floor(frequency))
+	const [a, b, c] = faceVertices(faceIndex)
+	return facePoint(a, b, c, row / freq, column / freq, radius)
+}
+
+export function forEachFaceTriangle(radius, frequency, callback) {
+	const freq = Math.max(1, Math.floor(frequency))
+	let triangleIndex = 0
+
+	for (let faceIndex = 0; faceIndex < ICOSA_DATA.faces.length; ++faceIndex) {
+		const [a, b, c] = faceVertices(faceIndex)
+		for (let row = 0; row < freq; ++row) {
+			for (let column = 0; column < freq - row; ++column) {
+				const p0 = facePoint(a, b, c, row / freq, column / freq, radius)
+				const p1 = facePoint(a, b, c, (row + 1) / freq, column / freq, radius)
+				const p2 = facePoint(a, b, c, row / freq, (column + 1) / freq, radius)
+				callback(triangleIndex++, faceIndex, row, column, p0, p1, p2)
+				if (column < freq - row - 1) {
+					const p3 = facePoint(a, b, c, (row + 1) / freq, (column + 1) / freq, radius)
+					callback(triangleIndex++, faceIndex, row, column, p1, p3, p2)
 				}
 			}
 		}
 	}
+}
 
-	return result
+export function buildPoints(radius, frequency) {
+	const points = new Array(pointCount(frequency))
+	let index = 0
+	forEachFaceTriangle(radius, frequency, (_triangleIndex, _faceIndex, _row, _column, a, b, c) => {
+		points[index++] = a
+		points[index++] = b
+		points[index++] = c
+	})
+	return points
+}
+
+export function buildTriangles(radius, frequency) {
+	const triangles = new Array(faceTriangleCount(frequency))
+	forEachFaceTriangle(radius, frequency, (triangleIndex, _faceIndex, _row, _column, a, b, c) => {
+		triangles[triangleIndex] = [a, b, c]
+	})
+	return triangles
 }
 
 export function triangleNormal(a, b, c) {

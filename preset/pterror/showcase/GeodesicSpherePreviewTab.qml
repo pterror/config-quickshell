@@ -43,6 +43,7 @@ Item {
 	property bool showCoreSphere: true
 	property bool autoOrbit: true
 	property int frequency: 10
+	property int pendingFrequency: frequency
 	property real radius: 24
 	property real baseHeight: 0.25
 	property real heightScale: 9
@@ -68,7 +69,8 @@ Item {
 	property real _lastTotalTicks: 0
 
 	readonly property var palette: paletteDefs[paletteIndex % paletteDefs.length]
-	readonly property int faceCount: 20 * frequency * frequency
+	readonly property int displayedFrequency: frequencySlider.pressed ? pendingFrequency : frequency
+	readonly property int faceCount: 20 * displayedFrequency * displayedFrequency
 	readonly property int renderedTriangleCount: faceCount * 7
 	readonly property int uploadBytesPerFrame: geodesicHeightTexture.textureWidth * geodesicHeightTexture.textureHeight
 	readonly property real uploadKiBPerFrame: uploadBytesPerFrame / 1024
@@ -121,8 +123,6 @@ Item {
 		stdout: SplitParser {
 			onRead: data => {
 				root.shellPid = Number(String(data).trim()) || 0
-				procStatFile.path = root.shellPid ? `/proc/${root.shellPid}/stat` : ""
-				procStatusFile.path = root.shellPid ? `/proc/${root.shellPid}/status` : ""
 			}
 		}
 	}
@@ -148,6 +148,13 @@ Item {
 				root.updateProcessMetrics(procStatText, statusAndCpu[0], statusAndCpu[1])
 			}
 		}
+	}
+
+	Timer {
+		id: frequencyDebounceTimer
+		interval: 140
+		repeat: false
+		onTriggered: root.frequency = root.pendingFrequency
 	}
 
 	Timer {
@@ -223,16 +230,16 @@ Item {
 		}
 	}
 
-		component LabeledSlider: Item {
-			id: labeledSlider
+	component LabeledSlider: Item {
+		id: labeledSlider
 		property string label: ""
 		property real from: 0
 		property real to: 1
-			property real stepSize: 0.1
-			property int decimals: 2
-			property real value: 0
-			property bool pressed: slider.pressed
-			signal valueEdited(real value)
+		property real stepSize: 0.1
+		property int decimals: 2
+		property real value: 0
+		property bool pressed: slider.pressed
+		signal valueEdited(real value)
 		implicitWidth: 176
 		implicitHeight: 82
 
@@ -256,16 +263,15 @@ Item {
 				}
 			}
 
-				Slider {
-					id: slider
-					Layout.fillWidth: true
-					Layout.alignment: Qt.AlignVCenter
-					from: labeledSlider.from
-					to: labeledSlider.to
-					stepSize: labeledSlider.stepSize
-					value: labeledSlider.value
-					onMoved: labeledSlider.valueEdited(value)
-				}
+			Slider {
+				id: slider
+				Layout.fillWidth: true
+				Layout.alignment: Qt.AlignVCenter
+				from: labeledSlider.from
+				to: labeledSlider.to
+				stepSize: labeledSlider.stepSize
+				value: labeledSlider.value
+				onMoved: function() { labeledSlider.valueEdited(slider.value) }
 			}
 		}
 	}
@@ -283,14 +289,14 @@ Item {
 			color: "white"
 		}
 
-			ComboBox {
-				id: combo
-				Layout.fillWidth: true
-				model: labeledCombo.model
-				currentIndex: labeledCombo.currentIndex
-				onActivated: labeledCombo.indexEdited(currentIndex)
-			}
+		ComboBox {
+			id: combo
+			Layout.fillWidth: true
+			model: labeledCombo.model
+			currentIndex: labeledCombo.currentIndex
+			onActivated: labeledCombo.indexEdited(currentIndex)
 		}
+	}
 
 	component LabeledSwitch: RowLayout {
 		id: labeledSwitch
@@ -306,13 +312,13 @@ Item {
 
 		Item { Layout.fillWidth: true }
 
-			Switch {
-				id: themedSwitch
-				Layout.alignment: Qt.AlignVCenter
-				checked: labeledSwitch.checked
-				onToggled: labeledSwitch.toggled(checked)
-			}
+		Switch {
+			id: themedSwitch
+			Layout.alignment: Qt.AlignVCenter
+			checked: labeledSwitch.checked
+			onToggled: labeledSwitch.toggled(checked)
 		}
+	}
 
 	Rectangle {
 		anchors.fill: parent
@@ -349,7 +355,7 @@ Item {
 						Item { Layout.fillWidth: true }
 
 						Text {
-							text: `${root.modeNames[root.renderMode]}  |  f=${root.frequency}  |  ${root.faceCount} faces`
+							text: `${root.modeNames[root.renderMode]}  |  f=${root.displayedFrequency}  |  ${root.faceCount} faces`
 							color: "#d2eff8"
 						}
 					}
@@ -506,8 +512,11 @@ Item {
 									to: 64
 									stepSize: 1
 									decimals: 0
-									value: root.frequency
-									onValueEdited: function(value) { root.frequency = Math.round(value) }
+									value: root.pendingFrequency
+									onValueEdited: function(value) {
+										root.pendingFrequency = Math.round(value)
+										frequencyDebounceTimer.restart()
+									}
 								}
 
 								LabeledSlider {
